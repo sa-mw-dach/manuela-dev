@@ -1,0 +1,37 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: iot-frontend
+  name: iot-frontend
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: {}
+  output:
+    to:
+      kind: ImageStreamTag
+      name: iot-frontend:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      uri: https://github.com/sa-mw-dach/manuela-dev.git
+    type: Git
+    contextDir: "components/iot-frontend"
+  strategy:
+    sourceStrategy:
+      env:
+      - name: OUTPUT_DIR
+        value: www
+      from:
+        kind: ImageStreamTag
+        name: centos7-s2i-web-app:latest
+    type: Source
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - type: ConfigChange
+  - imageChange:
+    type: ImageChange
+status: 
+  lastVersion: 0

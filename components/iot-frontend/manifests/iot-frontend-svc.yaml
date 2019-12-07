@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: iot-frontend
+  name: iot-frontend
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: iot-frontend
+    deploymentconfig: iot-frontend
+  sessionAffinity: None
+  type: ClusterIP

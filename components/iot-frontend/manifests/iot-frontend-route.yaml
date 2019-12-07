@@ -1,0 +1,24 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: iot-frontend
+  name: iot-frontend
+spec:
+  host: iot-frontend-oschneid-manuela.apps.ocp1.stormshift.coe.muc.redhat.com
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: Service
+    name: iot-frontend
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+  - conditions:
+    - lastTransitionTime: 2019-11-28T20:01:45Z
+      status: "True"
+      type: Admitted
+    host: iot-frontend-oschneid-iot.apps.ocp1.stormshift.coe.muc.redhat.com
+    routerName: router
+    wildcardPolicy: None
