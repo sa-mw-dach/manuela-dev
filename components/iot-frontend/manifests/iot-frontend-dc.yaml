@@ -27,7 +27,7 @@ spec:
         deploymentconfig: iot-frontend
     spec:
       containers:
-      - image: docker-registry.default.svc:5000/oschneid-manuela/iot-frontend
+      - image: iot-frontend:latest
         imagePullPolicy: Always
         name: iot-frontend
         ports:
@@ -51,5 +51,4 @@ spec:
       from:
         kind: ImageStreamTag
         name: iot-frontend:latest
-        namespace: oschneid-manuela
     type: ImageChange
