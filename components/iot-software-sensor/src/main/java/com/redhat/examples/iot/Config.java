@@ -25,6 +25,9 @@ public class Config {
 	@Value("${mqtt.service}")
 	private String mqttServiceName;
 	
+	@Value("${mqtt.tls}")
+	private boolean mqttTLS;
+
 	@Value("${device.id}")
 	private String deviceId;
 	
@@ -51,9 +54,9 @@ public class Config {
 		
 	@Bean
 	public MqttProducer mqttProducer() {
-		
-		String brokerURL = String.format("mqtt://%s:%s", mqttServiceName, mqttServicePort);
-		
+		String scheme = mqttTLS ? "wss" : "ws";
+		String brokerURL = String.format("%s://%s:%s", scheme, mqttServiceName, mqttServicePort);
+
 		return new MqttProducer(brokerURL, mqttUsername, mqttPassword, deviceId);
 	}
 	
