@@ -17,7 +17,7 @@ app.use(compression());
 
 // var client  = mqtt.connect('mqtt://test.mosquitto.org')
 
-var client = mqtt.connect('mqtt://broker-amq-mqtt.oschneid-iot.svc.cluster.local', { username: 'iotuser', password: 'iotuser' })
+var client = mqtt.connect('ws://broker-amq-mqtt-all-0-svc:61616', { username: 'iotuser', password: 'iotuser' })
 
 var topic_gps = "iot-ocp/sw/iottest/gps"
 var topic_temperature = "iot-ocp/sw/iottest/temperature"
