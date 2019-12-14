@@ -1,0 +1,4 @@
+resources:
+- iot-software-sensor-bc.yaml
+- iot-software-sensor-dc.yaml
+- iot-software-sensor-is.yaml

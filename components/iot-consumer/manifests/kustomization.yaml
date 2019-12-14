@@ -1,0 +1,8 @@
+resources:
+- amq-operator-subscription.yaml
+- amq-broker.yaml
+- iot-consumer-bc.yaml
+- iot-consumer-dc.yaml
+- iot-consumer-is.yaml
+- iot-consumer-route.yaml
+- iot-consumer-svc.yaml

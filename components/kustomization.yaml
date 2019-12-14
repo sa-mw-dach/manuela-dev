@@ -1,0 +1,5 @@
+bases:
+- iot-consumer/manifests
+- iot-frontend/manifests
+- iot-software-sensor/manifests
+

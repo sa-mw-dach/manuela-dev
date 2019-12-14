@@ -1,0 +1,7 @@
+resources:
+- nodeshift-is.yaml
+- iot-frontend-bc.yaml
+- iot-frontend-dc.yaml
+- iot-frontend-is.yaml
+- iot-frontend-route.yaml
+- iot-frontend-svc.yaml
