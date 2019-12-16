@@ -5,3 +5,4 @@ resources:
 - iot-frontend-is.yaml
 - iot-frontend-route.yaml
 - iot-frontend-svc.yaml
+- iot-frontend-configmap.yaml
