@@ -6,3 +6,4 @@ resources:
 - iot-consumer-is.yaml
 - iot-consumer-route.yaml
 - iot-consumer-svc.yaml
+- iot-consumer-configmap.yaml

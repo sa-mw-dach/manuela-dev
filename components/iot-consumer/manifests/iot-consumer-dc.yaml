@@ -27,15 +27,15 @@ spec:
         deploymentconfig: iot-consumer
     spec:
       containers:
+      - envFrom:
+        - configMapRef:
+            name: iot-consumer-cfg
       - image: iot-consumer:latest
         imagePullPolicy: Always
         name: iot-consumer
         ports:
         - containerPort: 3000
           protocol: TCP
-        env:
-        - name: PORT
-          value: '3000'
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
