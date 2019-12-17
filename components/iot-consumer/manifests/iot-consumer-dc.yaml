@@ -3,7 +3,10 @@ kind: DeploymentConfig
 metadata:
   labels:
     app: iot-consumer
+    app.kubernetes.io/part-of: ManuELA
   name: iot-consumer
+  annotations:
+    app.openshift.io/connects-to: 'broker-amq-mqtt-ss,iot-frontend'
 spec:
   replicas: 1
   revisionHistoryLimit: 10

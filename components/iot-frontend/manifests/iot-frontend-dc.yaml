@@ -3,6 +3,7 @@ kind: DeploymentConfig
 metadata:
   labels:
     app: iot-frontend
+    app.kubernetes.io/part-of: ManuELA
   name: iot-frontend
 spec:
   replicas: 1

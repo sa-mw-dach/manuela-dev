@@ -4,7 +4,10 @@ metadata:
   labels:
     application: iot-software-sensor
     template: openjdk18-web-basic-s2i
+    app.kubernetes.io/part-of: ManuELA
   name: iot-software-sensor
+  annotations:
+    app.openshift.io/connects-to: broker-amq-mqtt-ss
 spec:
   replicas: 1
   revisionHistoryLimit: 10
