@@ -7,8 +7,6 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -29,8 +27,8 @@ public class SchedulerManager implements ApplicationContextAware {
     
     private ApplicationContext applicationContext;
     
-    @Value("${iot.types}")
-    private String[] iotTypes;
+    @Value("${device.metrics}")
+    private String[] sensorMetrics;
     
     @Autowired
     private Config config;
@@ -47,18 +45,16 @@ public class SchedulerManager implements ApplicationContextAware {
     	// Environment Information
     	log.info("---------------------------");
     	log.info("Application Name: {}",config.getAppName());
-    	log.info("Category: {}",config.getCategory());
     	log.info("Device ID: {}",config.getDeviceId());
     	log.info("---------------------------");
 
-
-    	executorService = Executors.newScheduledThreadPool(iotTypes.length);
+    	executorService = Executors.newScheduledThreadPool(sensorMetrics.length);
     	
-    	for(String iotType : iotTypes) {
+    	for(String sensorMetric : sensorMetrics) {
 
     		try {
     			
-        		Sensor sensor = applicationContext.getBean(iotType, Sensor.class);
+        		Sensor sensor = applicationContext.getBean(sensorMetric, Sensor.class);
         		        		
         		if(sensor.isEnabled()) {
         			
@@ -68,12 +64,12 @@ public class SchedulerManager implements ApplicationContextAware {
         			executorService.scheduleAtFixedRate(new SensorRunner(sensor, config, mqttProducer), 0, sensor.getFrequency(), TimeUnit.SECONDS);
         		}
         		else {
-        			log.info("Sensor type " + iotType + " disabled");
+        			log.info("Sensor type " + sensorMetric + " disabled");
         		}
         		
     		}
     		catch(NoSuchBeanDefinitionException nsbde) {
-    			log.warn("Sensor type " + iotType + " not available");
+    			log.warn("Sensor type " + sensorMetric + " not available");
     		}
     	
     	}

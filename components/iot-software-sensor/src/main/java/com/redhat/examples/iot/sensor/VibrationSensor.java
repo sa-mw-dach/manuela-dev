@@ -45,7 +45,6 @@ public class VibrationSensor implements Sensor {
 		currentValue = start;
 	}
 	
-
 	@Override
 	public int getFrequency() {
 		return frequency;
@@ -64,9 +63,7 @@ public class VibrationSensor implements Sensor {
 	@Override
 	public Measure calculateCurrentMeasure(Measure measure) {
 		
-		
 		if(count > 0) {
-			
 			// Calculate random value from range
 			double randValue = ThreadLocalRandom.current().nextDouble(minIteration, (maxIteration+1));
 			currentValue = currentValue + randValue;
@@ -74,14 +71,10 @@ public class VibrationSensor implements Sensor {
 			if(currentValue < minRange || currentValue > maxRange) {
 				initAndReset();
 			}
-			
 		}
 		
 		measure.setType(getType());
 		measure.setPayload(String.valueOf(currentValue));
-		
-		
-		// TODO: Figure out how to handle current time
 		
 		++count;
 		return measure;

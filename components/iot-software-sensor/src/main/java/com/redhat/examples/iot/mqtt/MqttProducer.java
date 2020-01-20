@@ -7,8 +7,6 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,24 +14,22 @@ public class MqttProducer {
 
 	private MqttClient client;
 	private MqttConnectOptions options;
-	private MemoryPersistence persistence;
 	
 	private final String brokerURL;
 	private final String user;
 	private final String password;
-	private final String deviceId;
+	private final String clientId;
 
-	private static final int QOS = 2;
+	private static final int QOS = 1;
 	
     private static final Logger log = LoggerFactory.getLogger(MqttProducer.class);
 
-	
-	public MqttProducer(String brokerURL, String user, String password, String deviceId) {
+	public MqttProducer(String brokerURL, String user, String password, String clientId) {
 	
 		this.brokerURL = brokerURL;
 		this.user = user;
 		this.password = password;
-		this.deviceId = deviceId;
+		this.clientId = clientId;
 		
 	}
 	
@@ -44,10 +40,14 @@ public class MqttProducer {
 		}
 		
 		try {
-			client = new MqttClient(brokerURL, deviceId);
+			client = new MqttClient(brokerURL, clientId);
 			options = new MqttConnectOptions ();
 			options.setUserName(user);
 			options.setPassword(password.toCharArray());
+			options.setAutomaticReconnect(true);
+			options.setConnectionTimeout(0);
+			log.info("MQTT Connect options");
+			log.info(options.toString());
 			client.connect(options);
 		}catch(MqttException e) {
 			log.error(e.getMessage(), e);
@@ -56,7 +56,7 @@ public class MqttProducer {
 	}
 	
 	public void run(String topic, String data) throws MqttPersistenceException, MqttException {
-		
+		System.out.println("sending data: "+data);
 		MqttMessage message = new MqttMessage();
 		message.setQos(QOS);
 		

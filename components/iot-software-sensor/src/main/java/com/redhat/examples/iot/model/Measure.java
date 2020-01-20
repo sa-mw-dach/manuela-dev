@@ -8,14 +8,14 @@ public class Measure implements Serializable {
 	
 	private String  type;
 	private final String  deviceId;
-	private final String category;
+	private final String  machineId;
 	private final String timestamp;
 	private	String	payload;
 	
-	public Measure(String deviceId, String timestamp, String category) {
+	public Measure(String machineId, String deviceId, String timestamp) {
 		this.deviceId = deviceId;
+		this.machineId = machineId;
 		this.timestamp = timestamp;
-		this.category = category;
 	}
 	
 	public String getTimestamp() {
@@ -39,13 +39,11 @@ public class Measure implements Serializable {
 		this.payload = payload;
 	}
 	
-	public String getCategory() {
-		return category;
-	}
-	
 	public String getCSVData() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(category);
+		sb.append(machineId);
+		sb.append(",");
+		sb.append(deviceId);
 		sb.append(",");
 		sb.append(payload);
 		sb.append(",");

@@ -1,9 +1,5 @@
 package com.redhat.examples.iot;
 
-import java.util.concurrent.ThreadLocalRandom;
-
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,43 +26,27 @@ public class Config {
 
 	@Value("${device.id}")
 	private String deviceId;
+
+	@Value("${machine.id}")
+	private String machineId;
 	
 	@Value("${app.name}")
 	private String appName;
-	
-	@Value("${device.category:#{null}}")
-	private String category;
-	
-	@Value("${device.categories}")
-	private String[] categories;
-	
-	@PostConstruct
-	public void init() {
-		
-		// If category is not defined, choose one randomly
-		if(category == null) {
-			
-			category = categories[ThreadLocalRandom.current().nextInt(categories.length-1)];
-			
-		}
-		
-	}
 		
 	@Bean
 	public MqttProducer mqttProducer() {
 		String scheme = mqttTLS ? "wss" : "ws";
 		String brokerURL = String.format("%s://%s:%s", scheme, mqttServiceName, mqttServicePort);
 
-		return new MqttProducer(brokerURL, mqttUsername, mqttPassword, deviceId);
+		return new MqttProducer(brokerURL, mqttUsername, mqttPassword, machineId+'-'+deviceId);
 	}
 	
 	public String getDeviceId() {
-		
 		return deviceId;
 	}
-	
-	public String getCategory() {
-		return category;
+
+	public String getMachineId() {
+		return machineId;
 	}
 	
 	public String getAppName() {
