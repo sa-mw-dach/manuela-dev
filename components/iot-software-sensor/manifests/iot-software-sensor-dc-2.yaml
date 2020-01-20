@@ -2,17 +2,17 @@ apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
   labels:
-    application: iot-software-sensor
+    application: iot-software-sensor-2
     template: openjdk18-web-basic-s2i
     app.kubernetes.io/part-of: ManuELA
-  name: iot-software-sensor
+  name: iot-software-sensor-2
   annotations:
     app.openshift.io/connects-to: broker-amq-mqtt-ss
 spec:
   replicas: 1
   revisionHistoryLimit: 10
   selector:
-    deploymentConfig: iot-software-sensor
+    deploymentConfig: iot-software-sensor-2
   strategy:
     activeDeadlineSeconds: 21600
     recreateParams:
@@ -23,12 +23,12 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        application: iot-software-sensor
-        deploymentConfig: iot-software-sensor
-      name: iot-software-sensor
+        application: iot-software-sensor-2
+        deploymentConfig: iot-software-sensor-2
+      name: iot-software-sensor-2
     spec:
       containers:
-      - name: iot-software-sensor
+      - name: iot-software-sensor-2
         image: iot-software-sensor:latest
         imagePullPolicy: Always
         ports:
@@ -43,7 +43,7 @@ spec:
             protocol: TCP
         envFrom:
           - configMapRef: 
-              name: iot-software-sensor-config
+              name: iot-software-sensor-2-config
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
@@ -57,7 +57,7 @@ spec:
     - imageChangeParams:
         automatic: true
         containerNames:
-          - iot-software-sensor
+          - iot-software-sensor-2
         from:
           kind: ImageStreamTag
           name: 'iot-software-sensor:latest'

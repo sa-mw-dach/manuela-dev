@@ -7,7 +7,7 @@ var socket_path = process.env.SOCKET_PATH || "/api/service-web/socket";
 log.level = process.env.LOG_LEVEL || "trace";
 
 // topic config
-var topic_light = process.env.TOPIC_GPS || "iot-sensor/sw/light";
+var topic_light = process.env.TOPIC_LIGHT || "iot-sensor/sw/light";
 var topic_gps = process.env.TOPIC_GPS || "iot-sensor/sw/gps";
 var topic_temperature = process.env.TOPIC_TEMPERATURE || "iot-sensor/sw/temperature";
 var topic_vibration = process.env.TOPIC_VIBRATION || "iot-sensor/sw/vibration";
