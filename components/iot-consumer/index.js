@@ -75,7 +75,7 @@ function handleTemperature(message) {
     // check for temperature threshold
     var data = ab2str(message);
     const elements = data.split(',');
-    if(Number(elements[1]) > temperature_threshold) {
+    if(Number(elements[2]) > temperature_threshold) {
         console.log('temperature alert!!!');
         io.sockets.emit("temperature-alert", message);
     }
