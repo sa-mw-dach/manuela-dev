@@ -5,60 +5,68 @@ const log = log4js.getLogger();
 const port = process.env.PORT || 3000;
 var socket_path = process.env.SOCKET_PATH || "/api/service-web/socket";
 log.level = process.env.LOG_LEVEL || "trace";
-var topic_gps = process.env.TOPIC_GPS || "iot-ocp/sw/iottest/gps";
-var topic_temperature = process.env.TOPIC_TEMPERATURE || "iot-ocp/sw/iottest/temperature";
-var topic_vibration = process.env.TOPIC_VIBRATION || "iot-ocp/sw/iottest/vibration";
-var mqtt_broker = process.env.MQTT_BROKER || "ws://broker-amq-mqtt.oschneid-iot.svc.cluster.local";
+
+// topic config
+var topic_light = process.env.TOPIC_GPS || "iot-sensor/sw/light";
+var topic_gps = process.env.TOPIC_GPS || "iot-sensor/sw/gps";
+var topic_temperature = process.env.TOPIC_TEMPERATURE || "iot-sensor/sw/temperature";
+var topic_vibration = process.env.TOPIC_VIBRATION || "iot-sensor/sw/vibration";
+
+// MQTT connection
+var mqtt_broker = process.env.MQTT_BROKER || "ws://broker-amq-mqtt-all-0-svc-rte-oschneid-amq.apps.ocp4.stormshift.coe.muc.redhat.com";
 var mqtt_user = process.env.MQTT_USER || "iotuser";
 var mqtt_password = process.env.MQTT_PASSWORD || "iotuser";
-var temperature_threshold = process.env.TEMPERATURE_THRESHOLD || 70.0;
 
-// setup application
+// threshold
+const temperature_threshold = process.env.TEMPERATURE_THRESHOLD || 70.0;
+
+// setup application 
 var mqtt = require('mqtt')
 const compression = require('compression');
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-const router = new express.Router();
+// const router = new express.Router();
 const cors = require('cors');
 const io = require('socket.io')(http, { origins: '*:*', path: socket_path });
 
+// Middleware config
 app.use(cors());
 app.use(compression());
 
 // var client  = mqtt.connect('mqtt://test.mosquitto.org')
 
-var client = mqtt.connect(mqtt_broker, { username: mqtt_user, password: mqtt_password })
+var client = mqtt.connect(mqtt_broker, { username: mqtt_user, password: mqtt_password });
 
 client.on('connect', function () {
-    client.subscribe(topic_gps, function (err) {
-    })
-    client.subscribe(topic_temperature, function (err) {
-    })
-    client.subscribe(topic_vibration, function (err) {
-    })
+    client.subscribe(topic_gps, function (err) {});
+    client.subscribe(topic_temperature, function (err) {});
+    client.subscribe(topic_vibration, function (err) {});
+    client.subscribe(topic_light, function (err) {});
 })
 
 client.on('message', (topic, message) => {
     switch (topic) {
         case topic_gps:
-            return handleGps(message)
+            return handleGps(message);
         case topic_temperature:
-            return handleTemperature(message)
+            return handleTemperature(message);
         case topic_vibration:
-            return handleVibration(message)
+            return handleVibration(message);
+        case topic_light:
+            return handleLight(message);
     }
     console.log('No handler for topic %s', topic)
 })
 
-function ab2str(buf) {
-    // return decoder.decode(new Uint8Array(buf));
-    return String.fromCharCode.apply(null, new Uint8Array(buf));
-}
-
 function handleGps(message) {
     console.log('handleGps data %s', message);
     io.sockets.emit("gps-event", message);
+}
+
+function handleLight(message) {
+    console.log('handleLight data %s', message);
+    io.sockets.emit("light-event", message);
 }
 
 function handleTemperature(message) {
@@ -78,17 +86,16 @@ function handleVibration(message) {
     io.sockets.emit("vibration-event", message);
 }
 
+// convert ArrayBuffer to String
+function ab2str(buf) {
+    // return decoder.decode(new Uint8Array(buf));
+    return String.fromCharCode.apply(null, new Uint8Array(buf));
+}
+
 async function onWebsocketConnection(socket) {
     log.trace("begin onWebsocketConnection socket.id=%s", socket.id);
 
         log.debug("Register callbacks");
-
-        socket.on('refresh-event', function() {
-            // onRefreshEvent(socket);
-        });
-        socket.on('refresh-playlist', function() {
-            // onRefreshPlaylist(socket);
-        });
 
         socket.on('disconnect', function() {
             log.debug("Websocket disconnect...");
