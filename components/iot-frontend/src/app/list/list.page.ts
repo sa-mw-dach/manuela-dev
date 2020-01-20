@@ -166,7 +166,7 @@ export class ListPage implements OnInit, OnDestroy {
       const elements = tmp.split(',');
       ListPage.temperatureData.push({
         x: new Date().getTime(),
-        y: Number(elements[1])
+        y: Number(elements[2])
       });
       // console.log(ListPage.temperatureData);
     });
@@ -178,7 +178,7 @@ export class ListPage implements OnInit, OnDestroy {
       const elements = tmp.split(',');
       ListPage.vibrationData.push({
         x: new Date().getTime(),
-        y: Number(elements[1])
+        y: Number(elements[2])
       });
       // console.log(ListPage.vibrationData);
     });
