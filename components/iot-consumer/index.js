@@ -13,7 +13,7 @@ var topic_temperature = process.env.TOPIC_TEMPERATURE || "iot-sensor/sw/temperat
 var topic_vibration = process.env.TOPIC_VIBRATION || "iot-sensor/sw/vibration";
 
 // MQTT connection
-var mqtt_broker = process.env.MQTT_BROKER || "ws://broker-amq-mqtt-all-0-svc-rte-oschneid-amq.apps.ocp4.stormshift.coe.muc.redhat.com";
+var mqtt_broker = process.env.MQTT_BROKER || "ws://broker-amq-mqtt-all-0-svc";
 var mqtt_user = process.env.MQTT_USER || "iotuser";
 var mqtt_password = process.env.MQTT_PASSWORD || "iotuser";
 

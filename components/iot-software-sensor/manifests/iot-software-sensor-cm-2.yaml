@@ -8,9 +8,9 @@ data:
   DEVICE_METRICS: 'temperature,vibration,gps,light'
   MACHINE_ID: door-1-floor-1
 
-  MQTT_HOSTNAME: broker-amq-mqtt-all-0-svc-rte-iotdemo.apps.ocp4.stormshift.coe.muc.redhat.com
+  MQTT_HOSTNAME: broker-amq-mqtt-all-0-svc
   MQTT_PASSWORD: iotuser
-  MQTT_PORT: '80'
+  MQTT_PORT: '61616'
   MQTT_TLSSNI: 'false'
   MQTT_USER: iotuser
 
