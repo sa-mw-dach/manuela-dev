@@ -58,10 +58,11 @@ public class SchedulerManager implements ApplicationContextAware {
         		        		
         		if(sensor.isEnabled()) {
         			
-        			mqttProducer.connect();
-        			
-            		log.info("Starting Sensor: " + sensor.getType());
-        			executorService.scheduleAtFixedRate(new SensorRunner(sensor, config, mqttProducer), 0, sensor.getFrequency(), TimeUnit.SECONDS);
+					mqttProducer.connect();
+					if(mqttProducer.isConnected()) {
+						log.info("Starting Sensor: " + sensor.getType());
+        				executorService.scheduleAtFixedRate(new SensorRunner(sensor, config, mqttProducer), 0, sensor.getFrequency(), TimeUnit.SECONDS);
+					}
         		}
         		else {
         			log.info("Sensor type " + sensorMetric + " disabled");
