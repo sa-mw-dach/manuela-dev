@@ -1,0 +1,11 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>Realtime Data</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light">
+  <ion-card *ngFor="let machine of machines">
+    <div id="{{machine.machineId}}" style="width:100%; height:500px;"></div>
+  </ion-card>
+</ion-content>

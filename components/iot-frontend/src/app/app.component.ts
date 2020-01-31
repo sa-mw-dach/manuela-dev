@@ -17,8 +17,8 @@ export class AppComponent {
       icon: 'home'
     },
     {
-      title: 'Live Data',
-      url: '/list',
+      title: 'Realtime Data',
+      url: '/sensors',
       icon: 'list'
     }
   ];
