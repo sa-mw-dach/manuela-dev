@@ -106,12 +106,16 @@ export class SensorsPage implements OnInit, OnDestroy {
       };
       setTimeout(() => {
         this.charts.push(this.plotDynamicSplineChart(metric[0], series, 70));
-      }, 500);
+      }, 100);
     } else {
       console.log('MACHINE FOUND');
       // Machine found...
+      // console.log(this.charts);
       const indexMachine = this.machines.map(d => d.machineId).indexOf(metric[0]);
       const filterSensors = this.machines[indexMachine].sensors.filter(el => el.sensorId === metric[1]);
+      const indexChart = this.charts.map(d => d.userOptions.title.text).indexOf(metric[0]);
+      // console.log(indexChart);
+
       if (filterSensors.length === 0) {
         console.log('NEW SENSOR AND SERIES');
         // new sensor...
@@ -130,14 +134,16 @@ export class SensorsPage implements OnInit, OnDestroy {
           type: undefined,
           data: [{ x: Number(metric[3]), y: Number(metric[2]) }]
         };
-        this.charts[indexMachine].addSeries(series);
+        if (indexChart !== -1) {
+          this.charts[indexChart].addSeries(series);
+        }
     } else {
       console.log('SENSOR FOUND');
       const indexSensor = this.machines[indexMachine].sensors.map(d => d.sensorId).indexOf(metric[1]);
       const filterTypes = this.machines[indexMachine].sensors[indexSensor].types.filter(el => el.type === metricType);
       if (filterTypes.length === 0) {
         console.log('SENSOR FOUND -> NEW TYPE');
-        // new Type...
+        // new Metric Type...
         const newType = { type: metricType,
           series: [
             { x: Number(metric[3]), y: Number(metric[2]) }
@@ -149,15 +155,16 @@ export class SensorsPage implements OnInit, OnDestroy {
           type: undefined,
           data: [{ x: Number(metric[3]), y: Number(metric[2]) }]
         };
-        this.charts[indexMachine].addSeries(newSeries);
+        if (indexChart !== -1) {
+          this.charts[indexChart].addSeries(newSeries);
+        }
       } else {
         console.log('SENSOR AND TYPE FOUND -> ADD DATA');
         const indexTypes = this.machines[indexMachine].sensors[indexSensor].types.map(d => d.type).indexOf(metricType);
         this.machines[indexMachine].sensors[indexSensor].types[indexTypes].series.push({ x: Number(metric[3]), y: Number(metric[2]) });
 
-        const indexS = this.charts[indexMachine].series.map(d => d.name).indexOf(metric[1] + '-' + metricType);
-        console.dir(indexS);
-        this.charts[indexMachine].series[indexS].addPoint({ x: Number(metric[3]), y: Number(metric[2]) });
+        const indexS = this.charts[indexChart].series.map(d => d.name).indexOf(metric[1] + '-' + metricType);
+        this.charts[indexChart].series[indexS].addPoint({ x: Number(metric[3]), y: Number(metric[2]) });
       }
 
     }
