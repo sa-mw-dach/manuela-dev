@@ -164,7 +164,9 @@ export class SensorsPage implements OnInit, OnDestroy {
         this.machines[indexMachine].sensors[indexSensor].types[indexTypes].series.push({ x: Number(metric[3]), y: Number(metric[2]) });
 
         const indexS = this.charts[indexChart].series.map(d => d.name).indexOf(metric[1] + '-' + metricType);
-        this.charts[indexChart].series[indexS].addPoint({ x: Number(metric[3]), y: Number(metric[2]) });
+        if (indexChart !== -1 && indexS !== -1) {
+          this.charts[indexChart].series[indexS].addPoint({ x: Number(metric[3]), y: Number(metric[2]) });
+        }
       }
 
     }
