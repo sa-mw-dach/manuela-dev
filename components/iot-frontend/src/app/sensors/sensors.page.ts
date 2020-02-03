@@ -14,15 +14,16 @@ export class SensorsPage implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
   decoder = new TextDecoder('utf-8');
-  machines = [];
   charts = [];
+  displayCharts = new Set();
+  machineData = [];
 
   constructor(
     public websocketService: WebsocketService,
     public toastController: ToastController
   ) { }
 
-  plotDynamicSplineChart(machineId: string, series: any, threshold: number) {
+  plotDynamicSplineChart(machineId: string, series: any, unit: string, threshold: number) {
     return HighCharts.chart(machineId, {
       chart: {
         type: 'spline',
@@ -43,7 +44,7 @@ export class SensorsPage implements OnInit, OnDestroy {
       },
       yAxis: {
         title: {
-          text: 'Value'
+          text: unit
         },
         plotLines: [{
           value: threshold,
@@ -59,7 +60,7 @@ export class SensorsPage implements OnInit, OnDestroy {
         enabled: true
       },
       exporting: {
-        enabled: false
+        enabled: true
       },
       plotOptions: {
         line: {
@@ -78,104 +79,59 @@ export class SensorsPage implements OnInit, OnDestroy {
     return this.decoder.decode(new Uint8Array(buf));
   }
 
-  private handleMetrics(data, metricType: string) {
-    const metric = this.ab2str(data).split(',');
-    const m = this.machines.filter(el => el.machineId === metric[0]);
+  private handleMachineData(data, metricType: string) {
+    const dataset = this.ab2str(data).split(',');
+    const chartTitle = dataset[0] + ',' +dataset[1] + ',' + metricType;
+    // used in UI to setup divs
+    this.displayCharts.add(chartTitle);
+    // save metric
+    this.machineData.push(
+      {
+        machineId: dataset[0], 
+        sensorId: dataset[1], 
+        metricType: metricType, 
+        value: Number(dataset[2]), 
+        timestamp: Number(dataset[3])
+      }
+    );
+
+    // check if chart exists (one chart per machine)
+    const m = this.charts.filter(el => el.userOptions.title.text === chartTitle);
     if (m.length === 0) {
-      console.log('CREATING NEW MACHINE AND CHART');
-      // new machine...
-      const newMachine = {
-        machineId: metric[0],
-        sensors: [
-          { sensorId: metric[1],
-            types: [
-              { type: metricType,
-                series: [
-                  { x: Number(metric[3]), y: Number(metric[2]) }
-                ]
-               }
-            ]
-          }
-        ]
-      };
-      this.machines.push(newMachine);
+      const unit = metricType === 'vibration' ? 'mm/s' : 'Celsius';
       const series = {
-        name: metric[1] + '-' + metricType,
+        name: metricType,
         type: undefined,
-        data: [{ x: Number(metric[3]), y: Number(metric[2]) }]
+        data: []
       };
       setTimeout(() => {
-        this.charts.push(this.plotDynamicSplineChart(metric[0], series, 70));
+        this.charts.push(this.plotDynamicSplineChart(chartTitle, series, unit, 70));
+        // console.log(this.charts);
       }, 100);
-    } else {
-      console.log('MACHINE FOUND');
-      // Machine found...
-      // console.log(this.charts);
-      const indexMachine = this.machines.map(d => d.machineId).indexOf(metric[0]);
-      const filterSensors = this.machines[indexMachine].sensors.filter(el => el.sensorId === metric[1]);
-      const indexChart = this.charts.map(d => d.userOptions.title.text).indexOf(metric[0]);
-      // console.log(indexChart);
-
-      if (filterSensors.length === 0) {
-        console.log('NEW SENSOR AND SERIES');
-        // new sensor...
-        const newSensor = { sensorId: metric[1],
-          types: [
-            { type: metricType,
-              series: [
-                { x: Number(metric[3]), y: Number(metric[2]) }
-              ]
-             }
-          ]
-        };
-        this.machines[indexMachine].sensors.push(newSensor);
-        const series = {
-          name: metric[1] + '-' + metricType,
-          type: undefined,
-          data: [{ x: Number(metric[3]), y: Number(metric[2]) }]
-        };
-        if (indexChart !== -1) {
-          this.charts[indexChart].addSeries(series);
-        }
-    } else {
-      console.log('SENSOR FOUND');
-      const indexSensor = this.machines[indexMachine].sensors.map(d => d.sensorId).indexOf(metric[1]);
-      const filterTypes = this.machines[indexMachine].sensors[indexSensor].types.filter(el => el.type === metricType);
-      if (filterTypes.length === 0) {
-        console.log('SENSOR FOUND -> NEW TYPE');
-        // new Metric Type...
-        const newType = { type: metricType,
-          series: [
-            { x: Number(metric[3]), y: Number(metric[2]) }
-          ]
-         };
-        this.machines[indexMachine].sensors[indexSensor].types.push(newType);
-        const newSeries = {
-          name: metric[1] + '-' + metricType,
-          type: undefined,
-          data: [{ x: Number(metric[3]), y: Number(metric[2]) }]
-        };
-        if (indexChart !== -1) {
-          this.charts[indexChart].addSeries(newSeries);
-        }
-      } else {
-        console.log('SENSOR AND TYPE FOUND -> ADD DATA');
-        const indexTypes = this.machines[indexMachine].sensors[indexSensor].types.map(d => d.type).indexOf(metricType);
-        this.machines[indexMachine].sensors[indexSensor].types[indexTypes].series.push({ x: Number(metric[3]), y: Number(metric[2]) });
-
-        const indexS = this.charts[indexChart].series.map(d => d.name).indexOf(metric[1] + '-' + metricType);
-        if (indexChart !== -1 && indexS !== -1) {
-          this.charts[indexChart].series[indexS].addPoint({ x: Number(metric[3]), y: Number(metric[2]) });
-        }
-      }
-
     }
+
   }
-    // console.log(this.charts);
-}
 
+  
 
-ionViewDidEnter() {
+updateChartData() {
+
+  this.displayCharts.forEach(data => {
+    // console.log(data);
+    const indexChart = this.charts.map(d => d.userOptions.title.text).indexOf(data);
+    // console.log(indexChart);
+    const tmp = this.charts[indexChart].userOptions.title.text.split(',');
+    // console.log(tmp);
+    const series = this.machineData.filter(data => data.machineId === tmp[0]
+    && data.sensorId === tmp[1] && data.metricType === tmp[2]);
+    // console.log(series);
+    series.forEach(element => {
+      this.charts[indexChart].series[0].addPoint({x: element.timestamp, y: element.value});
+    });
+    
+  });
+    
+  
 
 }
 
@@ -184,24 +140,34 @@ ngOnInit() {
   this.websocketService.init(null);
 
   let sub = this.websocketService.observeGpsEvents().pipe().subscribe(data => {
-    this.handleMetrics(data, 'gps');
+    // TODO
   });
   this.subscriptions.push(sub);
 
-  sub = this.websocketService.observeTemperatureAlerts().pipe().subscribe(data => {
+  sub = this.websocketService.observeLightEvents().pipe().subscribe(data => {
     // TODO
   });
   this.subscriptions.push(sub);
 
   sub = this.websocketService.observeTemperatureEvents().pipe().subscribe(data => {
-    this.handleMetrics(data, 'temperature');
+    this.handleMachineData(data, 'temperature');
   });
   this.subscriptions.push(sub);
 
   sub = this.websocketService.observeVibrationEvents().pipe().subscribe(data => {
-    this.handleMetrics(data, 'vibration');
+    this.handleMachineData(data, 'vibration');
   });
   this.subscriptions.push(sub);
+
+  // ALERTS
+  sub = this.websocketService.observeTemperatureAlerts().pipe().subscribe(data => {
+    // TODO
+  });
+  this.subscriptions.push(sub);
+
+  setInterval(()=>{
+    this.updateChartData();
+  }, 3000);
 
 }
 
@@ -211,8 +177,9 @@ ngOnDestroy() {
     sub.unsubscribe();
   });
   this.websocketService.disconnect();
-  this.machines = [];
   this.charts = [];
+  this.displayCharts = new Set();
+  this.machineData = [];
 }
 
 }
