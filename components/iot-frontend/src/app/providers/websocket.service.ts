@@ -42,7 +42,7 @@ export class WebsocketService {
         console.debug('observeGpsEvents');
         const observable = new Observable(observer => {
             this.socket.on('gps-event', (data) => {
-                console.debug('gps-event -> Received gps sensor data');
+                // console.debug('gps-event -> Received gps sensor data');
                 observer.next(data);
             });
         });
@@ -53,7 +53,7 @@ export class WebsocketService {
         console.debug('observeLightEvents');
         const observable = new Observable(observer => {
             this.socket.on('light-event', (data) => {
-                console.debug('light-event -> Received light sensor data');
+                // console.debug('light-event -> Received light sensor data');
                 observer.next(data);
             });
         });
@@ -64,7 +64,7 @@ export class WebsocketService {
         console.debug('observeVibrationEvents');
         const observable = new Observable(observer => {
             this.socket.on('vibration-event', (data) => {
-                console.debug('vibration-event -> Received vibration sensor data');
+                // console.debug('vibration-event -> Received vibration sensor data');
                 observer.next(data);
             });
         });
@@ -75,7 +75,7 @@ export class WebsocketService {
         console.debug('observeTemperatureEvents');
         const observable = new Observable(observer => {
             this.socket.on('temperature-event', (data) => {
-                console.debug('temperature-event -> Received temperature sensor data');
+                // console.debug('temperature-event -> Received temperature sensor data');
                 observer.next(data);
             });
         });
@@ -86,7 +86,7 @@ export class WebsocketService {
         console.debug('observeTemperatureAlerts');
         const observable = new Observable(observer => {
             this.socket.on('temperature-alert', (data) => {
-                console.debug('temperature-alert -> Received sensor temperature event');
+                // console.debug('temperature-alert -> Received sensor temperature event');
                 observer.next(data);
             });
         });

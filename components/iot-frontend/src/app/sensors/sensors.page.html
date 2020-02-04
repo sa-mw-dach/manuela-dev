@@ -5,7 +5,16 @@
 </ion-header>
 
 <ion-content color="light">
-  <ion-card *ngFor="let machine of machines">
-    <div id="{{machine.machineId}}" style="width:100%; height:500px;"></div>
-  </ion-card>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+        <img src="https://www.pumpsandsystems.com/sites/default/files/2015/Telog----Pump-Station---wireless.jpg" />
+      </ion-col>
+      <ion-col *ngFor="let machineId of displayCharts" size="6">
+        <div id="{{machineId}}" style="width:100%; height:400px;"></div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
 </ion-content>
