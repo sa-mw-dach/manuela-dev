@@ -18,7 +18,7 @@ items:
 - kind: RoleBinding
   apiVersion: rbac.authorization.k8s.io/v1
   metadata:
-    namespace: manuela-stormshift-messaging
+    namespace: iotdemo
     name: admin
   roleRef:
     apiGroup: rbac.authorization.k8s.io
