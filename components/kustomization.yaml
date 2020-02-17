@@ -2,9 +2,9 @@ resources:
 - iotdemo-namespace.yaml
 - iotdemo-rolebinding.yaml
 - iotdemo-operatorgroup.yaml
+- iotdemo-secrets.yaml
 bases:
 - iot-consumer/manifests
 - iot-frontend/manifests
 - iot-software-sensor/manifests
 namespace: iotdemo
-

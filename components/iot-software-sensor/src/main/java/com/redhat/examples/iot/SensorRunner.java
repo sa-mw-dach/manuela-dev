@@ -39,7 +39,7 @@ public class SensorRunner implements Runnable {
 	@Override
 	public void run() {
 		ZonedDateTime utc = ZonedDateTime.now(ZoneOffset.UTC);
-		Measure measure = new Measure(machineId, deviceId, String.valueOf(utc.toInstant().toEpochMilli()/1000));
+		Measure measure = new Measure(machineId, deviceId, String.valueOf(utc.toInstant().toEpochMilli()));
 		
 		sensor.calculateCurrentMeasure(measure);
 		log.info("Current Measure ["+measure.getType()+"]: " + measure.getPayload());

@@ -1,0 +1,38 @@
+kind: List
+apiVersion: v1
+items:
+- kind: Task
+  apiVersion: tekton.dev/v1alpha1
+  metadata:
+    name: copy-image-from-internal-to-external-registry
+  spec:
+    steps:
+    - name: skopeo-copy
+      image: quay.io/redhat-emea-ssa-team/skopeo-ubi:latest
+      command:
+        - skopeo
+      args:
+        - "copy"
+        - "--authfile=/pushsecret/.dockerconfigjson"
+        - "--src-tls-verify=false"
+        - "docker://image-registry.openshift-image-registry.svc:5000/iotdemo/iot-software-sensor"
+        - "docker://quay.io/manuela/iot-software-sensor"
+
+- kind: Pipeline
+  apiVersion: tekton.dev/v1alpha1
+  metadata:
+    name: iot-software-sensor-pipeline
+  spec:
+    tasks:
+      - name: push2quay
+        taskRef:
+          name: copy-image-from-internal-to-external-registry
+
+- kind: PipelineRun
+  apiVersion: tekton.dev/v1alpha1
+  metadata:
+    name: sensor-pipeline-run-1
+  spec:
+    serviceAccountName: pipeline
+    pipelineRef:
+      name: iot-software-sensor-pipeline

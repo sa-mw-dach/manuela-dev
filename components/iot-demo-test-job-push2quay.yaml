@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: copy2quay
+  namespace: iotdemo
+spec:
+  template:
+    metadata:
+      name: copy2quay
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: skopeo-ubi
+          image: quay.io/redhat-emea-ssa-team/skopeo-ubi:latest
+          command:
+          - "/bin/sh"
+          - "-c"
+          - |
+              skopeo copy \
+              --authfile=/pushsecret/.dockerconfigjson \
+              --src-tls-verify=false \
+              --src-creds deployer:eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJpb3RkZW1vIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRlcGxveWVyLXRva2VuLXo4OHM0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImRlcGxveWVyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiNTgyYmRiZjYtM2UyYS0xMWVhLWFiNjUtNDI0MjQyNDIwMzExIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmlvdGRlbW86ZGVwbG95ZXIifQ.nSlwkbg1IODfWJkGQ4vzomYYwJ3mP3JIeJS2ZawZpS6iozmpcX17JYKL--5p2Q5TErFnP0MpG6Iu0PcEIQOyve7AgUOQ3n-q759wk0epvahz8j5AjkXkiwiKOf-J_cwXrOphGdhZ9jXk3byibtacSaepRUZM-cL_8U9g7E1LlHf-ZaIcYKW6gosdfToh7TJam4B9BYt3G_4LpLn3P52VTTMlCXqxlANwpUtMbRhcbSpSG97Us1oUNjUtj99kg-qY_SgvOMEmXqG_plIn8h_18kcTXzbjvqBmQ6VLp8cr-LArfHC7yUw2qY48wRJRbDXxKpqg7iPA41r2RF0AuMWpLA \
+              docker://image-registry.openshift-image-registry.svc:5000/iotdemo/iot-software-sensor \
+              docker://quay.io/manuela/iot-software-sensor
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /pushsecret
+              name: pushsecret
+              readOnly: true
+      volumes:
+        - name: pushsecret
+          secret:
+            secretName: quay-build-secret
