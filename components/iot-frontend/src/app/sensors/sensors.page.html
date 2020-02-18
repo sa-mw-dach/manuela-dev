@@ -7,9 +7,11 @@
 <ion-content color="light">
   <ion-grid>
     <ion-row>
+      <!--
       <ion-col size="6">
-        <img src="https://www.pumpsandsystems.com/sites/default/files/2015/Telog----Pump-Station---wireless.jpg" />
+        <img src="assets/pump.jpg" />
       </ion-col>
+      -->
       <ion-col *ngFor="let machineId of displayCharts" size="6">
         <div id="{{machineId}}" style="width:100%; height:400px;"></div>
       </ion-col>
