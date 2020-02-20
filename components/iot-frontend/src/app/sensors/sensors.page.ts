@@ -135,7 +135,7 @@ updateChartData() {
     && el.sensorId === tmp[1] && el.metricType === tmp[2]);
     // console.log(series);
     let sd = series.map(el => {
-      const point = {};
+      const point = {x: null, y: null};
       point.x = el.timestamp;
       point.y = el.value;
       return point;
@@ -190,7 +190,7 @@ ngOnInit() {
 
   setInterval(() => {
     this.updateChartData();
-  }, 1500);
+  }, 3000);
 
 }
 
