@@ -68,7 +68,14 @@ export class SensorsPage implements OnInit, OnDestroy {
                 enabled: true
             },
             enableMouseTracking: false
-        }
+        },
+        spline: {
+          marker: {
+              radius: 4,
+              lineColor: '#666666',
+              lineWidth: 2
+          }
+      }
       },
       series: [series]
     });
@@ -87,10 +94,10 @@ export class SensorsPage implements OnInit, OnDestroy {
     // save metric
     this.machineData.push(
       {
-        machineId: dataset[0], 
-        sensorId: dataset[1], 
-        metricType: metricType, 
-        value: Number(dataset[2]), 
+        machineId: dataset[0],
+        sensorId: dataset[1],
+        metricType: metricType,
+        value: Number(dataset[2]),
         timestamp: Number(dataset[3])
       }
     );
@@ -112,9 +119,11 @@ export class SensorsPage implements OnInit, OnDestroy {
 
   }
 
-  
-
 updateChartData() {
+  // console.log('DATA LENGTH: ' + this.machineData.length);
+  if (this.machineData.length > 200) {
+    this.machineData = this.machineData.slice(this.machineData.length - 200, this.machineData.length);
+  }
 
   this.displayCharts.forEach(data => {
     // console.log(data);
@@ -122,16 +131,30 @@ updateChartData() {
     // console.log(indexChart);
     const tmp = this.charts[indexChart].userOptions.title.text.split(',');
     // console.log(tmp);
-    const series = this.machineData.filter(data => data.machineId === tmp[0]
-    && data.sensorId === tmp[1] && data.metricType === tmp[2]);
+    const series = this.machineData.filter(el => el.machineId === tmp[0]
+    && el.sensorId === tmp[1] && el.metricType === tmp[2]);
     // console.log(series);
-    series.forEach(element => {
-      this.charts[indexChart].series[0].addPoint({x: element.timestamp, y: element.value});
+    let sd = series.map(el => {
+      const point = {};
+      point.x = el.timestamp;
+      point.y = el.value;
+      return point;
     });
-    
+    if (sd.length > 20) {
+      sd = sd.slice(sd.length - 20, sd.length);
+    }
+    // console.log(sd);
+    series.forEach(element => {
+      this.charts[indexChart].series[0].setData(sd, true, false, false);
+      /*
+      if (series.length > 20) {
+        this.charts[indexChart].series[0].addPoint({x: element.timestamp, y: element.value}, false, true);
+      } else {
+        this.charts[indexChart].series[0].addPoint({x: element.timestamp, y: element.value}, false);
+      }*/
+    });
+    // this.charts[indexChart].redraw(false);
   });
-    
-  
 
 }
 
@@ -165,9 +188,9 @@ ngOnInit() {
   });
   this.subscriptions.push(sub);
 
-  setInterval(()=>{
+  setInterval(() => {
     this.updateChartData();
-  }, 3000);
+  }, 1500);
 
 }
 
