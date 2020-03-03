@@ -1,0 +1,1 @@
+operator-sdk new networkpath --type ansible --kind NetworkPath --api-version manuela.redhat.com/v1alpha1
