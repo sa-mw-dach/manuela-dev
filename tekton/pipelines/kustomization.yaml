@@ -1,0 +1,7 @@
+resources:
+- consumer-pipeline.yaml
+- dashboard-pipeline.yaml
+- frontend-pipeline.yaml
+- sensor-pipeline.yaml
+
+

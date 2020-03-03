@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: iot-sensor-pipeline
+spec:
+  resources:
+  - name: sensor-git
+    type: git
+  - name: sensor-img
+    type: image  
+  tasks:
+  - name: build-sensor
+    taskRef:
+      name: s2i-java-8
+      kind: ClusterTask
+    resources:
+      inputs:
+        - name: source
+          resource: sensor-git
+      outputs:
+        - name: image
+          resource: sensor-img
+    params:
+      - name: TLSVERIFY
+        value: "false"
+      - name: PATH_CONTEXT
+        value: components/iot-software-sensor
+  - name: notify-ops-repo
+    taskRef: 
+      name: github-add-comment
+    runAfter:
+      - build-sensor  
+    params:
+      - name: REQUEST_URL
+        value: https://github.com/sa-mw-dach/manuela-gitops/issues/3 
+      - name: COMMENT
+        value: 'Tekton iot-sensor-pipeline: New version of quay.io/manuela/iot-software-sensor available.'         

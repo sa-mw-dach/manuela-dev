@@ -1,0 +1,6 @@
+resources:
+- consumer-img-pr.yaml
+- frontend-img-pr.yaml
+- manuela-git-pr.yaml
+- sensor-img-pr.yaml
+

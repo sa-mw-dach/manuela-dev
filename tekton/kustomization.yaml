@@ -1,0 +1,9 @@
+resources:
+- manuela-ci-namespace.yaml
+bases:
+- pipeline-resources
+- pipelines
+- secrets
+- tasks
+namespace: manuela-ci
+

@@ -1,0 +1,58 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: iot-dashboard-pipeline
+spec:
+  resources:
+  - name: manuela-git
+    type: git
+  - name: consumer-img
+    type: image
+  - name: frontend-img
+    type: image      
+  tasks:
+  - name: s2i-build-consumer
+    taskRef:
+      name: s2i-nodejs
+      kind: ClusterTask
+    resources:
+      inputs:
+        - name: source
+          resource: manuela-git
+      outputs:
+        - name: image
+          resource: consumer-img
+    params:
+      - name: TLSVERIFY
+        value: "false"
+      - name: PATH_CONTEXT
+        value: components/iot-consumer
+  - name: s2i-build-frontend
+    taskRef:
+      name: s2i
+      kind: ClusterTask
+    resources:
+      inputs:
+        - name: source
+          resource: manuela-git
+      outputs:
+        - name: image
+          resource: frontend-img
+    params:
+      - name: TLSVERIFY
+        value: "false"
+      - name: PATH_CONTEXT
+        value: components/iot-frontend
+      - name: BUILDER_IMAGE
+        value: nodeshift/ubi8-s2i-web-app
+  - name: notify-ops-repo
+    taskRef: 
+      name: github-add-comment
+    runAfter:
+      - s2i-build-consumer
+      - s2i-build-frontend  
+    params:
+      - name: REQUEST_URL
+        value: https://github.com/sa-mw-dach/manuela-gitops/issues/3 
+      - name: COMMENT
+        value: 'Tekton iot-dashboard-pipeline: New version of quay.io/manuela/iot-frontend and quay.io/manuela/iot-consumer available.'               

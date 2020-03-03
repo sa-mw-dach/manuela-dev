@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: iot-consumer-pipeline
+spec:
+  resources:
+  - name: consumer-git
+    type: git
+  - name: consumer-img
+    type: image    
+  tasks:
+  - name: build-consumer
+    taskRef:
+      name: s2i-nodejs
+      kind: ClusterTask
+    resources:
+      inputs:
+        - name: source
+          resource: consumer-git
+      outputs:
+        - name: image
+          resource: consumer-img
+    params:
+      - name: TLSVERIFY
+        value: "false"
+      - name: PATH_CONTEXT
+        value: components/iot-consumer         

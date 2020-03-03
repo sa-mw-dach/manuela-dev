@@ -1,0 +1,29 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: frontend-pipeline
+spec:
+  resources:
+  - name: frontend-git
+    type: git
+  - name: frontend-img
+    type: image    
+  tasks:
+  - name: build-frontend
+    taskRef:
+      name: s2i
+      kind: ClusterTask
+    resources:
+      inputs:
+        - name: source
+          resource: frontend-git
+      outputs:
+        - name: image
+          resource: frontend-img
+    params:
+      - name: TLSVERIFY
+        value: "false"
+      - name: PATH_CONTEXT
+        value: components/iot-frontend
+      - name: BUILDER_IMAGE
+        value: nodeshift/ubi8-s2i-web-app     

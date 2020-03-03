@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: manuela-git
+spec:
+  type: git
+  params:
+  - name: url
+    value: https://github.com/sa-mw-dach/manuela-dev
+  - name: revision
+    value: master
