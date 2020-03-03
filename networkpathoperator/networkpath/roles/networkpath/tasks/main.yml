@@ -4,6 +4,8 @@
   debug:
     msg: "name: {{ meta.name }} namespace: {{ meta.namespace }}"
 
+
+
 - name: update status
   operator_sdk.util.k8s_status:
     api_version: manuela.redhat.com/v1alpha1
