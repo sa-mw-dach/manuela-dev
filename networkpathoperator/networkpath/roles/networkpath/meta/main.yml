@@ -60,3 +60,4 @@ dependencies: []
   # if you add dependencies to this list.
 collections:
 - operator_sdk.util
+- pfsensible.core
