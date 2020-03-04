@@ -1,0 +1,22 @@
+kind: Task
+apiVersion: tekton.dev/v1alpha1
+metadata:
+  name: skopeo-copy
+spec:
+  inputs:
+    resources:
+    - name: remote-imgage
+      type: image 
+    - name: local-imgage
+      type: image
+  steps:
+  - name: skopeo-copy
+    image: quay.io/redhat-emea-ssa-team/skopeo-ubi:latest
+    command:
+      - skopeo
+    args:
+      - "copy"
+      - "--authfile=/pushsecret/.dockerconfigjson"
+      - "--src-tls-verify=false"
+      - "docker://$(inputs.resources.local-imgage.url)"
+      - "docker://$(inputs.resources.remote-imgage.url)"

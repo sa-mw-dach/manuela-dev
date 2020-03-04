@@ -4,9 +4,13 @@ metadata:
   name: iot-consumer-pipeline
 spec:
   resources:
-  - name: consumer-git
+  - name: gitops-repo
     type: git
-  - name: consumer-img
+  - name: remote-imgage
+    type: image 
+  - name: git-repo
+    type: git
+  - name: local-imgage
     type: image    
   tasks:
   - name: build-consumer
@@ -16,12 +20,64 @@ spec:
     resources:
       inputs:
         - name: source
-          resource: consumer-git
+          resource: git-repo
       outputs:
         - name: image
-          resource: consumer-img
+          resource: local-imgage
     params:
       - name: TLSVERIFY
         value: "false"
       - name: PATH_CONTEXT
-        value: components/iot-consumer         
+        value: components/iot-consumer
+      - name: VERSION
+        value: "10"   
+  - name: argocd-sync-application
+    taskRef:
+      name: argocd-task-sync-and-wait
+    runAfter:
+      - build-consumer  
+    params:
+      - name: application-name
+        value: manuela-stormshift-line-dashboard
+      - name: flags
+        value: --insecure
+      - name: argocd-version
+        value: "v1.4.1"        
+  - name: sensor-broker-test
+    taskRef:
+      name: mock
+      kind: Task
+    runAfter:
+      - argocd-sync-application  
+    params:
+      - name: MESSAGE
+        value: "succesfully sent messages to broker..."
+  - name: consumer-broker-test
+    taskRef:
+      name: mock
+      kind: Task
+    runAfter:
+      - argocd-sync-application  
+    params:
+      - name: MESSAGE
+        value: "succesfully processed messages from broker..."     
+  - name: consumer-frontend-test
+    taskRef:
+      name: mock
+      kind: Task
+    runAfter:
+      - argocd-sync-application  
+    params:
+      - name: MESSAGE
+        value: "succesfully executed Websocket APIs..."       
+  - name: e2e-test
+    taskRef:
+      name: mock
+      kind: Task
+    runAfter:
+      - sensor-broker-test
+      - consumer-broker-test 
+      - consumer-frontend-test 
+    params:
+      - name: MESSAGE
+        value: "e2e testsuite succesfully executed"      

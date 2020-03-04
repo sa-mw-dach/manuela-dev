@@ -1,9 +1,9 @@
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
 metadata:
-  name: sensor-image
+  name: quay-frontend-image
 spec:
   type: image
   params:
     - name: url
-      value: quay.io/manuela/iot-software-sensor
+      value: quay.io/manuela/iot-frontend
