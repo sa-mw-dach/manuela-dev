@@ -4,4 +4,11 @@ metadata:
   name: example-firewallrule
 spec:
   # Add fields here
-  size: 3
+  action: pass
+  interface: lan
+  ipprotocol: inet
+  protocol: udp
+  source: any
+  destination: any
+  destination_port: 53
+  after: top
