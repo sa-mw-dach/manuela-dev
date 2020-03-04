@@ -1,6 +1,9 @@
 resources:
-- consumer-img-pr.yaml
-- frontend-img-pr.yaml
+- ocp-consumer-img-pr.yaml
+- quay-consumer-img-pr.yaml
+- ocp-frontend-img-pr.yaml
+- quay-frontend-img-pr.yaml
 - manuela-git-pr.yaml
-- sensor-img-pr.yaml
+- ocp-sensor-img-pr.yaml
+- quay-sensor-img-pr.yaml
 
