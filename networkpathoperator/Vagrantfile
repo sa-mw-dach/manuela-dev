@@ -82,7 +82,7 @@ Vagrant.configure("2") do |config|
     sudo dnf -y install python3-ansible-runner
     sudo dnf -y install python3-kubernetes
     sudo dnf -y install python3-openshift
-    sudo ln -s /vagrant/networkpath /opt/ansible
+    sudo ln -s /vagrant/firewallrule /opt/ansible
 
     ansible-galaxy collection install operator_sdk.util
     ansible-galaxy collection install pfsensible.core
