@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: networkpath
+  name: firewallrule
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: networkpath
+      name: firewallrule
   template:
     metadata:
       labels:
-        name: networkpath
+        name: firewallrule
     spec:
-      serviceAccountName: networkpath
+      serviceAccountName: firewallrule
       containers:
         - name: ansible
           command:
@@ -20,7 +20,7 @@ spec:
           - /tmp/ansible-operator/runner
           - stdout
           # Replace this with the built image name
-          image: "quay.io/manuela/networkpathoperator:0.0.1"
+          image: "quay.io/manuela/firewallruleoperator:v0.0.1"
           imagePullPolicy: "Always"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
@@ -28,11 +28,14 @@ spec:
             readOnly: true
         - name: operator
           # Replace this with the built image name
-          image: "quay.io/manuela/networkpathoperator:0.0.1"
+          image: "quay.io/manuela/firewallruleoperator:v0.0.1"
           imagePullPolicy: "Always"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
             name: runner
+          - mountPath: "/tmp/inventory"
+            name: inventory
+            readOnly: true
           env:
             - name: WATCH_NAMESPACE
               valueFrom:
@@ -43,9 +46,13 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
-              value: "networkpath"
+              value: "firewallrule"
             - name: ANSIBLE_GATHERING
               value: explicit
       volumes:
         - name: runner
           emptyDir: {}
+        - name: inventory
+          secret: 
+            secretName: firewall-inventory
+            defaultMode: 256

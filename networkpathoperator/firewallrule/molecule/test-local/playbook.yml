@@ -3,7 +3,7 @@
 - name: Build Operator in Kubernetes docker container
   hosts: k8s
   vars:
-    image_name: manuela.redhat.com/networkpath:testing
+    image_name: manuela.redhat.com/firewallrule:testing
   tasks:
   # using command so we don't need to install any dependencies
   - name: Get existing image hash
@@ -23,8 +23,8 @@
     ansible_python_interpreter: '{{ ansible_playbook_python }}'
     deploy_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy"
     pull_policy: Never
-    REPLACE_IMAGE: manuela.redhat.com/networkpath:testing
-    custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'crds/manuela.redhat.com_v1alpha1_networkpath_cr.yaml'])) | from_yaml }}"
+    REPLACE_IMAGE: manuela.redhat.com/firewallrule:testing
+    custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'crds/manuela.redhat.com_v1alpha1_firewallrule_cr.yaml'])) | from_yaml }}"
   tasks:
   - block:
     - name: Delete the Operator Deployment
@@ -54,7 +54,7 @@
         namespace: '{{ namespace }}'
         definition: "{{ lookup('template', '/'.join([deploy_dir, 'operator.yaml'])) }}"
 
-    - name: Create the manuela.redhat.com/v1alpha1.NetworkPath
+    - name: Create the manuela.redhat.com/v1alpha1.FirewallRule
       k8s:
         state: present
         namespace: '{{ namespace }}'

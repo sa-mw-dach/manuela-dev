@@ -1,7 +1,7 @@
 apiVersion: manuela.redhat.com/v1alpha1
-kind: NetworkPath
+kind: FirewallRule
 metadata:
-  name: example-networkpath
+  name: example-firewallrule
 spec:
   # Add fields here
   size: 3

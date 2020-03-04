@@ -1,5 +1,0 @@
----
-- version: v1alpha1
-  group: manuela.redhat.com
-  kind: NetworkPath
-  playbook: /opt/ansible/playbook.yml

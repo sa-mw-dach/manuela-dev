@@ -6,22 +6,22 @@
   vars:
     ansible_python_interpreter: '{{ ansible_playbook_python }}'
     deploy_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy"
-    image_name: manuela.redhat.com/networkpath:testing
-    custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'crds/manuela.redhat.com_v1alpha1_networkpath_cr.yaml'])) | from_yaml }}"
+    image_name: manuela.redhat.com/firewallrule:testing
+    custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'crds/manuela.redhat.com_v1alpha1_firewallrule_cr.yaml'])) | from_yaml }}"
   tasks:
-  - name: Create the manuela.redhat.com/v1alpha1.NetworkPath
+  - name: Create the manuela.redhat.com/v1alpha1.FirewallRule
     k8s:
       namespace: '{{ namespace }}'
-      definition: "{{ lookup('file', '/'.join([deploy_dir, 'crds/manuela.redhat.com_v1alpha1_networkpath_cr.yaml'])) }}"
+      definition: "{{ lookup('file', '/'.join([deploy_dir, 'crds/manuela.redhat.com_v1alpha1_firewallrule_cr.yaml'])) }}"
 
   - name: Get the newly created Custom Resource
     debug:
-      msg: "{{ lookup('k8s', group='manuela.redhat.com', api_version='v1alpha1', kind='NetworkPath', namespace=namespace, resource_name=custom_resource.metadata.name) }}"
+      msg: "{{ lookup('k8s', group='manuela.redhat.com', api_version='v1alpha1', kind='FirewallRule', namespace=namespace, resource_name=custom_resource.metadata.name) }}"
 
   - name: Wait 2m for reconciliation to run
     k8s_info:
       api_version: 'v1alpha1'
-      kind: 'NetworkPath'
+      kind: 'FirewallRule'
       namespace: '{{ namespace }}'
       name: '{{ custom_resource.metadata.name }}'
     register: reconcile_cr

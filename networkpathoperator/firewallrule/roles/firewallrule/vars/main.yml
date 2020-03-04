@@ -1,0 +1,5 @@
+---
+# vars file for firewallrule
+meta:
+  name: test
+  namespace: test
