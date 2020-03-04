@@ -1,0 +1,11 @@
+== OSX ==
+operator-sdk new firewallrule --type ansible --kind FirewallRule --api-version manuela.redhat.com/v1alpha1 --generate-playbook
+###ansible-galaxy collection install pfsensible.core -p networkpath/collections/ansible_collections
+sed -i "" 's|{{ REPLACE_IMAGE }}|quay.io/manuela/firewallruleoperator:v0.0.1|g' deploy/operator.yaml
+sed -i "" 's/{{ pull_policy.* }}/Always/g' deploy/operator.yaml
+
+=== VAGRANT ===
+cd firewallrule
+sudo operator-sdk build quay.io/manuela/firewallruleoperator:v0.0.1
+sudo docker push quay.io/manuela/firewallruleoperator:v0.0.1
+oc apply -k deploy

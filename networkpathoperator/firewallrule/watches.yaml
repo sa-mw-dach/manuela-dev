@@ -1,0 +1,9 @@
+---
+- version: v1alpha1
+  group: manuela.redhat.com
+  kind: FirewallRule
+  playbook: /opt/ansible/playbook.yml
+  finalizer:
+    name: finalizer.manuela.redhat.com
+    vars:
+      state: absent

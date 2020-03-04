@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firewallrule
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: firewallrule
+  template:
+    metadata:
+      labels:
+        name: firewallrule
+    spec:
+      serviceAccountName: firewallrule
+      containers:
+        - name: ansible
+          command:
+          - /usr/local/bin/ao-logs
+          - /tmp/ansible-operator/runner
+          - stdout
+          # Replace this with the built image name
+          image: "quay.io/manuela/firewallruleoperator:v0.0.1"
+          imagePullPolicy: "Always"
+          volumeMounts:
+          - mountPath: /tmp/ansible-operator/runner
+            name: runner
+            readOnly: true
+        - name: operator
+          # Replace this with the built image name
+          image: "quay.io/manuela/firewallruleoperator:v0.0.1"
+          imagePullPolicy: "Always"
+          volumeMounts:
+          - mountPath: /tmp/ansible-operator/runner
+            name: runner
+          - mountPath: "/tmp/inventory"
+            name: inventory
+            readOnly: true
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "firewallrule"
+            - name: ANSIBLE_GATHERING
+              value: explicit
+      volumes:
+        - name: runner
+          emptyDir: {}
+        - name: inventory
+          secret: 
+            secretName: firewall-inventory
+            defaultMode: 256

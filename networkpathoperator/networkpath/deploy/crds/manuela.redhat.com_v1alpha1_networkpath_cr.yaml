@@ -1,7 +1,0 @@
-apiVersion: manuela.redhat.com/v1alpha1
-kind: NetworkPath
-metadata:
-  name: example-networkpath
-spec:
-  # Add fields here
-  size: 3
