@@ -49,13 +49,7 @@ spec:
         echo 'Output written to $(inputs.params.TMP_PATCHED_FILE)'
         echo ''
         cat $(inputs.params.TMP_PATCHED_FILE)
-    workingdir: /workspace/source
-  - name: overwrite-patched-file
-    image: alpine/git
-    script: "mv $@"
-    args:
-    - "$(inputs.params.TMP_PATCHED_FILE)" 
-    - "$(inputs.params.RESOURCE_PATH)"
+        mv $(inputs.params.TMP_PATCHED_FILE) $(inputs.params.RESOURCE_PATH)
     workingdir: /workspace/source
   - name: git-push
     image: alpine/git
@@ -67,6 +61,6 @@ spec:
         echo ''
         echo 'Adding $(inputs.params.RESOURCE_PATH) to git index'
         git add $(inputs.params.RESOURCE_PATH)
-        git commit -m '$(inputs.params.GIT_COMMEN)T'
-        git push
+        git commit -m '$(inputs.params.GIT_COMMENT)'
+        #git push
     workingdir: /workspace/source
