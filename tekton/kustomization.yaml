@@ -1,5 +1,6 @@
 resources:
 - manuela-ci-namespace.yaml
+- pipeline-sa.yaml
 bases:
 - pipeline-resources
 - pipelines

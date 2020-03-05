@@ -5,9 +5,9 @@ metadata:
 spec:
   inputs:
     resources:
-    - name: remote-imgage
+    - name: remote-image
       type: image 
-    - name: local-imgage
+    - name: local-image
       type: image
   steps:
   - name: skopeo-copy
@@ -18,5 +18,5 @@ spec:
       - "copy"
       - "--authfile=/pushsecret/.dockerconfigjson"
       - "--src-tls-verify=false"
-      - "docker://$(inputs.resources.local-imgage.url)"
-      - "docker://$(inputs.resources.remote-imgage.url)"
+      - "docker://$(inputs.resources.local-image.url)"
+      - "docker://$(inputs.resources.remote-image.url)"

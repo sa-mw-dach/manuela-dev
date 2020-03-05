@@ -24,14 +24,4 @@ spec:
       - name: TLSVERIFY
         value: "false"
       - name: PATH_CONTEXT
-        value: components/iot-software-sensor
-  - name: notify-ops-repo
-    taskRef: 
-      name: github-add-comment
-    runAfter:
-      - build-sensor  
-    params:
-      - name: REQUEST_URL
-        value: https://github.com/sa-mw-dach/manuela-gitops/issues/3 
-      - name: COMMENT
-        value: 'Tekton iot-sensor-pipeline: New version of quay.io/manuela/iot-software-sensor available.'         
+        value: components/iot-software-sensor     

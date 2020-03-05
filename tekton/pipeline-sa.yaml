@@ -1,0 +1,8 @@
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: pipeline
+secrets:
+  - name: argocd-env-secret
+  - name: quay-build-secret
+  - name: github

@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
-  name: frontend-pipeline
+  name: iot-frontend-pipeline
 spec:
   resources:
   - name: frontend-git

@@ -6,11 +6,11 @@ spec:
   resources:
   - name: gitops-repo
     type: git
-  - name: remote-imgage
+  - name: remote-image
     type: image 
   - name: git-repo
     type: git
-  - name: local-imgage
+  - name: local-image
     type: image    
   tasks:
   - name: build-consumer
@@ -23,7 +23,7 @@ spec:
           resource: git-repo
       outputs:
         - name: image
-          resource: local-imgage
+          resource: local-image
     params:
       - name: TLSVERIFY
         value: "false"
@@ -31,14 +31,23 @@ spec:
         value: components/iot-consumer
       - name: VERSION
         value: "10"   
+  - name: modify-gitops
+    taskRef:
+      name: mock
+      kind: Task
+    runAfter:
+      - build-consumer  
+    params:
+      - name: MESSAGE
+        value: "succesfully patched deployment config...."      
   - name: argocd-sync-application
     taskRef:
       name: argocd-task-sync-and-wait
     runAfter:
-      - build-consumer  
+      - modify-gitops  
     params:
       - name: application-name
-        value: manuela-stormshift-line-dashboard
+        value: manuela-tst-all
       - name: flags
         value: --insecure
       - name: argocd-version
@@ -80,4 +89,27 @@ spec:
       - consumer-frontend-test 
     params:
       - name: MESSAGE
-        value: "e2e testsuite succesfully executed"      
+        value: "e2e testsuite succesfully executed"
+  - name: push-to-quay
+    taskRef:
+      name: skopeo-copy
+      kind: Task
+    runAfter:
+      - e2e-test 
+    resources:
+      inputs:
+        - name: local-image
+          resource: local-image
+        - name: remote-image
+          resource: remote-image
+  - name: notify-gitops
+    taskRef: 
+      name: github-add-comment
+    runAfter:
+      - push-to-quay  
+    params:
+      - name: REQUEST_URL
+        value: https://github.com/sa-mw-dach/manuela-gitops/issues/3 
+      - name: COMMENT
+        value: "Tekton iot-consumer-pipeline: New version of quay.io/manuela/iot-consumer available."          
+        

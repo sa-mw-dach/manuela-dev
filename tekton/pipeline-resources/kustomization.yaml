@@ -4,6 +4,7 @@ resources:
 - ocp-frontend-img-pr.yaml
 - quay-frontend-img-pr.yaml
 - manuela-git-pr.yaml
+- manuela-gitops-pr.yaml
 - ocp-sensor-img-pr.yaml
 - quay-sensor-img-pr.yaml
 
