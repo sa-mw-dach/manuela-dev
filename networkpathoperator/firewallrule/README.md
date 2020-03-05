@@ -50,7 +50,8 @@ To deploy the operator onto a kubernetes cluster follow the steps below (Note: a
 6. In your pfSense firewall instance, enable ssh and register the public key for the root user in /root/.ssh/authorized_keys
 7. Copy & adjust the [sample firewall secret](deploy/firewall-inventory-secret-example.yaml) as ```firewall-inventory-secret.yaml```to include the ssh private key, the firewall access username (e.g. root) and the firewall's DNS name or IP address
 8. Instantiate the secret using ```kubectl apply -f deploy/firewall-inventory-secret.yaml```
-9. Create the operator deployment via ```kubectl apply -f deploy/operator.yaml```
+9. If necessary, update the operator image name/tag in the [deploy/operator.yaml](deploy/operator.yaml)
+10. Create the operator deployment via ```kubectl apply -f deploy/operator.yaml```
 
 ## Undeploying the operator from Kubernetes
 
