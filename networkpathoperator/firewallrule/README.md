@@ -30,14 +30,15 @@ If you are developing outside of Vagrant, you need to ensure that:
 * operator-sdk and ansible are installed
 * the following python modules are installed: python3-ansible-runner, python3-kubernetes, python3-openshift
 * the following ansible modules are avialable from ansible-galaxy: operator_sdk.util, pfsensible.core
+* the inventory files hostname, ansible_user and privatekey are available in /tmp/inventory (see [deploy/firewall-inventory-secret-example.yaml](deploy/firewall-inventory-secret-example.yaml))
 
 ## Building the Operator Container Image
 To build the operator as container image follow the steps below:
 1. Create a repository in your container registry, e.g. quay.io
 2. Ensure that your environment has docker (or a comparable OCI container build tool) installed
 3. Log into your container registry (e.g. via docker login)
-4. Build the container image by executing ```operator-sdk build your.registry/namespace/imagename:tag``` with your selection of registry/namespace/imagename/tag 
-5. Push the container image to the registry by executing ```docker push your.registry/namespace/imagename:tag```
+4. Build the container image by executing ```sudo operator-sdk build your.registry/namespace/imagename:tag``` with your selection of registry/namespace/imagename/tag 
+5. Push the container image to the registry by executing ```sudo docker push your.registry/namespace/imagename:tag```
 
 ## Deploying the operator to Kubernetes
 To deploy the operator onto a kubernetes cluster follow the steps below (Note: a deployment via OLM is not yet implemented):
