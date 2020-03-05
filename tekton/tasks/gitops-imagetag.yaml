@@ -1,0 +1,72 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: gitops-imagetag
+spec:
+  inputs:
+    params:
+    - name: GIT_USERNAME
+      description: The username to be used for the git commit.
+      type: string
+      default: "Tekton gitops-imagetag"
+    - name: GIT_EMAIL
+      description: The email to be used for the git commit.
+      type: string
+      default: "manuela-team@redhat.com"
+    - name: GIT_COMMENT
+      description: The comment to be used for the git commit.
+      type: string
+      default: "Image tag updated by Tekton task gitops-imagetag"
+    - name: TMP_PATCHED_FILE
+      description: The name of the temporary patch result file. Internal. 
+      type: string
+      default: "resource_patched.yaml"
+    - name: RESOURCE_PATH
+      description: The path of the resource to be patched.
+      type: string
+      default: "config/templates/manuela-dev/messaging/messaging-is.yaml"
+    - name: PATCH_COMMAND
+      description: The patch command to apply to the resource.
+      type: string
+      default: '{"spec":{"tags":[{"name":"latest","from":{"name":"iot-consumer:latest2"}}]}}'
+    resources:
+    - name: source
+      type: git
+  steps:
+  - name: patch-imagetag
+    image: quay.io/openshift/origin-cli:4.3.0
+    script: |
+        #!/usr/bin/env bash
+        oc version
+        echo ''
+        echo 'Patching $(inputs.params.RESOURCE_PATH)'
+        echo ''
+        cat $(inputs.params.RESOURCE_PATH)
+        echo ''
+        echo 'Patch command is $(inputs.params.PATCH_COMMAND)'
+        oc patch --local=true --output='yaml' --patch='$(inputs.params.PATCH_COMMAND)' --filename=$(inputs.params.RESOURCE_PATH) > $(inputs.params.TMP_PATCHED_FILE)
+        echo ''
+        echo 'Output written to $(inputs.params.TMP_PATCHED_FILE)'
+        echo ''
+        cat $(inputs.params.TMP_PATCHED_FILE)
+    workingdir: /workspace/source
+  - name: overwrite-patched-file
+    image: alpine/git
+    script: "mv $@"
+    args:
+    - "$(inputs.params.TMP_PATCHED_FILE)" 
+    - "$(inputs.params.RESOURCE_PATH)"
+    workingdir: /workspace/source
+  - name: git-push
+    image: alpine/git
+    script: |
+        #!/usr/bin/env sh
+        git version
+        git config --global user.email "$(inputs.params.GIT_EMAIL)"
+        git config --global user.name "$(inputs.params.GIT_USERNAME)"
+        echo ''
+        echo 'Adding $(inputs.params.RESOURCE_PATH) to git index'
+        git add $(inputs.params.RESOURCE_PATH)
+        git commit -m '$(inputs.params.GIT_COMMEN)T'
+        git push
+    workingdir: /workspace/source
