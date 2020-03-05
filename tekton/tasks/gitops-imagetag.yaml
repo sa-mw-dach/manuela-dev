@@ -49,6 +49,8 @@ spec:
         echo 'Output written to $(inputs.params.TMP_PATCHED_FILE)'
         echo ''
         cat $(inputs.params.TMP_PATCHED_FILE)
+        echo ''
+        echo 'Replacing $(inputs.params.RESOURCE_PATH) with $(inputs.params.TMP_PATCHED_FILE)'
         mv $(inputs.params.TMP_PATCHED_FILE) $(inputs.params.RESOURCE_PATH)
     workingdir: /workspace/source
   - name: git-push
