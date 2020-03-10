@@ -1,0 +1,29 @@
+kind: Task
+apiVersion: tekton.dev/v1alpha1
+metadata:
+  name: bumpversion
+spec:
+  inputs:
+    resources:
+      - name: source
+        type: git
+        targetPath: git-repo
+    params:
+      - name: PATH_CONTEXT
+        type: string
+#  results:
+#    - name: new-version
+#      description: The current date in unix timestamp format
+  steps:
+  - name: bumpversion
+    image: quay.io/dfroehli/bumpversiontask:latest
+    script: |
+      #!/usr/bin/env bash
+      cd git-repo/$(inputs.params.PATH_CONTEXT)/
+      bump2version --commit patch VERSION
+
+#  - name: git-push
+#    image: alpine/git
+#    script: |
+#        #!/usr/bin/env sh
+#        git push

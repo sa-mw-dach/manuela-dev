@@ -4,3 +4,4 @@ resources:
 - tkn-task.yaml
 - argocd-task.yaml
 - skopeo-copy-task.yaml
+- bumpversion-task.yaml
