@@ -5,3 +5,4 @@ resources:
 - argocd-task.yaml
 - skopeo-copy-task.yaml
 - bumpversion-task.yaml
+- gitops-imagetag.yaml

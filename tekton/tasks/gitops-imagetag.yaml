@@ -8,7 +8,7 @@ spec:
     - name: GIT_USERNAME
       description: The username to be used for the git commit.
       type: string
-      default: "Tekton gitops-imagetag"
+      default: "manuela-tekton"
     - name: GIT_EMAIL
       description: The email to be used for the git commit.
       type: string
@@ -28,7 +28,7 @@ spec:
     - name: PATCH_COMMAND
       description: The patch command to apply to the resource.
       type: string
-      default: '{"spec":{"tags":[{"name":"latest","from":{"name":"iot-consumer:latest2"}}]}}'
+      default: '{"spec":{"tags":[{"name":"latest","from":{"name":"iot-consumer:latest"}}]}}'
     resources:
     - name: source
       type: git
@@ -55,8 +55,16 @@ spec:
     workingdir: /workspace/source
   - name: git-push
     image: alpine/git
+    env:
+      - name: GITHUBTOKEN
+        valueFrom:
+          secretKeyRef:
+            name: github
+            key: token
     script: |
         #!/usr/bin/env sh
+        echo "https://ortwinschneider:$GITHUBTOKEN@github.com" > ~/.git-credentials
+        git config --global credential.helper store 'store --file ~/.git-credentials'
         git version
         git config --global user.email "$(inputs.params.GIT_EMAIL)"
         git config --global user.name "$(inputs.params.GIT_USERNAME)"
@@ -64,5 +72,5 @@ spec:
         echo 'Adding $(inputs.params.RESOURCE_PATH) to git index'
         git add $(inputs.params.RESOURCE_PATH)
         git commit -m '$(inputs.params.GIT_COMMENT)'
-        #git push
+        git push --set-upstream origin master
     workingdir: /workspace/source

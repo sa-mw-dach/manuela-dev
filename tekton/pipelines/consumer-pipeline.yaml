@@ -111,5 +111,5 @@ spec:
       - name: REQUEST_URL
         value: https://github.com/sa-mw-dach/manuela-gitops/issues/3 
       - name: COMMENT
-        value: "Tekton iot-consumer-pipeline: New version of quay.io/manuela/iot-consumer available."          
+        value: Tekton iot-consumer-pipeline; There is a new version of quay.io/manuela/iot-consumer available.     
         
