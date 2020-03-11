@@ -7,11 +7,11 @@ spec:
   - name: gitops-repo
     type: git
   - name: remote-image
-    type: image 
+    type: image
   - name: git-repo
     type: git
   - name: local-image
-    type: image    
+    type: image
   tasks:
   - name: build-consumer
     taskRef:
@@ -30,34 +30,49 @@ spec:
       - name: PATH_CONTEXT
         value: components/iot-consumer
       - name: VERSION
-        value: "10"   
+        value: "10"
+
+  - name: bumpversion
+    taskRef:
+      name: bumpversion
+    resources:
+      inputs:
+        - name: source
+          resource: git-repo
+    params:
+      - name: PATH_CONTEXT
+        value: components/iot-consumer
+    runAfter:
+      - build-consumer
+
   - name: modify-gitops
     taskRef:
       name: mock
       kind: Task
     runAfter:
-      - build-consumer  
+      - bumpversion
     params:
       - name: MESSAGE
-        value: "succesfully patched deployment config...."      
+        value: "succesfully patched deployment config...."
+        
   - name: argocd-sync-application
     taskRef:
       name: argocd-task-sync-and-wait
     runAfter:
-      - modify-gitops  
+      - modify-gitops
     params:
       - name: application-name
         value: manuela-tst-all
       - name: flags
         value: --insecure
       - name: argocd-version
-        value: "v1.4.1"        
+        value: "v1.4.1"
   - name: sensor-broker-test
     taskRef:
       name: mock
       kind: Task
     runAfter:
-      - argocd-sync-application  
+      - argocd-sync-application
     params:
       - name: MESSAGE
         value: "succesfully sent messages to broker..."
@@ -66,27 +81,27 @@ spec:
       name: mock
       kind: Task
     runAfter:
-      - argocd-sync-application  
+      - argocd-sync-application
     params:
       - name: MESSAGE
-        value: "succesfully processed messages from broker..."     
+        value: "succesfully processed messages from broker..."
   - name: consumer-frontend-test
     taskRef:
       name: mock
       kind: Task
     runAfter:
-      - argocd-sync-application  
+      - argocd-sync-application
     params:
       - name: MESSAGE
-        value: "succesfully executed Websocket APIs..."       
+        value: "succesfully executed Websocket APIs..."
   - name: e2e-test
     taskRef:
       name: mock
       kind: Task
     runAfter:
       - sensor-broker-test
-      - consumer-broker-test 
-      - consumer-frontend-test 
+      - consumer-broker-test
+      - consumer-frontend-test
     params:
       - name: MESSAGE
         value: "e2e testsuite succesfully executed"
@@ -95,7 +110,7 @@ spec:
       name: skopeo-copy
       kind: Task
     runAfter:
-      - e2e-test 
+      - e2e-test
     resources:
       inputs:
         - name: local-image
@@ -103,13 +118,12 @@ spec:
         - name: remote-image
           resource: remote-image
   - name: notify-gitops
-    taskRef: 
+    taskRef:
       name: github-add-comment
     runAfter:
-      - push-to-quay  
+      - push-to-quay
     params:
       - name: REQUEST_URL
-        value: https://github.com/sa-mw-dach/manuela-gitops/issues/3 
+        value: https://github.com/sa-mw-dach/manuela-gitops/issues/3
       - name: COMMENT
-        value: Tekton iot-consumer-pipeline; There is a new version of quay.io/manuela/iot-consumer available.     
-        
+        value: Tekton iot-consumer-pipeline; There is a new version of quay.io/manuela/iot-consumer available.
