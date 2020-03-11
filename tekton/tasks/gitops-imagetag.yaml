@@ -56,14 +56,19 @@ spec:
   - name: git-push
     image: alpine/git
     env:
-      - name: GITHUBTOKEN
+      - name: GITHUB_TOKEN
         valueFrom:
           secretKeyRef:
             name: github
             key: token
+      - name: GITHUB_USER
+        valueFrom:
+          secretKeyRef:
+            name: github
+            key: user      
     script: |
         #!/usr/bin/env sh
-        echo "https://ortwinschneider:$GITHUBTOKEN@github.com" > ~/.git-credentials
+        echo "https://$GITHUB_USER:$GITHUB_TOKEN@github.com" > ~/.git-credentials
         git config --global credential.helper store 'store --file ~/.git-credentials'
         git version
         git config --global user.email "$(inputs.params.GIT_EMAIL)"
