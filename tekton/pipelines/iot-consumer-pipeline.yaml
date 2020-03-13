@@ -31,7 +31,6 @@ spec:
         value: components/iot-consumer
       - name: VERSION
         value: "10"
-
   - name: bumpversion
     taskRef:
       name: bumpversion
@@ -44,17 +43,32 @@ spec:
         value: components/iot-consumer
     runAfter:
       - build-consumer
-
-  - name: modify-gitops
+  - name: tag-local-image 
     taskRef:
-      name: mock
-      kind: Task
+      name: skopeo-tag-image
+    resources:
+      inputs:
+        - name: source
+          resource: git-repo
+        - name: image
+          resource: local-image  
+    params:
+      - name: PATH_CONTEXT
+        value: components/iot-consumer
     runAfter:
       - bumpversion
-    params:
-      - name: MESSAGE
-        value: "succesfully patched deployment config...."
-        
+  - name: modify-gitops
+    taskRef:
+      name: gitops-imagetag
+      kind: Task
+    runAfter:
+      - tag-local-image
+    resources:
+      inputs:
+        - name: source-semver
+          resource: git-repo
+        - name: source
+          resource: gitops-repo    
   - name: argocd-sync-application
     taskRef:
       name: argocd-task-sync-and-wait
@@ -113,13 +127,18 @@ spec:
       - e2e-test
     resources:
       inputs:
+        - name: source
+          resource: git-repo
         - name: local-image
           resource: local-image
         - name: remote-image
           resource: remote-image
+    params:
+    - name: PATH_CONTEXT
+      value: components/iot-consumer    
   - name: notify-gitops
     taskRef:
-      name: github-add-comment
+      name: github-add-comment 
     runAfter:
       - push-to-quay
     params:

@@ -19,7 +19,6 @@ spec:
         description: The email to be used for the git commit.
         type: string
         default: "manuela-team@redhat.com"
-
 #  results:
 #    - name: new-version
 #      description: The current date in unix timestamp format
@@ -30,7 +29,6 @@ spec:
       #!/usr/bin/env bash
       cd git-repo/$(inputs.params.PATH_CONTEXT)/
       bump2version --commit build VERSION
-
   - name: push-version-to-git
     image: alpine/git
     env:

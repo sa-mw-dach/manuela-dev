@@ -1,0 +1,25 @@
+kind: Task
+apiVersion: tekton.dev/v1alpha1
+metadata:
+  name: skopeo-copy
+spec:
+  inputs:
+    resources:
+    - name: source
+      type: git
+      targetPath: git-repo
+    - name: remote-image
+      type: image 
+    - name: local-image
+      type: image
+    params:
+    - name: PATH_CONTEXT
+      type: string  
+  steps:
+  - name: skopeo-copy
+    image: quay.io/redhat-emea-ssa-team/skopeo-ubi:latest
+    script: |
+      #!/usr/bin/env bash
+      cd git-repo/$(inputs.params.PATH_CONTEXT)/
+      export SEMVER=$(cat VERSION)
+      skopeo copy --authfile=/pushsecret/.dockerconfigjson --src-tls-verify=false --dest-tls-verify=false docker://$(inputs.resources.local-image.url):$SEMVER docker://$(inputs.resources.remote-image.url):$SEMVER

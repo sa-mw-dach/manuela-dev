@@ -1,8 +1,8 @@
 resources:
-- github-add-comment-task.yaml
-- mock-task.yaml
-- tkn-task.yaml
-- argocd-task.yaml
-- skopeo-copy-task.yaml
-- bumpversion-task.yaml
+- argocd-task-sync-and-wait.yaml
+- bumpversion.yaml
+- github-add-comment.yaml
 - gitops-imagetag.yaml
+- mock.yaml
+- skopeo-copy.yaml
+- skopeo-tag-image.yaml

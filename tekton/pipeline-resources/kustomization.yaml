@@ -1,10 +1,10 @@
 resources:
-- ocp-consumer-img-pr.yaml
-- quay-consumer-img-pr.yaml
-- ocp-frontend-img-pr.yaml
-- quay-frontend-img-pr.yaml
-- manuela-git-pr.yaml
-- manuela-gitops-pr.yaml
-- ocp-sensor-img-pr.yaml
-- quay-sensor-img-pr.yaml
+- manuela-git.yaml
+- manuela-gitops.yaml
+- ocp-consumer-image.yaml
+- quay-consumer-image.yaml
+- ocp-frontend-image.yaml
+- quay-frontend-image.yaml
+- ocp-sensor-image.yaml
+- quay-sensor-image.yaml
 
