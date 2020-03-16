@@ -71,10 +71,18 @@ function handleLight(message) {
 
 function handleTemperature(message) {
     console.log('handleTemperature data %s', message);
-    io.sockets.emit("temperature-event", message);
-    // check for temperature threshold
     var data = ab2str(message);
     const elements = data.split(',');
+    
+    // Demo usecase: uncomment to multiply sensor values by two
+    /*
+    var modifiedValue = Number(elements[2]) * 2;
+    var newData = data.replace(elements[2], modifiedValue);
+    message = Buffer.from(newData, 'utf8');
+    */ 
+
+    io.sockets.emit("temperature-event", message);
+    // check for temperature threshold
     if(Number(elements[2]) > temperature_threshold) {
         console.log('temperature alert!!!');
         io.sockets.emit("temperature-alert", message);

@@ -86,9 +86,9 @@ export class SensorsPage implements OnInit, OnDestroy {
     return this.decoder.decode(new Uint8Array(buf));
   }
 
-  private handleMachineData(data, metricType: string) {
+  private handleMachineData(data, metricTyp: string) {
     const dataset = this.ab2str(data).split(',');
-    const chartTitle = dataset[0] + ',' +dataset[1] + ',' + metricType;
+    const chartTitle = dataset[0] + ',' + dataset[1] + ',' + metricTyp;
     // used in UI to setup divs
     this.displayCharts.add(chartTitle);
     // save metric
@@ -96,7 +96,7 @@ export class SensorsPage implements OnInit, OnDestroy {
       {
         machineId: dataset[0],
         sensorId: dataset[1],
-        metricType: metricType,
+        metricType: metricTyp,
         value: Number(dataset[2]),
         timestamp: Number(dataset[3])
       }
@@ -105,9 +105,9 @@ export class SensorsPage implements OnInit, OnDestroy {
     // check if chart exists (one chart per machine)
     const m = this.charts.filter(el => el.userOptions.title.text === chartTitle);
     if (m.length === 0) {
-      const unit = metricType === 'vibration' ? 'mm/s' : 'Celsius';
+      const unit = metricTyp === 'vibration' ? 'mm/s' : 'Celsius';
       const series = {
-        name: metricType,
+        name: metricTyp,
         type: undefined,
         data: []
       };
