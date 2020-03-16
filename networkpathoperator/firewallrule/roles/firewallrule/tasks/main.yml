@@ -9,8 +9,9 @@
     ipprotocol: "{{ ipprotocol }}"
     protocol: "{{ protocol }}"
     source: "{{ source }}"
+    source_port: "{{ source_port|default(None, true) }}"
     destination: "{{ destination }}"
-    destination_port: "{{ destination_port }}"
+    destination_port: "{{ destination_port|default(None, true) }}"
     after: "{{ after }}"
     state: "{{ state|default('present',true) }}"
 

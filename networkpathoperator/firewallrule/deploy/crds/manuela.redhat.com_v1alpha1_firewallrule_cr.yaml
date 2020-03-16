@@ -10,6 +10,6 @@ spec:
   protocol: udp
   source: any
   destination: any
-  destination_port: 53
+  destination_port: '53'
   after: top
   
