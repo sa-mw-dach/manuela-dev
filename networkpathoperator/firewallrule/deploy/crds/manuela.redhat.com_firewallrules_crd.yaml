@@ -16,6 +16,46 @@ spec:
     openAPIV3Schema:
       type: object
       x-kubernetes-preserve-unknown-fields: true
+      properties:
+        spec:
+          type: object
+          properties:
+            action:
+              type: string
+              enum:
+              - pass
+              - block
+              - reject
+            interface: 
+              type: string
+            ipprotocol: 
+              type: string
+              enum:
+              - inet
+              - inet46
+              - inet6
+            protocol: 
+              type: string
+              enum:
+              - any
+              - tcp
+              - udp
+              - tcp/udp
+              - icmp
+              - igmp
+              - ospf
+            source:
+              type: string
+            destination:
+              type: string
+            source_port: 
+              type: string
+              pattern: '^\d+|None$'
+            destination_port:
+              type: string
+              pattern: '^\d+|None$'
+            after: 
+              type: string
   versions:
   - name: v1alpha1
     served: true
