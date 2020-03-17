@@ -20,7 +20,7 @@ var mqtt_password = process.env.MQTT_PASSWORD || "iotuser";
 // threshold
 const temperature_threshold = process.env.TEMPERATURE_THRESHOLD || 70.0;
 
-// setup application 
+// setup application
 var mqtt = require('mqtt')
 const compression = require('compression');
 const express = require('express');
@@ -73,13 +73,13 @@ function handleTemperature(message) {
     console.log('handleTemperature data %s', message);
     var data = ab2str(message);
     const elements = data.split(',');
-    
+
     // Demo usecase: uncomment to multiply sensor values by two
-    /*
+
     var modifiedValue = Number(elements[2]) * 2;
     var newData = data.replace(elements[2], modifiedValue);
     message = Buffer.from(newData, 'utf8');
-    */ 
+
 
     io.sockets.emit("temperature-event", message);
     // check for temperature threshold
