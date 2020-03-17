@@ -75,11 +75,11 @@ function handleTemperature(message) {
     const elements = data.split(',');
 
     // Demo usecase: uncomment to multiply sensor values by two
-
+    /*
     var modifiedValue = Number(elements[2]) * 2;
     var newData = data.replace(elements[2], modifiedValue);
     message = Buffer.from(newData, 'utf8');
-
+    */
 
     io.sockets.emit("temperature-event", message);
     // check for temperature threshold
