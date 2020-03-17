@@ -74,12 +74,14 @@ function handleTemperature(message) {
     var data = ab2str(message);
     const elements = data.split(',');
 
-    // Demo usecase: uncomment to multiply sensor values by two
-    /*
-    var modifiedValue = Number(elements[2]) * 2;
+    // Demo usecase:
+    // - Someboday added a Celsius in Fahrenheit conversion
+    // - Fix it by commenting out the conversion from Celsius in Fahrenheit
+
+    var modifiedValue = (Number(elements[2]) * 9/5) + 32;
     var newData = data.replace(elements[2], modifiedValue);
     message = Buffer.from(newData, 'utf8');
-    */
+
 
     io.sockets.emit("temperature-event", message);
     // check for temperature threshold
