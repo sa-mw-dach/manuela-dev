@@ -3,5 +3,6 @@ kind: Kustomization
 
 resources:
 - crw-namespace.yaml
+- crw-operator-group.yaml
 - crw-operator-sub.yaml
 - crw-che-cluster.yaml
