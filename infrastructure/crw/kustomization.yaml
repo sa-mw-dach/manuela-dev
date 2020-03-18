@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- crw-namespace.yaml
+- crw-operator-sub.yaml
+- crw-che-cluster.yaml
