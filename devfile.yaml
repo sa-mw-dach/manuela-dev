@@ -33,11 +33,19 @@ components:
  - mountSources: true
    endpoints:
      - name: nodejs
-       port: 3000
+       port: 3000 
    memoryLimit: 512Mi
    type: dockerimage
    alias: iot-consumer
-   image: 'registry.redhat.io/codeready-workspaces/stacks-node-rhel8:2.0'  
+   image: 'registry.redhat.io/codeready-workspaces/stacks-node-rhel8:2.0'
+ - mountSources: true
+   endpoints:
+     - name: iot-frontend
+       port: 8100 
+   memoryLimit: 2048Mi
+   type: dockerimage
+   alias: iot-frontend
+   image: 'registry.redhat.io/codeready-workspaces/stacks-node-rhel8:2.0'    
  - mountSources: true
    endpoints:
      - name: 8080/tcp
@@ -94,13 +102,13 @@ commands:
       ${CHE_PROJECTS_ROOT}/manuela-dev/components/iot-software-sensor/pom.xml -p
       ${CHE_PROJECTS_ROOT}/manuela-dev/components/iot-software-sensor
      component: iot-software-sensor
- - name: download dependencies
+ - name: install dependencies
    actions:
    - workdir: '${CHE_PROJECTS_ROOT}/manuela-dev/components/iot-consumer'
      type: exec
      command: npm install
      component: iot-consumer
- - name: run iot-consumer
+ - name: start iot-consumer
    actions:
    - workdir: '${CHE_PROJECTS_ROOT}/manuela-dev/components/iot-consumer'
      type: exec
@@ -115,4 +123,22 @@ commands:
       ${node_server_pids}" &&  kill -15 ${node_server_pids} &>/dev/null &&
       echo 'Done.'
      component: iot-consumer
+ - name: install Ionic and dependencies
+   actions:
+   - workdir: '${CHE_PROJECTS_ROOT}/manuela-dev/components/iot-frontend'
+     type: exec
+     command: npm i -g ionic && npm install
+     component: iot-frontend
+ - name: start iot-frontend
+   actions:
+   - workdir: '${CHE_PROJECTS_ROOT}/manuela-dev/components/iot-frontend'
+     type: exec
+     command: npm run serve:dev    
+     component: iot-frontend  
+ - name: audit fix dependencies
+   actions:
+   - workdir: '${CHE_PROJECTS_ROOT}/manuela-dev/components/iot-frontend'
+     type: exec
+     command: npm audit fix  
+     component: iot-frontend           
 
