@@ -4,7 +4,7 @@ resources:
 bases:
 - pipeline-resources
 - pipelines
-- secrets
+#- secrets
 - tasks
 - configmaps
 - github.com/sa-mw-dach/manuela-gitops/config/templates/manuela-team-rolebindings
