@@ -73,7 +73,7 @@ spec:
     - name: RESOURCE_PATH
       value: config/instances/manuela-tst/kustomization.yaml
     - name: YAML_PATH
-      value: images.(name==line-dashboard).newTag  
+      value: images.(name==messaging).newTag  
   - name: argocd-sync-application
     taskRef:
       name: argocd-task-sync-and-wait
