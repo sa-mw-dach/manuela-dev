@@ -17,19 +17,23 @@ spec:
       description: The comment to be used for the git commit.
       type: string
       default: "Image tag updated by Tekton task gitops-imagetag"
-    - name: TMP_PATCHED_FILE
-      description: The name of the temporary patch result file. Internal. 
-      type: string
-      default: "resource_patched.yaml"
+    # - name: TMP_PATCHED_FILE
+    #   description: The name of the temporary patch result file. Internal. 
+    #   type: string
+    #   default: "resource_patched.yaml"
     - name: RESOURCE_PATH
       description: The path of the resource to be patched.
       type: string
       default: "config/instances/manuela-tst/kustomization.yaml"
-    - name: PATCH_COMMAND
-      description: The patch command to apply to the resource.
+    # - name: PATCH_COMMAND
+    #   description: The patch command to apply to the resource.
+    #   type: string
+    #   default: '{"images":[{"name":"image-registry.openshift-image-registry.svc:5000/manuela-tst-all/messaging","newTag":"1.1.1"}]}'
+    #   #default: '{"spec":{"tags":[{"name":"latest","from":{"name":"iot-consumer:latest"}}]}}'
+    - name: YAML_PATH
+      description: the yq yaml path of the value to be changed
       type: string
-      default: '{"images":[{"name":"image-registry.openshift-image-registry.svc:5000/manuela-tst-all/messaging","newTag":"1.1.1"}]}'
-      #default: '{"spec":{"tags":[{"name":"latest","from":{"name":"iot-consumer:latest"}}]}}'
+      default: images.(name==line-dashboard).newTag
     resources:
     - name: source
       type: git
@@ -37,28 +41,40 @@ spec:
       type: git  
   steps:
   - name: patch-imagetag
-    image: quay.io/openshift/origin-cli:4.3.0
+    image: mikefarah/yq:3.2.1
     script: |
-        #!/usr/bin/env bash
-        oc version
-        echo ''
+        #!/usr/bin/env sh
         semver=$(cat /workspace/source-semver/components/iot-consumer/VERSION)
         echo $semver
-        patch='{"images":[{"name":"image-registry.openshift-image-registry.svc:5000/manuela-tst-all/messaging","newTag":"'"${semver}"'"}]}'
-        echo $patch
         echo 'Patching $(inputs.params.RESOURCE_PATH)'
         echo ''
         cat $(inputs.params.RESOURCE_PATH)
         echo ''
-        echo 'Patch command is "'$patch'" '
-        oc patch --type merge --local=true --output='yaml' --patch=$patch --filename=$(inputs.params.RESOURCE_PATH) > $(inputs.params.TMP_PATCHED_FILE)
+        yq w -i $(inputs.params.RESOURCE_PATH) '$(inputs.params.YAML_PATH)' $semver
         echo ''
-        echo 'Output written to $(inputs.params.TMP_PATCHED_FILE)'
-        echo ''
-        cat $(inputs.params.TMP_PATCHED_FILE)
-        echo ''
-        echo 'Replacing $(inputs.params.RESOURCE_PATH) with $(inputs.params.TMP_PATCHED_FILE)'
-        mv $(inputs.params.TMP_PATCHED_FILE) $(inputs.params.RESOURCE_PATH)
+        cat $(inputs.params.RESOURCE_PATH)
+    # image: quay.io/openshift/origin-cli:4.3.0
+    # script: |
+    #     #!/usr/bin/env bash
+    #     oc version
+    #     echo ''
+    #     semver=$(cat /workspace/source-semver/components/iot-consumer/VERSION)
+    #     echo $semver
+    #     patch='{"images":[{"name":"image-registry.openshift-image-registry.svc:5000/manuela-tst-all/messaging","newTag":"'"${semver}"'"}]}'
+    #     echo $patch
+    #     echo 'Patching $(inputs.params.RESOURCE_PATH)'
+    #     echo ''
+    #     cat $(inputs.params.RESOURCE_PATH)
+    #     echo ''
+    #     echo 'Patch command is "'$patch'" '
+    #     oc patch --type merge --local=true --output='yaml' --patch=$patch --filename=$(inputs.params.RESOURCE_PATH) > $(inputs.params.TMP_PATCHED_FILE)
+    #     echo ''
+    #     echo 'Output written to $(inputs.params.TMP_PATCHED_FILE)'
+    #     echo ''
+    #     cat $(inputs.params.TMP_PATCHED_FILE)
+    #     echo ''
+    #     echo 'Replacing $(inputs.params.RESOURCE_PATH) with $(inputs.params.TMP_PATCHED_FILE)'
+    #     mv $(inputs.params.TMP_PATCHED_FILE) $(inputs.params.RESOURCE_PATH)
     workingdir: /workspace/source
   - name: git-push
     image: alpine/git
