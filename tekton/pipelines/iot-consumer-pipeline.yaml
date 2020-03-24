@@ -68,7 +68,12 @@ spec:
         - name: source-semver
           resource: git-repo
         - name: source
-          resource: gitops-repo    
+          resource: gitops-repo
+    params:
+    - name: RESOURCE_PATH
+      value: config/instances/manuela-tst/kustomization.yaml
+    - name: YAML_PATH
+      value: images.(name==line-dashboard).newTag  
   - name: argocd-sync-application
     taskRef:
       name: argocd-task-sync-and-wait
