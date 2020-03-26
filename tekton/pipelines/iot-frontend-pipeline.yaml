@@ -70,6 +70,8 @@ spec:
         - name: source-gitops
           resource: gitops-repo
     params:
+    - name: GIT_BRANCH
+      value: master
     - name: RESOURCE_PATH
       value: config/instances/manuela-tst/kustomization.yaml
     - name: YAML_PATH

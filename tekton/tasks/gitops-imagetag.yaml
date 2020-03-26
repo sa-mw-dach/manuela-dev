@@ -20,7 +20,7 @@ spec:
     - name: GIT_BRANCH
       description: The branch to create / use
       type: string
-      default: approve
+      default: master
     - name: VERSION_PATH
       description: path of the VERSION file in the source-dev repo 
       type: string

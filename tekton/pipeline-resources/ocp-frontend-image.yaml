@@ -6,4 +6,4 @@ spec:
   type: image
   params:
     - name: url
-      value: image-registry.openshift-image-registry.svc:5000/manuela-ci/iot-frontend
+      value: image-registry.openshift-image-registry.svc:5000/manuela-tst-all/line-dashboard
