@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
-  name: iot-consumer-pipeline
+  name: iot-software-sensor-pipeline
 spec:
   resources:
   - name: gitops-repo
@@ -15,7 +15,7 @@ spec:
   tasks:
   - name: build-consumer
     taskRef:
-      name: s2i-nodejs
+      name: s2i-java-8
       kind: ClusterTask
     resources:
       inputs:
@@ -28,9 +28,7 @@ spec:
       - name: TLSVERIFY
         value: "false"
       - name: PATH_CONTEXT
-        value: components/iot-consumer
-      - name: VERSION
-        value: "10"
+        value: components/iot-software-sensor
   - name: bumpversion
     taskRef:
       name: bumpversion
@@ -40,7 +38,7 @@ spec:
           resource: git-repo
     params:
       - name: PATH_CONTEXT
-        value: components/iot-consumer
+        value: components/iot-software-sensor
     runAfter:
       - build-consumer
   - name: tag-local-image 
@@ -54,7 +52,7 @@ spec:
           resource: local-image  
     params:
       - name: PATH_CONTEXT
-        value: components/iot-consumer
+        value: components/iot-software-sensor
     runAfter:
       - bumpversion
   - name: modify-gitops-test
@@ -73,7 +71,7 @@ spec:
     - name: RESOURCE_PATH
       value: config/instances/manuela-tst/kustomization.yaml
     - name: YAML_PATH
-      value: images.(name==messaging).newTag  
+      value: images.(name==machine-sensor).newTag  
   - name: argocd-sync-application
     taskRef:
       name: argocd-task-sync-and-wait
@@ -140,7 +138,7 @@ spec:
           resource: remote-image
     params:
     - name: PATH_CONTEXT
-      value: components/iot-consumer
+      value: components/iot-software-sensor
   - name: modify-gitops-prod
     taskRef:
       name: gitops-imagetag
@@ -155,9 +153,9 @@ spec:
           resource: gitops-repo
     params:
     - name: RESOURCE_PATH
-      value: config/templates/manuela-openshift-prod/messaging/kustomization.yaml
+      value: config/templates/manuela-openshift-prod/machine-sensor/kustomization.yaml
     - name: YAML_PATH
-      value: images.(name==messaging).newTag  
+      value: images.(name==machine-sensor).newTag  
     - name: GIT_BRANCH
       value: staging-approval
   - name: create-pull-request

@@ -4,26 +4,171 @@ metadata:
   name: iot-frontend-pipeline
 spec:
   resources:
-  - name: frontend-git
+  - name: gitops-repo
     type: git
-  - name: frontend-img
-    type: image    
+  - name: remote-image
+    type: image
+  - name: git-repo
+    type: git
+  - name: local-image
+    type: image
   tasks:
-  - name: build-frontend
+  - name: build-consumer
     taskRef:
-      name: s2i
+      name: s2i-nodejs
       kind: ClusterTask
     resources:
       inputs:
         - name: source
-          resource: frontend-git
+          resource: git-repo
       outputs:
         - name: image
-          resource: frontend-img
+          resource: local-image
     params:
       - name: TLSVERIFY
         value: "false"
       - name: PATH_CONTEXT
         value: components/iot-frontend
-      - name: BUILDER_IMAGE
-        value: nodeshift/ubi8-s2i-web-app     
+      - name: VERSION
+        value: "10"
+  - name: bumpversion
+    taskRef:
+      name: bumpversion
+    resources:
+      inputs:
+        - name: source
+          resource: git-repo
+    params:
+      - name: PATH_CONTEXT
+        value: components/iot-frontend
+    runAfter:
+      - build-consumer
+  - name: tag-local-image 
+    taskRef:
+      name: skopeo-tag-image
+    resources:
+      inputs:
+        - name: source
+          resource: git-repo
+        - name: image
+          resource: local-image  
+    params:
+      - name: PATH_CONTEXT
+        value: components/iot-frontend
+    runAfter:
+      - bumpversion
+  - name: modify-gitops-test
+    taskRef:
+      name: gitops-imagetag
+      kind: Task
+    runAfter:
+      - tag-local-image
+    resources:
+      inputs:
+        - name: source-semver
+          resource: git-repo
+        - name: source-gitops
+          resource: gitops-repo
+    params:
+    - name: RESOURCE_PATH
+      value: config/instances/manuela-tst/kustomization.yaml
+    - name: YAML_PATH
+      value: images.(name==line-dashboard).newTag  
+  - name: argocd-sync-application
+    taskRef:
+      name: argocd-task-sync-and-wait
+    runAfter:
+      - modify-gitops-test
+    params:
+      - name: application-name
+        value: manuela-tst-all
+      - name: flags
+        value: --insecure
+      - name: argocd-version
+        value: "v1.4.1"
+  - name: sensor-broker-test
+    taskRef:
+      name: mock
+      kind: Task
+    runAfter:
+      - argocd-sync-application
+    params:
+      - name: MESSAGE
+        value: "succesfully sent messages to broker..."
+  - name: consumer-broker-test
+    taskRef:
+      name: mock
+      kind: Task
+    runAfter:
+      - argocd-sync-application
+    params:
+      - name: MESSAGE
+        value: "succesfully processed messages from broker..."
+  - name: consumer-frontend-test
+    taskRef:
+      name: mock
+      kind: Task
+    runAfter:
+      - argocd-sync-application
+    params:
+      - name: MESSAGE
+        value: "succesfully executed Websocket APIs..."
+  - name: e2e-test
+    taskRef:
+      name: mock
+      kind: Task
+    runAfter:
+      - sensor-broker-test
+      - consumer-broker-test
+      - consumer-frontend-test
+    params:
+      - name: MESSAGE
+        value: "e2e testsuite succesfully executed"
+  - name: push-to-quay
+    taskRef:
+      name: skopeo-copy
+      kind: Task
+    runAfter:
+      - e2e-test
+    resources:
+      inputs:
+        - name: source
+          resource: git-repo
+        - name: local-image
+          resource: local-image
+        - name: remote-image
+          resource: remote-image
+    params:
+    - name: PATH_CONTEXT
+      value: components/iot-frontend
+  - name: modify-gitops-prod
+    taskRef:
+      name: gitops-imagetag
+      kind: Task
+    runAfter:
+      - push-to-quay
+    resources:
+      inputs:
+        - name: source-semver
+          resource: git-repo
+        - name: source-gitops
+          resource: gitops-repo
+    params:
+    - name: RESOURCE_PATH
+      value: config/templates/manuela-openshift-prod/line-dashboard/kustomization.yaml
+    - name: YAML_PATH
+      value: images.(name==line-dashboard).newTag  
+    - name: GIT_BRANCH
+      value: staging-approval
+  - name: create-pull-request
+    taskRef:
+      name: github-add-pull-request 
+    runAfter:
+      - modify-gitops-prod
+    params:
+      - name: GITHUB_REPO
+        value: sa-mw-dach/manuela-gitops
+      - name: GIT_BRANCH_HEAD
+        value: staging-approval
+      - name: GIT_BRANCH_BASE
+        value: master
