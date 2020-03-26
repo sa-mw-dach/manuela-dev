@@ -74,6 +74,8 @@ spec:
       value: config/instances/manuela-tst/kustomization.yaml
     - name: YAML_PATH
       value: images.(name==messaging).newTag  
+    - name: VERSION_PATH
+      value: components/iot-consumer/VERSION
   - name: argocd-sync-application
     taskRef:
       name: argocd-task-sync-and-wait
@@ -160,6 +162,8 @@ spec:
       value: images.(name==messaging).newTag  
     - name: GIT_BRANCH
       value: staging-approval
+    - name: VERSION_PATH
+      value: components/iot-consumer/VERSION
   - name: create-pull-request
     taskRef:
       name: github-add-pull-request 

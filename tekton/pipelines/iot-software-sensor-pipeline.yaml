@@ -13,7 +13,7 @@ spec:
   - name: local-image
     type: image
   tasks:
-  - name: build-consumer
+  - name: build-sensor
     taskRef:
       name: s2i-java-8
       kind: ClusterTask
@@ -40,7 +40,7 @@ spec:
       - name: PATH_CONTEXT
         value: components/iot-software-sensor
     runAfter:
-      - build-consumer
+      - build-sensor
   - name: tag-local-image 
     taskRef:
       name: skopeo-tag-image
@@ -72,6 +72,8 @@ spec:
       value: config/instances/manuela-tst/kustomization.yaml
     - name: YAML_PATH
       value: images.(name==machine-sensor).newTag  
+    - name: VERSION_PATH
+      value: components/iot-software-sensor/VERSION
   - name: argocd-sync-application
     taskRef:
       name: argocd-task-sync-and-wait
@@ -158,6 +160,8 @@ spec:
       value: images.(name==machine-sensor).newTag  
     - name: GIT_BRANCH
       value: staging-approval
+    - name: VERSION_PATH
+      value: components/iot-software-sensor/VERSION
   - name: create-pull-request
     taskRef:
       name: github-add-pull-request 

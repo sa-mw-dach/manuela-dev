@@ -13,7 +13,7 @@ spec:
   - name: local-image
     type: image
   tasks:
-  - name: build-consumer
+  - name: build-frontend
     taskRef:
       name: s2i-nodejs
       kind: ClusterTask
@@ -42,7 +42,7 @@ spec:
       - name: PATH_CONTEXT
         value: components/iot-frontend
     runAfter:
-      - build-consumer
+      - build-frontend
   - name: tag-local-image 
     taskRef:
       name: skopeo-tag-image
@@ -74,6 +74,8 @@ spec:
       value: config/instances/manuela-tst/kustomization.yaml
     - name: YAML_PATH
       value: images.(name==line-dashboard).newTag  
+    - name: VERSION_PATH
+      value: components/iot-frontend/VERSION
   - name: argocd-sync-application
     taskRef:
       name: argocd-task-sync-and-wait
@@ -160,6 +162,8 @@ spec:
       value: images.(name==line-dashboard).newTag  
     - name: GIT_BRANCH
       value: staging-approval
+    - name: VERSION_PATH
+      value: components/iot-frontend/VERSION
   - name: create-pull-request
     taskRef:
       name: github-add-pull-request 

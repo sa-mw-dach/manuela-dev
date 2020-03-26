@@ -21,6 +21,9 @@ spec:
       description: The branch to create / use
       type: string
       default: approve
+    - name: VERSION_PATH
+      description: path of the VERSION file in the source-dev repo 
+      type: string
     - name: RESOURCE_PATH
       description: The path of the resource to be patched.
       type: string
@@ -53,7 +56,7 @@ spec:
     image: mikefarah/yq:3.2.1
     script: |
         #!/usr/bin/env sh
-        semver=$(cat /workspace/source-semver/components/iot-consumer/VERSION)
+        semver=$(cat /workspace/source-semver/$(inputs.params.VERSION_PATH))
         echo $semver
         echo 'Patching $(inputs.params.RESOURCE_PATH)'
         echo ''

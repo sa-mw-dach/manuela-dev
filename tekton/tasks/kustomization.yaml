@@ -6,3 +6,4 @@ resources:
 - mock.yaml
 - skopeo-copy.yaml
 - skopeo-tag-image.yaml
+- github-add-pull-request.yaml
