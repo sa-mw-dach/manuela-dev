@@ -15,7 +15,7 @@ spec:
   tasks:
   - name: build-frontend
     taskRef:
-      name: s2i-nodejs
+      name: s2i
       kind: ClusterTask
     resources:
       inputs:
@@ -29,8 +29,8 @@ spec:
         value: "false"
       - name: PATH_CONTEXT
         value: components/iot-frontend
-      - name: VERSION
-        value: "10"
+      - name: BUILDER_IMAGE
+        value: nodeshift/ubi8-s2i-web-app
   - name: bumpversion
     taskRef:
       name: bumpversion

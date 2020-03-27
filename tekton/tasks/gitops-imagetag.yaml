@@ -42,7 +42,7 @@ spec:
     image: alpine/git
     script: |
         #!/usr/bin/env sh
-        if [ "$(inputs.params.GIT_BRANCH)" != "$(resources.inputs.source-gitops.params.revision:-master)" ]; then
+        if [ "$(inputs.params.GIT_BRANCH)" != "master" ]; then
           git fetch 2>&1
           echo 'Creating and checking out branch $(inputs.params.GIT_BRANCH)'
           git checkout -q --track -b $(inputs.params.GIT_BRANCH) origin/$(inputs.params.GIT_BRANCH) 2>&1 || git checkout -q -b $(inputs.params.GIT_BRANCH) 2>&1
@@ -66,6 +66,8 @@ spec:
         echo ''
         cat $(inputs.params.RESOURCE_PATH)
     workingdir: /workspace/source-gitops
+
+
   - name: git-push
     image: alpine/git
     env:
