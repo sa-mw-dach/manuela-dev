@@ -72,7 +72,7 @@ spec:
     params:
     - name: GIT_BRANCH
       value: master
-    - name: RESOURCE_PATH
+    - name: KUSTOMIZATION_YAML_PATH
       value: config/instances/manuela-tst/kustomization.yaml
     - name: YAML_PATH
       value: images.(name==messaging).newTag  
@@ -158,7 +158,7 @@ spec:
         - name: source-gitops
           resource: gitops-repo
     params:
-    - name: RESOURCE_PATH
+    - name: KUSTOMIZATION_YAML_PATH
       value: config/templates/manuela-openshift-prod/messaging/kustomization.yaml
     - name: YAML_PATH
       value: images.(name==messaging).newTag  
@@ -166,6 +166,10 @@ spec:
       value: staging-approval
     - name: VERSION_PATH
       value: components/iot-consumer/VERSION
+    - name: IMAGESTREAM_PATH
+      value: config/templates/manuela-openshift-prod/messaging/messaging-is.yaml 
+    - name: REMOTE_IMAGE
+      value: quay.io/manuela/iot-consumer
   - name: create-pull-request
     taskRef:
       name: github-add-pull-request 

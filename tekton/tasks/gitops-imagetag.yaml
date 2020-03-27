@@ -24,14 +24,22 @@ spec:
     - name: VERSION_PATH
       description: path of the VERSION file in the source-dev repo 
       type: string
-    - name: RESOURCE_PATH
-      description: The path of the resource to be patched.
+    - name: KUSTOMIZATION_YAML_PATH
+      description: The path of the kustomize resource to be patched.
       type: string
       default: "config/instances/manuela-tst/kustomization.yaml"
     - name: YAML_PATH
       description: the yq yaml path of the value to be changed
       type: string
       default: images.(name==line-dashboard).newTag
+    - name: IMAGESTREAM_PATH
+      type: string
+      description: config/templates/manuela-openshift-prod/messaging/messaging-is.yaml
+      default: ""
+    - name: REMOTE_IMAGE
+      type: string
+      description: quay.io/manuela/iot-consumer
+      default: ""
     resources:
     - name: source-gitops
       type: git
@@ -48,8 +56,8 @@ spec:
           git checkout -q --track -b $(inputs.params.GIT_BRANCH) origin/$(inputs.params.GIT_BRANCH) 2>&1 || git checkout -q -b $(inputs.params.GIT_BRANCH) 2>&1
           git branch
 
-          echo 'merging master into $(inputs.params.GIT_BRANCH)'
-          git merge master 2>&1
+          #echo 'merging master into $(inputs.params.GIT_BRANCH)'
+          #git merge master 2>&1
         fi
     workingdir: /workspace/source-gitops
   - name: patch-imagetag
@@ -58,16 +66,18 @@ spec:
         #!/usr/bin/env sh
         semver=$(cat /workspace/source-semver/$(inputs.params.VERSION_PATH))
         echo $semver
-        echo 'Patching $(inputs.params.RESOURCE_PATH)'
+        echo 'Patching $(inputs.params.KUSTOMIZATION_YAML_PATH)'
+        #echo ''
+        #cat $(inputs.params.KUSTOMIZATION_YAML_PATH)
         echo ''
-        cat $(inputs.params.RESOURCE_PATH)
-        echo ''
-        yq w -i $(inputs.params.RESOURCE_PATH) '$(inputs.params.YAML_PATH)' $semver
-        echo ''
-        cat $(inputs.params.RESOURCE_PATH)
+        yq w -i $(inputs.params.KUSTOMIZATION_YAML_PATH) '$(inputs.params.YAML_PATH)' $semver
+        #echo ''
+        #cat $(inputs.params.KUSTOMIZATION_YAML_PATH)
+        if [ ! -z "$(inputs.params.IMAGESTREAM_PATH)" ]; then
+          echo "Adding $semver to image stream $(inputs.params.IMAGESTREAM_PATH)"
+          echo "{\"spec\":{\"tags\":[{\"name\":\"$semver\",\"from\":{\"kind\":\"DockerImage\",\"name\":\"$(inputs.params.REMOTE_IMAGE):$semver\"},\"importPolicy\":{},\"referencePolicy\":{\"type\":\"Local\"}}]}}" | yq -P m -i -a $(inputs.params.IMAGESTREAM_PATH) -
+        fi
     workingdir: /workspace/source-gitops
-
-
   - name: git-push
     image: alpine/git
     env:
@@ -83,13 +93,14 @@ spec:
             key: user      
     script: |
         #!/usr/bin/env sh
+        git diff
         echo "https://$GITHUB_USER:$GITHUB_TOKEN@github.com" > ~/.git-credentials
         git config --global credential.helper store 'store --file ~/.git-credentials'
         git config --global user.email "$(inputs.params.GIT_EMAIL)"
         git config --global user.name "$(inputs.params.GIT_USERNAME)"
         echo ''
-        echo 'Adding $(inputs.params.RESOURCE_PATH) to git index'
-        git add $(inputs.params.RESOURCE_PATH)
+        echo 'Adding changes to git index'
+        git add .
         git commit -m '$(inputs.params.GIT_COMMENT)'
         git push --set-upstream origin $(inputs.params.GIT_BRANCH)
-    workingdir: /workspace/source-gitops 
+    workingdir: /workspace/source-gitops  
