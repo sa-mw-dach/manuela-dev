@@ -43,6 +43,7 @@ public class TemperatureSensor implements Sensor {
 	public double currentValue;
 	
 	public int count = 0;
+	public int direction = 1;
 	
 	@PostConstruct
 	@Override
@@ -69,26 +70,39 @@ public class TemperatureSensor implements Sensor {
 	@Override
 	public Measure calculateCurrentMeasure(Measure measure) {
 		
-		
+	/*	
 		if(count > 0) {
 
 			// Calculate random value from range
 			double randValue = ThreadLocalRandom.current().nextDouble(minIteration, (maxIteration+1));
-			currentValue = currentValue + randValue;
+			// currentValue = currentValue + randValue;
 			
 			if(currentValue < minRange || currentValue > maxRange) {
 				initAndReset();
 			}
 			
 		}
-		
+	*/
+
+		double randValue = ThreadLocalRandom.current().nextDouble(minIteration, (maxIteration+1));
+
+		if(currentValue > maxRange) {
+			direction = -1;
+		}
+
+		if(currentValue < minRange) {
+			direction = 1;
+		}
+
+		currentValue = currentValue + randValue * direction;
+
 		measure.setType(getType());
 		measure.setPayload(String.valueOf(currentValue));
-				
+		
+
 		++count;
 		return measure;
 	}
 
-	
 
 }
