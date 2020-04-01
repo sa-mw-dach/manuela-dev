@@ -23,6 +23,34 @@ export class SensorsPage implements OnInit, OnDestroy {
     public toastController: ToastController
   ) { }
 
+
+  async presentToastWithOptions() {
+    const toast = await this.toastController.create({
+      header: 'Temperature ALERT!',
+      message: 'Please take immediate action',
+      position: 'top',
+      color: 'danger',
+      buttons: [
+        {
+          side: 'start',
+          icon: 'snow',
+          text: 'Start Cooling System',
+          handler: () => {
+            console.log('Favorite clicked');
+          }
+        }, {
+          text: 'Done',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    toast.present();
+    console.debug('*** presentToastWithOption ');
+  }
+
   plotDynamicSplineChart(machineId: string, series: any, unit: string, threshold: number) {
     return HighCharts.chart(machineId, {
       chart: {
@@ -185,6 +213,7 @@ ngOnInit() {
   // ALERTS
   sub = this.websocketService.observeTemperatureAlerts().pipe().subscribe(data => {
     // TODO
+    this.presentToastWithOptions();
     console.debug('*** Missing TODO in observeTemperatureAlerts().pipe().subscribe()!');
   });
   this.subscriptions.push(sub);
