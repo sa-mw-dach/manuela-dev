@@ -177,7 +177,7 @@ spec:
       - modify-gitops-prod
     params:
       - name: GITHUB_REPO
-        value: sa-mw-dach/manuela-gitops
+        value: stefan-bergstein/manuela-gitops
       - name: GIT_BRANCH_HEAD
         value: staging-approval
       - name: GIT_BRANCH_BASE

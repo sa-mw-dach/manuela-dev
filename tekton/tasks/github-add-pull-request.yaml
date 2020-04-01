@@ -16,7 +16,7 @@ spec:
     - name: GITHUB_REPO
       description: The github owner/repo to use
       type: string
-      default: sa-mw-dach/manuela-gitops
+      default: stefan-bergstein/manuela-gitops
     - name: GIT_BRANCH_HEAD
       description: The branch to pull from
       type: string

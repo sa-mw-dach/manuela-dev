@@ -16,7 +16,7 @@ spec:
   runPolicy: Serial
   source:
     git:
-      uri: https://github.com/sa-mw-dach/manuela-dev.git
+      uri: https://github.com/stefan-bergstein/manuela-dev.git
     type: Git
     contextDir: "components/iot-frontend"
   strategy:

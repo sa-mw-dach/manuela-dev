@@ -6,6 +6,6 @@ spec:
   type: git
   params:
   - name: url
-    value: https://github.com/sa-mw-dach/manuela-dev
+    value: https://github.com/stefan-bergstein/manuela-dev
   - name: revision
     value: master

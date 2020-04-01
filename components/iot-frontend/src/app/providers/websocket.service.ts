@@ -31,7 +31,7 @@ export class WebsocketService {
         });
 
         this.socket.on('connect', (socket) => {
-            console.debug('connected!');
+            console.debug('Yeah, connected!');
         });
 
         console.debug('init(): connect');

@@ -53,10 +53,10 @@ First, install the `OpenShift Pipelines Operator` onto your cluster:
 
 If you want to contribute to this repository, please see our [contributing](./CONTRIBUTING.md) guidelines.
 
-If you are looking for support, please enter an [issue](https://github.com/sa-mw-dach/manuela-dev/issues/new)
+If you are looking for support, please enter an [issue](https://github.com/stefan-bergstein/manuela-dev/issues/new)
 
 ## Status of the Project
 
 This project is still under active development, so you might run into
-[issues](https://github.com/sa-mw-dach/manuela-dev/issues). If you do,
+[issues](https://github.com/stefan-bergstein/manuela-dev/issues). If you do,
 please don't be shy about letting us know.

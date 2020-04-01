@@ -4,7 +4,7 @@ metadata:
 projects:
  - name: manuela-dev
    source:
-     location: 'git@github.com:sa-mw-dach/manuela-dev.git'
+     location: 'git@github.com:stefan-bergstein/manuela-dev.git'
      type: git
      branch: master
 components:
@@ -52,7 +52,7 @@ components:
        port: 8080
    memoryLimit: 768Mi
    type: dockerimage
-   volumes:
+   volumes:dach
      - name: m2
        containerPath: /home/jboss/.m2
    alias: iot-software-sensor
