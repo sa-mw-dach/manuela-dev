@@ -148,7 +148,7 @@ export class ListPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('init websocketService');
+    console.log('init websocketService in  list.page.ts');
     this.websocketService.init(null);
 
     let sub = this.websocketService.observeGpsEvents().pipe().subscribe(data => {
@@ -163,7 +163,7 @@ export class ListPage implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
 
     sub = this.websocketService.observeTemperatureEvents().pipe().subscribe(data => {
-      // console.debug(`received observeTemperatureEvents: `, this.ab2str(data));
+      // console.debug('received observeTemperatureEvents: ', this.ab2str(data));
       const tmp = this.ab2str(data);
       const elements = tmp.split(',');
       ListPage.temperatureData.push({

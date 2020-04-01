@@ -159,7 +159,7 @@ updateChartData() {
 }
 
 ngOnInit() {
-  console.log('init websocketService');
+  console.log('init websocketService in sensor.page.ts');
   this.websocketService.init(null);
 
   let sub = this.websocketService.observeGpsEvents().pipe().subscribe(data => {
