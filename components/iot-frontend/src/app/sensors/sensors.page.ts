@@ -30,23 +30,7 @@ export class SensorsPage implements OnInit, OnDestroy {
       message: 'Please take immediate action',
       duration: 3000,
       position: 'top',
-      color: 'danger',
-      buttons: [
-        {
-          side: 'start',
-          icon: 'snow',
-          text: 'Start Cooling System',
-          handler: () => {
-            console.log('Favorite clicked');
-          }
-        }, {
-          text: 'Done',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        }
-      ]
+      color: 'danger'
     });
     toast.present();
     console.debug('*** presentToastWithOption ');
