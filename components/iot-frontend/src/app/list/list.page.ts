@@ -135,6 +135,7 @@ export class ListPage implements OnInit, OnDestroy {
       ]
     });
     toast.present();
+    console.debug('*** presentToastWithOption ');
   }
 
   // ArrayBuffer to String conversion
@@ -157,6 +158,7 @@ export class ListPage implements OnInit, OnDestroy {
 
     sub = this.websocketService.observeTemperatureAlerts().pipe().subscribe(data => {
       this.presentToastWithOptions();
+      console.debug('*** received observeTemperatureAlerts', this.ab2str(data));
     });
     this.subscriptions.push(sub);
 

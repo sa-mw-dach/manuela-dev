@@ -86,7 +86,7 @@ export class WebsocketService {
         console.debug('observeTemperatureAlerts');
         const observable = new Observable(observer => {
             this.socket.on('temperature-alert', (data) => {
-                // console.debug('temperature-alert -> Received sensor temperature event');
+                console.debug('temperature-alert -> Received sensor temperature event');
                 observer.next(data);
             });
         });

@@ -185,6 +185,7 @@ ngOnInit() {
   // ALERTS
   sub = this.websocketService.observeTemperatureAlerts().pipe().subscribe(data => {
     // TODO
+    console.debug('*** Missing TODO in observeTemperatureAlerts().pipe().subscribe()!');
   });
   this.subscriptions.push(sub);
 
