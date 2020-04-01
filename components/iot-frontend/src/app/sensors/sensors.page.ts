@@ -28,6 +28,7 @@ export class SensorsPage implements OnInit, OnDestroy {
     const toast = await this.toastController.create({
       header: 'Temperature ALERT!',
       message: 'Please take immediate action',
+      duration: 3000,
       position: 'top',
       color: 'danger',
       buttons: [
