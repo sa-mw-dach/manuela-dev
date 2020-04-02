@@ -80,10 +80,13 @@ function check_anomaly(id, value) {
        console.log('Last ID: %s,  Val: NO', id );
     } else {
        console.log('Last ID: %s,  Val: %d', id, last_value_map[id] );
-       if ( value > (last_value_map[id] * 1.95) ) {
-	 result = true 
+       if (  value > 2 && value > (last_value_map[id] * 1.95) ) {
+	      result = true 
+       } else {
+         result = false 
        }
     }
+    
     console.log('New  ID: %s,  Val: %d', id, value );
     last_value_map[id] = value;
     return result;
