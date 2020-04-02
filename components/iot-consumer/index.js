@@ -63,11 +63,32 @@ function handleGps(message) {
     console.log('handleGps data %s', message);
     io.sockets.emit("gps-event", message);
 }
-console.log('temperature alert!!!');
+
 function handleLight(message) {
     console.log('handleLight data %s', message);
     io.sockets.emit("light-event", message);
 }
+
+
+// Mock for Anomaly
+var last_value_map = {};
+function check_anomaly(id, value) {
+    var result = false
+
+    if ( isNaN(last_value_map[id])) {
+       result = false
+       console.log('Last ID: %s,  Val: NO', id );
+    } else {
+       console.log('Last ID: %s,  Val: %d', id, last_value_map[id] );
+       if ( value > (last_value_map[id] * 1.95) ) {
+	 result = true 
+       }
+    }
+    console.log('New  ID: %s,  Val: %d', id, value );
+    last_value_map[id] = value;
+    return result;
+}
+
 
 function handleTemperature(message) {
     console.log('handleTemperature data %s', message);
@@ -99,6 +120,15 @@ function handleVibration(message) {
 
     // check for vibration threshold
     console.log('vibration alert???');
+
+    var data = ab2str(message);
+    const elements = data.split(',');
+
+    var id=elements[0]+elements[1]
+    var value = parseFloat(elements[2])
+
+    var ano = check_anomaly(id,value)
+    console.log('Ano: %s', ano.toString());
 
     /*
     if(Number(elements[2]) > temperature_threshold) {
