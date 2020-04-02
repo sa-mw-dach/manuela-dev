@@ -118,8 +118,7 @@ function handleVibration(message) {
     console.log('handleVibration data %s', message);
     io.sockets.emit("vibration-event", message);
 
-    // check for vibration threshold
-    console.log('vibration alert???');
+    // check for vibration anomaly
 
     var data = ab2str(message);
     const elements = data.split(',');
@@ -130,12 +129,11 @@ function handleVibration(message) {
     var ano = check_anomaly(id,value)
     console.log('Ano: %s', ano.toString());
 
-    /*
-    if(Number(elements[2]) > temperature_threshold) {
-        console.log('temperature alert!!!');
-        io.sockets.emit("temperature-alert", message);
+    if(ano) {
+        console.log('vibration alert!!!');
+        io.sockets.emit("vibration-alert", message);
     } 
-    */   
+
 
 }
 
