@@ -172,7 +172,7 @@ updateChartData() {
 }
 
 ngOnInit() {
-  console.log('init websocketService in sensor.page.ts');
+  console.log('init websocketService');
   this.websocketService.init(null);
 
   let sub = this.websocketService.observeGpsEvents().pipe().subscribe(data => {
@@ -199,7 +199,6 @@ ngOnInit() {
   sub = this.websocketService.observeTemperatureAlerts().pipe().subscribe(data => {
     // TODO
     this.presentToastWithOptions();
-    console.debug('*** Missing TODO in observeTemperatureAlerts().pipe().subscribe()!');
   });
   this.subscriptions.push(sub);
 
