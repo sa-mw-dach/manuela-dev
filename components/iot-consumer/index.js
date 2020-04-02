@@ -63,7 +63,7 @@ function handleGps(message) {
     console.log('handleGps data %s', message);
     io.sockets.emit("gps-event", message);
 }
-
+console.log('temperature alert!!!');
 function handleLight(message) {
     console.log('handleLight data %s', message);
     io.sockets.emit("light-event", message);
@@ -96,6 +96,17 @@ function handleTemperature(message) {
 function handleVibration(message) {
     console.log('handleVibration data %s', message);
     io.sockets.emit("vibration-event", message);
+
+    // check for vibration threshold
+    console.log('vibration alert???');
+
+    /*
+    if(Number(elements[2]) > temperature_threshold) {
+        console.log('temperature alert!!!');
+        io.sockets.emit("temperature-alert", message);
+    } 
+    */   
+
 }
 
 // convert ArrayBuffer to String
