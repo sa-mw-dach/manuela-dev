@@ -26,7 +26,7 @@ export class SensorsPage implements OnInit, OnDestroy {
   async presentToastTemperature() {
     const toast = await this.toastController.create({
       header: 'Temperature ALERT!',
-      message: 'Please take immediate action',
+      message: 'Please check the pump and raise incident if required.',
       duration: 3000,
       position: 'top',
       color: 'danger'
@@ -37,10 +37,11 @@ export class SensorsPage implements OnInit, OnDestroy {
 
   async presentToastVibration() {
     const toast = await this.toastController.create({
-      header: 'Vibration Anomaly!',
-      message: 'Please take care ...',
+      header: 'Vibration ALERT!',
+      message: 'Please check the pump and raise incident if required.',
       duration: 5000,
-      position: 'top'
+      position: 'top',
+      color: 'warning'
     });
     toast.present();
     // console.debug('*** presentToastVibration ');
