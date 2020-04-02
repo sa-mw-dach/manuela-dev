@@ -23,7 +23,7 @@ export class SensorsPage implements OnInit, OnDestroy {
     public toastController: ToastController
   ) { }
 
-  async presentToastWithOptions() {
+  async presentToastTemperature() {
     const toast = await this.toastController.create({
       header: 'Temperature ALERT!',
       message: 'Please take immediate action',
@@ -32,8 +32,21 @@ export class SensorsPage implements OnInit, OnDestroy {
       color: 'danger'
     });
     toast.present();
-    // console.debug('*** presentToastWithOption ');
+    // console.debug('*** presentToastTemperature ');
   }
+
+  async presentToastVibration() {
+    const toast = await this.toastController.create({
+      header: 'Vibration Anomaly!',
+      message: 'Please take care ...',
+      duration: 5000,
+      position: 'top'
+    });
+    toast.present();
+    // console.debug('*** presentToastVibration ');
+  }
+
+
 
   plotDynamicSplineChart(machineId: string, series: any, unit: string, threshold: number) {
     return HighCharts.chart(machineId, {
@@ -196,7 +209,12 @@ ngOnInit() {
 
   // ALERTS
   sub = this.websocketService.observeTemperatureAlerts().pipe().subscribe(data => {
-    this.presentToastWithOptions();
+    this.presentToastTemperature();
+  });
+  this.subscriptions.push(sub);
+
+  sub = this.websocketService.observeVibrationAlerts().pipe().subscribe(data => {
+    this.presentToastVibration();
   });
   this.subscriptions.push(sub);
 
