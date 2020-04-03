@@ -41,7 +41,16 @@ export class SensorsPage implements OnInit, OnDestroy {
       message: 'Please check the pump and raise incident if required.',
       duration: 5000,
       position: 'top',
-      color: 'warning'
+      color: 'warning',
+      buttons: [
+        {
+          text: 'Done',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
     });
     toast.present();
     // console.debug('*** presentToastVibration ');
