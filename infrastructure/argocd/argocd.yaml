@@ -10,3 +10,5 @@ spec:
     version: openshift-connector
   helpChatURL: https://chat.google.com/room/AAAAonnPp64
   helpChatText: "MANUela Chat"
+
+#see: https://argocd-operator.readthedocs.io/en/latest/reference/argocd/
