@@ -4,9 +4,9 @@ metadata:
   name: iot-software-sensor-config
 data:
   APP_NAME: iot-sensor
-  DEVICE_ID: sensor-tv
+  DEVICE_ID: pump-1
   DEVICE_METRICS: 'temperature,vibration,gps,light'
-  MACHINE_ID: pump-1
+  MACHINE_ID: floor-1-line-1-extruder-1
 
   MQTT_HOSTNAME: broker-amq-mqtt-all-0-svc
   MQTT_PASSWORD: iotuser
@@ -40,6 +40,7 @@ data:
   SENSOR_TEMPERATURE_STARTMAX: '50'
   SENSOR_TEMPERATURE_STARTMIN: '50'
   
+  
   SENSOR_VIBRATION_ENABLED: 'true'
   SENSOR_VIBRATION_FREQUENC: '5'
   SENSOR_VIBRATION_MAXITERATION: '1'
@@ -47,3 +48,4 @@ data:
   SENSOR_VIBRATION_MINITERATION: '0'
   SENSOR_VIBRATION_MINRANGE: '0'
   SENSOR_VIBRATION_START: '0'
+  SENSOR_VIBRATION_PEAKINTETVAL: '20'

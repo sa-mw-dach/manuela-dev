@@ -4,9 +4,9 @@ metadata:
   name: iot-software-sensor-2-config
 data:
   APP_NAME: iot-sensor
-  DEVICE_ID: door-sensor-v
+  DEVICE_ID: pump-2
   DEVICE_METRICS: 'temperature,vibration,gps,light'
-  MACHINE_ID: door-1-floor-1
+  MACHINE_ID: floor-1-line-1-extruder-1
 
   MQTT_HOSTNAME: broker-amq-mqtt-all-0-svc
   MQTT_PASSWORD: iotuser
@@ -47,3 +47,4 @@ data:
   SENSOR_VIBRATION_MINITERATION: '0'
   SENSOR_VIBRATION_MINRANGE: '0'
   SENSOR_VIBRATION_START: '0'
+  SENSOR_VIBRATION_PEAKINTETVAL: '200'
