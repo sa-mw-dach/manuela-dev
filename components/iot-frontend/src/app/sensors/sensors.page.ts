@@ -29,7 +29,7 @@ export class SensorsPage implements OnInit, OnDestroy {
       message: 'Please check the pump and submit a ticket.',
       duration: 3000,
       position: 'top',
-      color: 'danger'
+      color: 'warning'
     });
     toast.present();
     // console.debug('*** presentToastTemperature ');
@@ -39,8 +39,8 @@ export class SensorsPage implements OnInit, OnDestroy {
     const toast = await this.toastController.create({
       header: 'Vibration ALERT!',
       message: 'Please check the pump and and submit a ticket.',
-      position: 'top',
-      color: 'warning',
+      position: 'bottom',
+      color: 'danger',
       buttons: [
         {
           text: 'Done',
