@@ -4,3 +4,4 @@ kind: Kustomization
 bases:
 - openshift-pipelines
 - crw
+- argocd
