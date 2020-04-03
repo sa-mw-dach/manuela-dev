@@ -20,6 +20,9 @@ var mqtt_password = process.env.MQTT_PASSWORD || "iotuser";
 // threshold
 const temperature_threshold = process.env.TEMPERATURE_THRESHOLD || 70.0;
 
+const temperature_alert_enabled = ((process.env.TEMPERATURE_ALERT_ENABLED || "true") === 'true');
+const vibration_alert_enabled = ((process.env.VIBRATION_ALERT_ENABLED || "true") === 'true');
+
 // setup application
 var mqtt = require('mqtt')
 const compression = require('compression');
@@ -111,9 +114,11 @@ function handleTemperature(message) {
 
     io.sockets.emit("temperature-event", message);
     // check for temperature threshold
-    if(Number(elements[2]) > temperature_threshold) {
-        console.log('temperature alert!!!');
-        io.sockets.emit("temperature-alert", message);
+    if(temperature_alert_enabled) {
+        if(Number(elements[2]) > temperature_threshold) {
+            console.log('temperature alert!!!');
+            io.sockets.emit("temperature-alert", message);
+        }
     }
 }
 
@@ -122,21 +127,21 @@ function handleVibration(message) {
     io.sockets.emit("vibration-event", message);
 
     // check for vibration anomaly
+    if(vibration_alert_enabled) {
+        var data = ab2str(message);
+        const elements = data.split(',');
 
-    var data = ab2str(message);
-    const elements = data.split(',');
+        var id=elements[0]+elements[1]
+        var value = parseFloat(elements[2])
 
-    var id=elements[0]+elements[1]
-    var value = parseFloat(elements[2])
+        var ano = check_anomaly(id,value)
+        console.log('Ano: %s', ano.toString());
 
-    var ano = check_anomaly(id,value)
-    console.log('Ano: %s', ano.toString());
-
-    if(ano) {
-        console.log('vibration alert!!!');
-        io.sockets.emit("vibration-alert", message);
+        if(ano) {
+            console.log('vibration alert!!!');
+            io.sockets.emit("vibration-alert", message);
+        }
     } 
-
 
 }
 
