@@ -8,6 +8,7 @@ bases:
 - iot-consumer/manifests
 - iot-frontend/manifests
 - iot-software-sensor/manifests
-- ../namespaces_and_operator_subscriptions/iotdemo
+#the following causes an error if the rolebindings admin and view have already been created
+#- ../namespaces_and_operator_subscriptions/iotdemo
 
 namespace: iotdemo
