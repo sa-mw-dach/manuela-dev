@@ -3,9 +3,7 @@ kind: Kustomization
 
 bases:
 - github.com/sa-mw-dach/manuela-gitops/config/templates/manuela-team-rolebindings
+- ../../namespaces_and_operator_subscriptions/manuela-crw
 
 resources:
-- crw-namespace.yaml
-- crw-operator-group.yaml
-- crw-operator-sub.yaml
 - crw-che-cluster.yaml
