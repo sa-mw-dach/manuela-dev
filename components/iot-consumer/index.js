@@ -20,6 +20,9 @@ var mqtt_password = process.env.MQTT_PASSWORD || "iotuser";
 // threshold
 const temperature_threshold = process.env.TEMPERATURE_THRESHOLD || 70.0;
 
+const temperature_alert_enabled = ((process.env.TEMPERATURE_ALERT_ENABLED || "true") === 'true');
+const vibration_alert_enabled = ((process.env.VIBRATION_ALERT_ENABLED || "true") === 'true');
+
 // setup application
 var mqtt = require('mqtt')
 const compression = require('compression');
@@ -69,6 +72,30 @@ function handleLight(message) {
     io.sockets.emit("light-event", message);
 }
 
+
+// Mock for Anomaly
+var last_value_map = {};
+function check_anomaly(id, value) {
+    var result = false
+
+    if ( isNaN(last_value_map[id])) {
+       result = false
+       console.log('Last ID: %s,  Val: NO', id );
+    } else {
+       console.log('Last ID: %s,  Val: %d', id, last_value_map[id] );
+       if (  value > 2 && value > (last_value_map[id] * 1.95) ) {
+	      result = true 
+       } else {
+         result = false 
+       }
+    }
+    
+    console.log('New  ID: %s,  Val: %d', id, value );
+    last_value_map[id] = value;
+    return result;
+}
+
+
 function handleTemperature(message) {
     console.log('handleTemperature data %s', message);
     var data = ab2str(message);
@@ -87,15 +114,35 @@ function handleTemperature(message) {
 
     io.sockets.emit("temperature-event", message);
     // check for temperature threshold
-    if(Number(elements[2]) > temperature_threshold) {
-        console.log('temperature alert!!!');
-        io.sockets.emit("temperature-alert", message);
+    if(temperature_alert_enabled) {
+        if(Number(elements[2]) > temperature_threshold) {
+            console.log('temperature alert!!!');
+            io.sockets.emit("temperature-alert", message);
+        }
     }
 }
 
 function handleVibration(message) {
     console.log('handleVibration data %s', message);
     io.sockets.emit("vibration-event", message);
+
+    // check for vibration anomaly
+    if(vibration_alert_enabled) {
+        var data = ab2str(message);
+        const elements = data.split(',');
+
+        var id=elements[0]+elements[1]
+        var value = parseFloat(elements[2])
+
+        var ano = check_anomaly(id,value)
+        console.log('Ano: %s', ano.toString());
+
+        if(ano) {
+            console.log('vibration alert!!!');
+            io.sockets.emit("vibration-alert", message);
+        }
+    } 
+
 }
 
 // convert ArrayBuffer to String

@@ -34,10 +34,15 @@ public class VibrationSensor implements Sensor {
 
 	@Value("${sensor.vibration.maxRange}") 
 	private int maxRange;
+
+	@Value("${sensor.vibration.peakInterval}") 
+	private int peakInterval;
 	
 	public double currentValue;
+	public double sumitValue;
 	
-	public int count = 0;
+	public int count = 1;
+	public int direction = 1;
 	
 	@PostConstruct
 	@Override
@@ -62,7 +67,8 @@ public class VibrationSensor implements Sensor {
 
 	@Override
 	public Measure calculateCurrentMeasure(Measure measure) {
-		
+	
+	/*
 		if(count > 0) {
 			// Calculate random value from range
 			double randValue = ThreadLocalRandom.current().nextDouble(minIteration, (maxIteration+1));
@@ -72,9 +78,28 @@ public class VibrationSensor implements Sensor {
 				initAndReset();
 			}
 		}
-		
+	*/
+	
+		double randValue = ThreadLocalRandom.current().nextDouble(minIteration, (maxIteration+1));
+
+		if(currentValue > maxRange) {
+			direction = -1;
+		}
+
+		if(currentValue < minRange) {
+			direction = 1;
+		}
+
+		currentValue = currentValue + randValue * direction;
+
+		if( (count % peakInterval) == 0) {
+			sumitValue = currentValue * 2;
+		} else {
+			sumitValue = currentValue;
+		}
+
 		measure.setType(getType());
-		measure.setPayload(String.valueOf(currentValue));
+		measure.setPayload(String.valueOf(sumitValue));
 		
 		++count;
 		return measure;

@@ -1,0 +1,46 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: github-add-pull-request
+spec:
+  inputs:
+    params:
+    - name: PULL_REQUEST_BODY
+      description: The body to be used for the pull request
+      type: string
+      default: ""
+    - name: PULL_REQUEST_TITLE
+      description: Title of the pull request
+      type: string
+      default: "Pull request created by Tekton task github-add-pull-request"
+    - name: GITHUB_REPO
+      description: The github owner/repo to use
+      type: string
+      default: sa-mw-dach/manuela-gitops
+    - name: GIT_BRANCH_HEAD
+      description: The branch to pull from
+      type: string
+      default: approve
+    - name: GIT_BRANCH_BASE
+      description: The branch to pull into
+      type: string
+      default: master
+    resources: []
+  steps:
+  - name: create-pull-request
+    image: curlimages/curl
+    env:
+      - name: GITHUB_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: github
+            key: token
+      - name: GITHUB_USER
+        valueFrom:
+          secretKeyRef:
+            name: github
+            key: user      
+    script: |
+        #!/usr/bin/env sh
+        #echo curl -v -u :$GITHUB_TOKEN https://api.github.com/repos/$(inputs.params.GITHUB_REPO)/pulls -d '{"title":"$(inputs.params.PULL_REQUEST_TITLE)","body":"$(inputs.params.PULL_REQUEST_BODY)","head":"$(inputs.params.GIT_BRANCH_HEAD)","base":"$(inputs.params.GIT_BRANCH_BASE)"}'
+        curl -v -u :$GITHUB_TOKEN https://api.github.com/repos/$(inputs.params.GITHUB_REPO)/pulls -d '{"title":"$(inputs.params.PULL_REQUEST_TITLE)","body":"$(inputs.params.PULL_REQUEST_BODY)","head":"$(inputs.params.GIT_BRANCH_HEAD)","base":"$(inputs.params.GIT_BRANCH_BASE)"}'

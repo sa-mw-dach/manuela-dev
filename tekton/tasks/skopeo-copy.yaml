@@ -22,4 +22,5 @@ spec:
       #!/usr/bin/env bash
       cd git-repo/$(inputs.params.PATH_CONTEXT)/
       export SEMVER=$(cat VERSION)
+      echo skopeo copy --authfile=/pushsecret/.dockerconfigjson --src-tls-verify=false --dest-tls-verify=false docker://$(inputs.resources.local-image.url):$SEMVER docker://$(inputs.resources.remote-image.url):$SEMVER
       skopeo copy --authfile=/pushsecret/.dockerconfigjson --src-tls-verify=false --dest-tls-verify=false docker://$(inputs.resources.local-image.url):$SEMVER docker://$(inputs.resources.remote-image.url):$SEMVER

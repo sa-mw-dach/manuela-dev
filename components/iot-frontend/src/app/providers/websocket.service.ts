@@ -93,6 +93,17 @@ export class WebsocketService {
         return observable;
     }
 
+    observeVibrationAlerts() {
+        console.debug('observeTemperatureAlerts');
+        const observable = new Observable(observer => {
+            this.socket.on('vibration-alert', (data) => {
+                // console.debug('vibration-alert -> Received sensor vibration event');
+                observer.next(data);
+            });
+        });
+        return observable;
+    }
+
     isConnected() {
         return this.socket.connected;
     }

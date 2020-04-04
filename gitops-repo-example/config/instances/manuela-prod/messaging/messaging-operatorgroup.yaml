@@ -1,0 +1,10 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  generateName: manuela-prod-messaging-
+  generation: 1
+  name: manuela-prod-messaging
+  namespace: manuela-prod-messaging
+spec:
+  targetNamespaces:
+  - manuela-prod-messaging

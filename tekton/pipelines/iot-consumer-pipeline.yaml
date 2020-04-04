@@ -57,7 +57,7 @@ spec:
         value: components/iot-consumer
     runAfter:
       - bumpversion
-  - name: modify-gitops
+  - name: modify-gitops-test
     taskRef:
       name: gitops-imagetag
       kind: Task
@@ -67,18 +67,22 @@ spec:
       inputs:
         - name: source-semver
           resource: git-repo
-        - name: source
+        - name: source-gitops
           resource: gitops-repo
     params:
-    - name: RESOURCE_PATH
+    - name: GIT_BRANCH
+      value: master
+    - name: KUSTOMIZATION_YAML_PATH
       value: config/instances/manuela-tst/kustomization.yaml
     - name: YAML_PATH
-      value: images.(name==line-dashboard).newTag  
+      value: images.(name==messaging).newTag  
+    - name: VERSION_PATH
+      value: components/iot-consumer/VERSION
   - name: argocd-sync-application
     taskRef:
       name: argocd-task-sync-and-wait
     runAfter:
-      - modify-gitops
+      - modify-gitops-test
     params:
       - name: application-name
         value: manuela-tst-all
@@ -140,14 +144,41 @@ spec:
           resource: remote-image
     params:
     - name: PATH_CONTEXT
-      value: components/iot-consumer    
-  - name: notify-gitops
+      value: components/iot-consumer
+  - name: modify-gitops-prod
     taskRef:
-      name: github-add-comment 
+      name: gitops-imagetag
+      kind: Task
     runAfter:
       - push-to-quay
+    resources:
+      inputs:
+        - name: source-semver
+          resource: git-repo
+        - name: source-gitops
+          resource: gitops-repo
     params:
-      - name: REQUEST_URL
-        value: https://github.com/sa-mw-dach/manuela-gitops/issues/3
-      - name: COMMENT
-        value: Tekton iot-consumer-pipeline; There is a new version of quay.io/manuela/iot-consumer available.
+    - name: KUSTOMIZATION_YAML_PATH
+      value: config/templates/manuela-openshift-prod/messaging/kustomization.yaml
+    - name: YAML_PATH
+      value: images.(name==messaging).newTag  
+    - name: GIT_BRANCH
+      value: staging-approval
+    - name: VERSION_PATH
+      value: components/iot-consumer/VERSION
+    - name: IMAGESTREAM_PATH
+      value: config/templates/manuela-openshift-prod/messaging/messaging-is.yaml 
+    - name: REMOTE_IMAGE
+      value: quay.io/manuela/iot-consumer
+  - name: create-pull-request
+    taskRef:
+      name: github-add-pull-request 
+    runAfter:
+      - modify-gitops-prod
+    params:
+      - name: GITHUB_REPO
+        value: sa-mw-dach/manuela-gitops
+      - name: GIT_BRANCH_HEAD
+        value: staging-approval
+      - name: GIT_BRANCH_BASE
+        value: master
