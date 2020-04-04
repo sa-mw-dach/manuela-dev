@@ -93,7 +93,7 @@ public class VibrationSensor implements Sensor {
 		currentValue = currentValue + randValue * direction;
 
 		if( (count % peakInterval) == 0) {
-			sumitValue = currentValue * 2;
+			sumitValue = currentValue * 2.5;
 		} else {
 			sumitValue = currentValue;
 		}
