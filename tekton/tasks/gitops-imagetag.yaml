@@ -76,6 +76,7 @@ spec:
         if [ ! -z "$(inputs.params.IMAGESTREAM_PATH)" ]; then
           echo "Adding $semver to image stream $(inputs.params.IMAGESTREAM_PATH)"
           echo "{\"spec\":{\"tags\":[{\"name\":\"$semver\",\"from\":{\"kind\":\"DockerImage\",\"name\":\"$(inputs.params.REMOTE_IMAGE):$semver\"},\"importPolicy\":{},\"referencePolicy\":{\"type\":\"Local\"}}]}}" | yq -P m -i -a $(inputs.params.IMAGESTREAM_PATH) -
+          yq -P d -i $(inputs.params.IMAGESTREAM_PATH) 'spec.tags[0]'
         fi
     workingdir: /workspace/source-gitops
   - name: git-push
