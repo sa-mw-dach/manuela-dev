@@ -24,12 +24,6 @@ spec:
       - name: line-dashboard
         image: line-dashboard:latest
         imagePullPolicy: Always
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 30
         ports:
         - containerPort: 8080
           name: http

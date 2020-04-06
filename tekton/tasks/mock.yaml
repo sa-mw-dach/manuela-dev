@@ -6,6 +6,7 @@ spec:
   inputs:
     params:
       - name: MESSAGE
+        type: string
         description: |
           The message to echo.
         default: "Hello from mock-task"

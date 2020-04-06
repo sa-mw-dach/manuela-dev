@@ -1,11 +1,16 @@
-resources:
-- manuela-ci.yaml
-- pipeline.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: manuela-ci
+
 bases:
+- ../namespaces_and_operator_subscriptions/openshift-pipelines
+- ../namespaces_and_operator_subscriptions/manuela-ci
 - pipeline-resources
 - pipelines
 #- secrets
 - tasks
 - configmaps
-- github.com/sa-mw-dach/manuela-gitops/config/templates/manuela-team-rolebindings
-namespace: manuela-ci
+
+resources:
+- pipeline-service-account.yaml

@@ -9,4 +9,4 @@ spec:
   name: openshift-pipelines-operator
   source: community-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: openshift-pipelines-operator.v0.10.5
+  startingCSV: openshift-pipelines-operator.v0.10.8

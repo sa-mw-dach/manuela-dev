@@ -22,12 +22,6 @@ spec:
       - image: messaging
         imagePullPolicy: Always
         name: messaging
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          initialDelaySeconds: 15
-          periodSeconds: 30
         ports:
         - containerPort: 3000
           protocol: TCP
