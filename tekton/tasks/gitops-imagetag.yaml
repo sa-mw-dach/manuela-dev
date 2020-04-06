@@ -40,6 +40,10 @@ spec:
       type: string
       description: quay.io/manuela/iot-consumer
       default: ""
+    - name: TRUNCATE_IMAGESTREAM_TAGS_AFTER
+      type: string
+      description: Number of image stream tags to keep
+      default: "5"
     resources:
     - name: source-gitops
       type: git
@@ -76,7 +80,9 @@ spec:
         if [ ! -z "$(inputs.params.IMAGESTREAM_PATH)" ]; then
           echo "Adding $semver to image stream $(inputs.params.IMAGESTREAM_PATH)"
           echo "{\"spec\":{\"tags\":[{\"name\":\"$semver\",\"from\":{\"kind\":\"DockerImage\",\"name\":\"$(inputs.params.REMOTE_IMAGE):$semver\"},\"importPolicy\":{},\"referencePolicy\":{\"type\":\"Local\"}}]}}" | yq -P m -i -a $(inputs.params.IMAGESTREAM_PATH) -
-          yq -P d -i $(inputs.params.IMAGESTREAM_PATH) 'spec.tags[0]'
+          if [ $(yq r $(inputs.params.IMAGESTREAM_PATH) --length spec.tags) -gt $(inputs.params.TRUNCATE_IMAGESTREAM_TAGS_AFTER) ]; then
+            yq -P d -i $(inputs.params.IMAGESTREAM_PATH) 'spec.tags[0]'
+          fi
         fi
     workingdir: /workspace/source-gitops
   - name: git-push
