@@ -39,8 +39,10 @@ export class SensorsPage implements OnInit, OnDestroy {
     const toast = await this.toastController.create({
       header: 'Vibration ALERT!',
       message: 'Please check the pump and and submit a ticket.',
+      duration: 3000,
       position: 'bottom',
-      color: 'danger',
+      color: 'danger'
+      /*
       buttons: [
         {
           text: 'Done',
@@ -50,12 +52,11 @@ export class SensorsPage implements OnInit, OnDestroy {
           }
         }
       ]
+      */
     });
     toast.present();
     // console.debug('*** presentToastVibration ');
   }
-
-
 
   plotDynamicSplineChart(machineId: string, series: any, unit: string, threshold: number) {
     return HighCharts.chart(machineId, {
