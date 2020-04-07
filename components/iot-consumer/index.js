@@ -37,6 +37,21 @@ const io = require('socket.io')(http, { origins: '*:*', path: socket_path });
 app.use(cors());
 app.use(compression());
 
+// health check
+app.use('/health', async (_req, res, _next) => {
+	const healthcheck = {
+		uptime: process.uptime(),
+		message: 'OK',
+		timestamp: Date.now()
+	};
+	try {
+		res.send(healthcheck);
+	} catch (e) {
+		healthcheck.message = e;
+		res.status(503).send(healthcheck);
+	}
+});
+
 // var client  = mqtt.connect('mqtt://test.mosquitto.org')
 
 var client = mqtt.connect(mqtt_broker, { username: mqtt_user, password: mqtt_password });
