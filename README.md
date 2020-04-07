@@ -1,15 +1,12 @@
 # ManuELA-dev
 
 MANUfacturing Edge Lightweight Accelerator
+This repo containts all development artefacts, i.e. source code of the different components, build pipleine, CodeReadyWorkspace Dev files.
 
-## Start your ManuELA-dev environment
+You have two options to develop.
+## Use local laptop with VSCode or similiar.
+TODO: Instructions on how to setup local dev.
 
-To start developing in manuela-dev:
-1. For Red Hatters: Just start the workspace: (https://codeready-manuela-crw.apps.ocp3.stormshift.coe.muc.redhat.com/f?url=https://github.com/sa-mw-dach/manuela-dev)
-
-The URL should use your instance of Che/CodeReady Workspaces:
-
-```
-https://<your-codeready-workspaces-instance>/f?url=https://github.com/sa-mw-dach/manuela-dev
-```
-
+## Use Code Ready Workspaces
+You could use your own Code Ready Workspace where everything necessary is already setup.
+That is actually part of the demo, please see the Demo Script for the CloudeIDE
