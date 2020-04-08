@@ -1,4 +1,4 @@
-# ito-anomaly-detection
+# iot-anomaly-detection
 
 Build Config and Deploy 
 

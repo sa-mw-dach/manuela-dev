@@ -17,7 +17,7 @@ spec:
     - spec:
         containers:
           - name: anomaly-detection
-            image: ito-anomaly-detection:latest
+            image: iot-anomaly-detection:latest
             env:
             - name: MODEL_VERSION
               value: "1"

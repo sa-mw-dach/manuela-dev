@@ -1,7 +1,7 @@
 kind: ImageStream
 apiVersion: v1
 metadata:
-  name: ito-anomaly-detection
+  name: iot-anomaly-detection
   labels:
     component: serving
 spec:

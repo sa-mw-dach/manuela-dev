@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
 - odh-instance.yaml
 - seldon-deployment-crd.yaml
-- ito-anomaly-detection-bc.yaml  
-- ito-anomaly-detection-route.yaml   
-- ito-anomaly-detection-is.yaml  
-- ito-anomaly-detection-seldon.yaml
+- iot-anomaly-detection-bc.yaml  
+- iot-anomaly-detection-route.yaml   
+- iot-anomaly-detection-is.yaml  
+- iot-anomaly-detection-seldon.yaml

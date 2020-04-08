@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: BuildConfig
 metadata:
-  name: ito-anomaly-detection
+  name: iot-anomaly-detection
   annotations:
     description: >
       Source-to-Image (S2I) builder image for serving an anomaly detection model
@@ -11,16 +11,15 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: ito-anomaly-detection:latest
+      name: iot-anomaly-detection:latest
   postCommit: {}
   resources: {}
   runPolicy: Serial
   source:
     git:
       uri: https://github.com/sa-mw-dach/manuela-dev.git
-      ref: "ito-anomaly-detection"
     type: Git
-    contextDir: "components/ito-anomaly-detection"
+    contextDir: "components/iot-anomaly-detection"
   strategy:
     sourceStrategy:
       from:
