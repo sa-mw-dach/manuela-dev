@@ -54,9 +54,12 @@ app.use('/health', async (_req, res, _next) => {
 
 // var client  = mqtt.connect('mqtt://test.mosquitto.org')
 
+console.log('connecting to ', mqtt_broker);
+
 var client = mqtt.connect(mqtt_broker, { username: mqtt_user, password: mqtt_password });
 
 client.on('connect', function () {
+    console.log('connected');
     client.subscribe(topic_gps, function (err) {});
     client.subscribe(topic_temperature, function (err) {});
     client.subscribe(topic_vibration, function (err) {});
@@ -99,12 +102,12 @@ function check_anomaly(id, value) {
     } else {
        console.log('Last ID: %s,  Val: %d', id, last_value_map[id] );
        if (  value > 2 && value > (last_value_map[id] * 1.95) ) {
-	      result = true 
+	      result = true
        } else {
-         result = false 
+         result = false
        }
     }
-    
+
     console.log('New  ID: %s,  Val: %d', id, value );
     last_value_map[id] = value;
     return result;
@@ -117,16 +120,13 @@ function handleTemperature(message) {
     const elements = data.split(',');
 
     // Demo usecase:
-    // - Someboday added a Celsius in Fahrenheit conversion
-    // - Fix it by commenting out the conversion from Celsius in Fahrenheit
-
-    /*
+    // - Someboday added an unnecessary Celsius in Fahrenheit conversion
+    // - Fix it by commenting out the conversion from Celsius in Fahrenheit:
+ /*
     var modifiedValue = (Number(elements[2]) * 9/5) + 32;
     var newData = data.replace(elements[2], modifiedValue);
     message = Buffer.from(newData, 'utf8');
-    */
-
-
+*/
     io.sockets.emit("temperature-event", message);
     // check for temperature threshold
     if(temperature_alert_enabled) {
@@ -156,7 +156,7 @@ function handleVibration(message) {
             console.log('vibration alert!!!');
             io.sockets.emit("vibration-alert", message);
         }
-    } 
+    }
 
 }
 
