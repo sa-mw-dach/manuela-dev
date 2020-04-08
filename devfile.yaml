@@ -38,6 +38,9 @@ components:
    type: dockerimage
    alias: iot-consumer
    image: 'registry.redhat.io/codeready-workspaces/stacks-node-rhel8:2.0'
+   env:
+      - value: 'ws://localhost:61616'
+        name: MQTT_BROKER
  - mountSources: true
    endpoints:
      - name: iot-frontend
@@ -58,14 +61,18 @@ components:
    alias: iot-software-sensor
    image: 'registry.redhat.io/codeready-workspaces/stacks-java-rhel8:2.0'
    env:
-   - value: >-
-      -XX:MaxRAMPercentage=50.0 -XX:+UseParallelGC -XX:MinHeapFreeRatio=10
-      -XX:MaxHeapFreeRatio=20 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90
-      -Dsun.zip.disableMemoryMapping=true -Xms20m
-      -Djava.security.egd=file:/dev/./urandom -Duser.home=/home/jboss
-     name: JAVA_OPTS
-   - value: $(JAVA_OPTS)
-     name: MAVEN_OPTS
+    - value: >-
+        -XX:MaxRAMPercentage=50.0 -XX:+UseParallelGC -XX:MinHeapFreeRatio=10
+        -XX:MaxHeapFreeRatio=20 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90
+        -Dsun.zip.disableMemoryMapping=true -Xms20m
+        -Djava.security.egd=file:/dev/./urandom -Duser.home=/home/jboss
+      name: JAVA_OPTS
+    - value: $(JAVA_OPTS)
+      name: MAVEN_OPTS
+    - value: '61616'
+      name: MQTT_PORT
+    - value: localhost
+      name: MQTT_HOSTNAME
 commands:
  - name: build
    actions:
