@@ -4,7 +4,7 @@ metadata:
 projects:
  - name: manuela-dev
    source:
-     location: 'git@github.com:sa-mw-dach/manuela-dev.git'
+     location: 'git@github.com:sa-mw-dach/manuela-dev'
      type: git
      branch: master
 components:
@@ -140,5 +140,14 @@ commands:
    - workdir: '${CHE_PROJECTS_ROOT}/manuela-dev/components/iot-frontend'
      type: exec
      command: npm audit fix  
-     component: iot-frontend           
+     component: iot-frontend
+ - name: Update iot-consumer URL config
+   actions:
+   - workdir: '${CHE_PROJECTS_ROOT}/manuela-dev/components/iot-frontend/src/conf'
+     type: exec
+     command: >-
+      oc login --server=${KUBERNETES_SERVICE_HOST}:443 && 
+      export IOT_CONSUMER_ROUTE=$(oc get route | grep iot-consumer | awk '{ print $2 }') &&
+      sed -i 's|http://localhost:3000|https://'$IOT_CONSUMER_ROUTE'|' config.json
+     component: iot-frontend               
 
