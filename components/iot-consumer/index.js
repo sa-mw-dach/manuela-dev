@@ -122,7 +122,7 @@ function handleTemperature(message) {
     // Demo usecase:
     // - Someboday added an unnecessary Celsius in Fahrenheit conversion
     // - Fix it by commenting out the conversion from Celsius in Fahrenheit:
- /*
+/*
     var modifiedValue = (Number(elements[2]) * 9/5) + 32;
     var newData = data.replace(elements[2], modifiedValue);
     message = Buffer.from(newData, 'utf8');
