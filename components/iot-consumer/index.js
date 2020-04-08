@@ -120,7 +120,7 @@ function handleTemperature(message) {
     const elements = data.split(',');
 
     // Demo usecase:
-    // - Someboday added an unnecessary Celsius in Fahrenheit conversion
+    // - Somebody added an unnecessary Celsius in Fahrenheit conversion
     // - Fix it by commenting out the conversion from Celsius in Fahrenheit:
 /*
     var modifiedValue = (Number(elements[2]) * 9/5) + 32;
@@ -128,6 +128,7 @@ function handleTemperature(message) {
     message = Buffer.from(newData, 'utf8');
 */
     io.sockets.emit("temperature-event", message);
+
     // check for temperature threshold
     if(temperature_alert_enabled) {
         if(Number(elements[2]) > temperature_threshold) {
