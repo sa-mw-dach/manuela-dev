@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
 - amq-broker.yaml
-- odh-instance.yaml
 - iot-consumer-bc.yaml
 - iot-consumer-dc.yaml
 - iot-consumer-is.yaml

@@ -1,9 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-resources:
-- seldon-deployment-crd.yaml
-- edge-anomaly-detection-bc.yaml  
-- edge-anomaly-detection-route.yaml   
-- edge-anomaly-detection-is.yaml  
-- edge-anomaly-detection-seldon.yaml

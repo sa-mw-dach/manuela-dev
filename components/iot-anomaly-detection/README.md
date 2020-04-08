@@ -1,4 +1,4 @@
-# edge-anomaly-detection
+# ito-anomaly-detection
 
 Build Config and Image Stream
 
