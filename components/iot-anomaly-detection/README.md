@@ -1,15 +1,10 @@
 # ito-anomaly-detection
 
-Build Config and Image Stream
+Build Config and Deploy 
 
 ```
-oc apply -f serve.bc.yaml
-```
-
-Seldon Deployment
-
-```
-oc apply -f serve.seldon.yaml
+cd manifests 
+oc apply -k .
 ```
 
 You can change `MODEL_STDDEV_MULTIPLIER` (defines a threshold for anomaly detection - `mean + std dev * multiplier`) and `MODEL_WINDOW_SIZE` (how many historiacl values are used to compute mean and std dev) env vars to modify the parameters for anomaly detection
