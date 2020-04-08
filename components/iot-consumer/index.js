@@ -125,7 +125,8 @@ function handleTemperature(message) {
     message = Buffer.from(newData, 'utf8');
     console.log('Send data in Fahrenheit');
 
-    io.sockets.emit("temperature-event", message);
+    */
+       io.sockets.emit("temperature-event", message);
     // check for temperature threshold
     if(temperature_alert_enabled) {
         if(Number(elements[2]) > temperature_threshold) {
