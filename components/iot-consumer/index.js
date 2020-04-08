@@ -99,12 +99,12 @@ function check_anomaly(id, value) {
     } else {
        console.log('Last ID: %s,  Val: %d', id, last_value_map[id] );
        if (  value > 2 && value > (last_value_map[id] * 1.95) ) {
-	      result = true 
+	      result = true
        } else {
-         result = false 
+         result = false
        }
     }
-    
+
     console.log('New  ID: %s,  Val: %d', id, value );
     last_value_map[id] = value;
     return result;
@@ -120,11 +120,11 @@ function handleTemperature(message) {
     // - Someboday added a Celsius in Fahrenheit conversion
     // - Fix it by commenting out the conversion from Celsius in Fahrenheit
 
-    /*
+
     var modifiedValue = (Number(elements[2]) * 9/5) + 32;
     var newData = data.replace(elements[2], modifiedValue);
     message = Buffer.from(newData, 'utf8');
-    */
+
 
 
     io.sockets.emit("temperature-event", message);
@@ -156,7 +156,7 @@ function handleVibration(message) {
             console.log('vibration alert!!!');
             io.sockets.emit("vibration-alert", message);
         }
-    } 
+    }
 
 }
 
