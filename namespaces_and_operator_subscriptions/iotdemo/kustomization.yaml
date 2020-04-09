@@ -10,3 +10,4 @@ resources:
 - iotdemo-namespace.yaml
 - iotdemo-operatorgroup.yaml
 - amq-operator-subscription.yaml
+- odh-operator-subscription.yaml
