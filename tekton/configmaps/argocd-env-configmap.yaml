@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: argocd-env-configmap
 data:
-  ARGOCD_SERVER: argocd-server-argocd.apps.ocp3.stormshift.coe.muc.redhat.com:443
+  ARGOCD_SERVER: argocd-server.argocd.svc
