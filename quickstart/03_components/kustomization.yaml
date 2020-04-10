@@ -3,7 +3,10 @@ kind: Kustomization
 
 namespace: iotdemo
 
+resources:
+- iotdemo-rolebinding.yaml
+
 bases:
-  - ../../components/iot-consumer/manifests
-  - ../../components/iot-frontend/manifests
-  - ../../components/iot-software-sensor/manifests
+- ../../components/iot-consumer/manifests
+- ../../components/iot-frontend/manifests
+- ../../components/iot-software-sensor/manifests

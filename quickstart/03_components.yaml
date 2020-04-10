@@ -1,3 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: system:image-pullers
+  namespace: iotdemo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:image-puller
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: system:authenticated
+---
 apiVersion: v1
 data:
   MQTT_BROKER: ws://broker-amq-mqtt-all-0-svc:61616
