@@ -5,7 +5,8 @@ namespace: argocd
 
 resources:
 - argocd.yaml
-- networkpolicy.yaml
+#- networkpolicy-router.yaml
+#- networkpolicy-pipeline.yaml
 
 bases: 
 - ../../namespaces_and_operator_subscriptions/argocd
