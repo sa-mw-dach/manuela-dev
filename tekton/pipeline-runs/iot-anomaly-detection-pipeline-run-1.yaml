@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  name: iot-anomaly-detection-pipeline-run-1
+spec:
+  pipelineRef:
+    name: iot-anomaly-detection-pipeline
+  resources:
+    - name: gitops-repo
+      resourceRef:
+        name: manuela-gitops
+    - name: remote-image
+      resourceRef:
+        name: quay-anomaly-detection-image
+    - name: git-repo
+      resourceRef:
+        name: manuela-git
+    - name: local-image
+      resourceRef:
+        name: ocp-anomaly-detection-image
+  serviceAccountName: pipeline
+
