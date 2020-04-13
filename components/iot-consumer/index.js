@@ -116,11 +116,7 @@ async function check_anomaly(id, value) {
         log.debug("edgeAnomalyDict: " + JSON.stringify(edgeAnomalyDict)); //DELETE
     
         try {
-          if ( id != 'floor-1-line-1-extruder-1pump-2' ) {
-            result = false;
-            console.log('Last ID: %s,  Val: NO', id );
-          } else {
-            console.log('Last ID: %s,  Val: %d', id, value );
+            console.log('*ED* ID: %s,  Val: %d', id, value );
             const edgeAnomalyResponse = await request({
               method: 'POST',
               uri: anomaly_detection_url + '/api/v0.1/predictions',
@@ -137,7 +133,6 @@ async function check_anomaly(id, value) {
             } else {
               result = false;
             }
-          }
         } catch (err) {
           log.error("check_anomaly failed", err)
         }
