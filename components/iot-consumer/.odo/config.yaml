@@ -1,0 +1,14 @@
+kind: LocalConfig
+apiversion: odo.openshift.io/v1alpha1
+ComponentSettings:
+  Type: nodejs:latest
+  SourceLocation: ./
+  SourceType: local
+  Ports:
+  - 8080/TCP
+  Application: consumer
+  Project: itodev-consumer
+  Name: consumer
+  Url:
+  - Name: test
+    Port: 8080
