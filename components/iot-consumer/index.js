@@ -29,7 +29,7 @@ const vibration_anomaly_pump = process.env.VIBRATION_ANOMALY_PUMP || "floor-1-li
 
 // const anomaly_detection_url = process.env.ANOMALY_DETECTION_URL || 'http://anomaly-detection-anomaly-detection';
 
-const anomaly_detection_url = process.env.ANOMALY_DETECTION_URL || 'https://anomaly-detection-iotdemo.apps-crc.testing';
+const anomaly_detection_url = process.env.ANOMALY_DETECTION_URL || 'http://anomaly-detection-iotdemo.apps-crc.testing';
 
 
 
@@ -125,8 +125,11 @@ async function check_anomaly(id, value) {
               timeout: 1000
             });
     
-            log.debug("Edge Anomaly Repsonse: " + JSON.stringify(edgeAnomalyResponse)); //DELETE
-            log.debug("Edge Anomaly Repsonse.data: " + JSON.stringify(edgeAnomalyResponse.data)); //DELETE
+            // log.debug("Edge Anomaly Repsonse: " + JSON.stringify(edgeAnomalyResponse)); //DELETE
+            // log.debug("Edge Anomaly Repsonse.data: " + JSON.stringify(edgeAnomalyResponse.data)); //DELETE
+
+            console.log("Edge Anomaly Repsonse: " + JSON.stringify(edgeAnomalyResponse)); //DELETE
+            console.log("Edge Anomaly Repsonse.data: " + JSON.stringify(edgeAnomalyResponse.data)); //DELETE
     
             if ( parseInt(edgeAnomalyResponse["data"]["ndarray"][0]) == 1 ){
               result = true;
@@ -134,6 +137,7 @@ async function check_anomaly(id, value) {
               result = false;
             }
         } catch (err) {
+          console.log("check_anomaly failed", err)
           log.error("check_anomaly failed", err)
         }
 
