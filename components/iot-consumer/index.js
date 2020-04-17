@@ -22,17 +22,11 @@ var mqtt_password = process.env.MQTT_PASSWORD || "iotuser";
 // threshold
 const temperature_threshold = process.env.TEMPERATURE_THRESHOLD || 70.0;
 
-const temperature_alert_enabled = ((process.env.TEMPERATURE_ALERT_ENABLED || "true") === 'true');
-const vibration_alert_enabled = ((process.env.VIBRATION_ALERT_ENABLED || "true") === 'true');
-const vibration_anomaly_enabled = ((process.env.VIBRATION_ANOMALY_ENABLED || "true") === 'true');
+const temperature_alert_enabled = ((process.env.TEMPERATURE_ALERT_ENABLED || "false") === 'true');
+const vibration_alert_enabled = ((process.env.VIBRATION_ALERT_ENABLED || "false") === 'true');
+const vibration_anomaly_enabled = ((process.env.VIBRATION_ANOMALY_ENABLED || "false") === 'true');
 const vibration_anomaly_pump = process.env.VIBRATION_ANOMALY_PUMP || "floor-1-line-1-extruder-1pump-2";
-
-// const anomaly_detection_url = process.env.ANOMALY_DETECTION_URL || 'http://anomaly-detection-anomaly-detection';
-
-const anomaly_detection_url = process.env.ANOMALY_DETECTION_URL || 'http://anomaly-detection-iotdemo.apps-crc.testing';
-
-
-
+const anomaly_detection_url = process.env.ANOMALY_DETECTION_URL || 'http://anomaly-detection-anomaly-detection';
 
 // setup application
 var mqtt = require('mqtt')
@@ -40,7 +34,7 @@ const compression = require('compression');
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-// const router = new express.Router();
+// const router = new express.Router(vibration_alert_enabled);
 const cors = require('cors');
 const io = require('socket.io')(http, { origins: '*:*', path: socket_path });
 const request = require('request-promise');
@@ -103,17 +97,17 @@ function handleLight(message) {
 }
 
 
-// Mock for Anomaly
-var last_value_map = {};
+// Anomaly Detection
+var last_value_map = {}; 
 async function check_anomaly(id, value) {
     var result = false
 
     if (vibration_anomaly_enabled && id == vibration_anomaly_pump ) {
-        // Call anomaly detection web service
+        // Call anomaly detection web service for specified pump
         console.log('Anomaly detection for: %s, Val: %d', id, value );
         var edgeAnomalyDict = { "data": { "ndarray": [parseFloat(value)] }};
 
-        log.debug("edgeAnomalyDict: " + JSON.stringify(edgeAnomalyDict)); //DELETE
+        // log.debug("edgeAnomalyDict: " + JSON.stringify(edgeAnomalyDict)); 
     
         try {
             console.log('*ED* ID: %s,  Val: %d', id, value );
@@ -127,9 +121,6 @@ async function check_anomaly(id, value) {
     
             // log.debug("Edge Anomaly Repsonse: " + JSON.stringify(edgeAnomalyResponse)); //DELETE
             // log.debug("Edge Anomaly Repsonse.data: " + JSON.stringify(edgeAnomalyResponse.data)); //DELETE
-
-            console.log("Edge Anomaly Repsonse: " + JSON.stringify(edgeAnomalyResponse)); //DELETE
-            console.log("Edge Anomaly Repsonse.data: " + JSON.stringify(edgeAnomalyResponse.data)); //DELETE
     
             if ( parseInt(edgeAnomalyResponse["data"]["ndarray"][0]) == 1 ){
               result = true;
@@ -137,24 +128,23 @@ async function check_anomaly(id, value) {
               result = false;
             }
         } catch (err) {
-          console.log("check_anomaly failed", err)
           log.error("check_anomaly failed", err)
         }
 
-
     } else {
-        // Basic internal anomaly check
+        // Basic internal anomaly check (Mock)
+        // All metric
 
         if ( isNaN(last_value_map[id])) {
         result = false
         console.log('Last ID: %s,  Val: NO', id );
         } else {
-        console.log('Last ID: %s,  Val: %d', id, last_value_map[id] );
-        if (  value > 2 && value > (last_value_map[id] * 1.95) ) {
-            result = true
-        } else {
-            result = false
-        }
+            console.log('Last ID: %s,  Val: %d', id, last_value_map[id] );
+            if (  value > 2 && value > (last_value_map[id] * 1.95) ) {
+                result = true
+            } else {
+                result = false
+            }
         }
 
         console.log('New  ID: %s,  Val: %d', id, value );
@@ -201,7 +191,7 @@ async function handleVibration(message) {
         var value = parseFloat(elements[2])
 
         var ano = await check_anomaly(id,value)
-        console.log('Ano: %s', ano);
+        // console.log('Ano: %s', ano);
 
         if(ano) {
             console.log('vibration alert!!!');
