@@ -17,7 +17,6 @@ spec:
   source:
     git:
       uri: https://github.com/sa-mw-dach/manuela-dev.git
-      ref: "Integrate-anomaly-detection"
     type: Git
     contextDir: "components/iot-consumer"
   strategy:
