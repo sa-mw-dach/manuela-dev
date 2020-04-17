@@ -4,6 +4,8 @@ metadata:
   name: argocd
   namespace: argocd
 spec:
+  server:
+    route: true
   dex:
     image: quay.io/ablock/dex
     openShiftOAuth: true
