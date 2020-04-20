@@ -33,6 +33,9 @@ public class SensorRoute extends RouteBuilder{
     @ConfigProperty(name = "mqtt.port")
     String mqtt_port;
 
+    @ConfigProperty(name = "mqtt.protocol")
+    String mqtt_protocol;
+
     @ConfigProperty(name = "mqtt.temperature.topic")
     String mqtt_temperature_topic;
 
@@ -63,25 +66,25 @@ public class SensorRoute extends RouteBuilder{
         if(temperatureSensor.isEnabled()) {
             fromF("timer:temperatureSensorHeartbeat?period=%s", temperatureSensor.getFrequency())
                 .process(createTemperaturePayload)
-                .toF("paho:%s?brokerUrl=ws://%s:%s",mqtt_temperature_topic,mqtt_host,mqtt_port);
+                .toF("paho:%s?brokerUrl=%s://%s:%s",mqtt_temperature_topic,mqtt_protocol,mqtt_host,mqtt_port);
         }
 
         if(vibrationSensor.isEnabled()) {
             fromF("timer:vibrationSensorHeartbeat?period=%s", vibrationSensor.getFrequency())
                 .process(createVibrationPayload)
-                .toF("paho:%s?brokerUrl=ws://%s:%s",mqtt_vibration_topic,mqtt_host,mqtt_port);
+                .toF("paho:%s?brokerUrl=%s://%s:%s",mqtt_vibration_topic,mqtt_protocol,mqtt_host,mqtt_port);
         }
 
         if(gpsSensor.isEnabled()) {
             fromF("timer:gpsSensorHeartbeat?period=%s", gpsSensor.getFrequency())
                 .process(createGpsPayload)
-                .toF("paho:%s?brokerUrl=ws://%s:%s",mqtt_gps_topic,mqtt_host,mqtt_port);
+                .toF("paho:%s?brokerUrl=%s://%s:%s",mqtt_gps_topic,mqtt_protocol,mqtt_host,mqtt_port);
         }
 
         if(lightSensor.isEnabled()) {
             fromF("timer:lightSensorHeartbeat?period=%s", lightSensor.getFrequency())
                 .process(createLightPayload)
-                .toF("paho:%s?brokerUrl=ws://%s:%s",mqtt_light_topic,mqtt_host,mqtt_port);
+                .toF("paho:%s?brokerUrl=%s://%s:%s",mqtt_light_topic,mqtt_protocol,mqtt_host,mqtt_port);
         }
         
     }
