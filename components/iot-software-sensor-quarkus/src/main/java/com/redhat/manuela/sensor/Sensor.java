@@ -1,4 +1,6 @@
-package com.redhat.manuela;
+package com.redhat.manuela.sensor;
+
+import com.redhat.manuela.model.Measure;
 
 public interface Sensor {
 	

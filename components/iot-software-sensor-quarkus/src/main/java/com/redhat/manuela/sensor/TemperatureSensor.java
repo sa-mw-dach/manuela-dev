@@ -1,9 +1,9 @@
-package com.redhat.manuela;
+package com.redhat.manuela.sensor;
 
 import java.util.concurrent.ThreadLocalRandom;
-
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import com.redhat.manuela.model.Measure;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped

@@ -1,4 +1,4 @@
-package com.redhat.manuela;
+package com.redhat.manuela.model;
 
 import java.io.Serializable;
 
