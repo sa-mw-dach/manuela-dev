@@ -1,50 +1,50 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: gitops-imagetag
 spec:
-  inputs:
-    params:
-    - name: GIT_USERNAME
-      description: The username to be used for the git commit.
-      type: string
-      default: "manuela-tekton"
-    - name: GIT_EMAIL
-      description: The email to be used for the git commit.
-      type: string
-      default: "manuela-team@redhat.com"
-    - name: GIT_COMMENT
-      description: The comment to be used for the git commit.
-      type: string
-      default: "Image tag updated by Tekton task gitops-imagetag"
-    - name: GIT_BRANCH
-      description: The branch to create / use
-      type: string
-      default: master
-    - name: VERSION_PATH
-      description: path of the VERSION file in the source-dev repo 
-      type: string
-    - name: KUSTOMIZATION_YAML_PATH
-      description: The path of the kustomize resource to be patched.
-      type: string
-      default: "config/instances/manuela-tst/kustomization.yaml"
-    - name: YAML_PATH
-      description: the yq yaml path of the value to be changed
-      type: string
-      default: images.(name==line-dashboard).newTag
-    - name: IMAGESTREAM_PATH
-      type: string
-      description: config/templates/manuela-openshift-prod/messaging/messaging-is.yaml
-      default: ""
-    - name: REMOTE_IMAGE
-      type: string
-      description: quay.io/manuela/iot-consumer
-      default: ""
-    - name: TRUNCATE_IMAGESTREAM_TAGS_AFTER
-      type: string
-      description: Number of image stream tags to keep
-      default: "5"
-    resources:
+  params:
+  - name: GIT_USERNAME
+    description: The username to be used for the git commit.
+    type: string
+    default: "manuela-tekton"
+  - name: GIT_EMAIL
+    description: The email to be used for the git commit.
+    type: string
+    default: "manuela-team@redhat.com"
+  - name: GIT_COMMENT
+    description: The comment to be used for the git commit.
+    type: string
+    default: "Image tag updated by Tekton task gitops-imagetag"
+  - name: GIT_BRANCH
+    description: The branch to create / use
+    type: string
+    default: master
+  - name: VERSION_PATH
+    description: path of the VERSION file in the source-dev repo 
+    type: string
+  - name: KUSTOMIZATION_YAML_PATH
+    description: The path of the kustomize resource to be patched.
+    type: string
+    default: "config/instances/manuela-tst/kustomization.yaml"
+  - name: YAML_PATH
+    description: the yq yaml path of the value to be changed
+    type: string
+    default: images.(name==line-dashboard).newTag
+  - name: IMAGESTREAM_PATH
+    type: string
+    description: config/templates/manuela-openshift-prod/messaging/messaging-is.yaml
+    default: ""
+  - name: REMOTE_IMAGE
+    type: string
+    description: quay.io/manuela/iot-consumer
+    default: ""
+  - name: TRUNCATE_IMAGESTREAM_TAGS_AFTER
+    type: string
+    description: Number of image stream tags to keep
+    default: "5"
+  resources:
+    inputs:
     - name: source-gitops
       type: git
     - name: source-semver

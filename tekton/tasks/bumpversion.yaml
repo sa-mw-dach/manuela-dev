@@ -1,24 +1,24 @@
 kind: Task
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 metadata:
   name: bumpversion
 spec:
-  inputs:
-    resources:
-      - name: source
-        type: git
-        targetPath: git-repo
-    params:
-      - name: PATH_CONTEXT
-        type: string
-      - name: GIT_USERNAME
-        description: The username to be used for the git commit.
-        type: string
-        default: "manuela-tekton"
-      - name: GIT_EMAIL
-        description: The email to be used for the git commit.
-        type: string
-        default: "manuela-team@redhat.com"
+  resources:
+    inputs:
+    - name: source
+      type: git
+      targetPath: git-repo
+  params:
+  - name: PATH_CONTEXT
+    type: string
+  - name: GIT_USERNAME
+    description: The username to be used for the git commit.
+    type: string
+    default: "manuela-tekton"
+  - name: GIT_EMAIL
+    description: The email to be used for the git commit.
+    type: string
+    default: "manuela-team@redhat.com"
 #  results:
 #    - name: new-version
 #      description: The current date in unix timestamp format

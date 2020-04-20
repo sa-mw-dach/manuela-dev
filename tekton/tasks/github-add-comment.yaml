@@ -1,25 +1,24 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: github-add-comment
   description: |
     This Task will add a comment to a pull request or an issue.
 spec:
-  inputs:
-    params:
-      - name: GITHUB_HOST_URL
-        description: |
-          The GitHub host, adjust this if you run a GitHub enteprise.
-        default: "api.github.com"
+  params:
+  - name: GITHUB_HOST_URL
+    description: |
+      The GitHub host, adjust this if you run a GitHub enteprise.
+    default: "api.github.com"
 
-      - name: REQUEST_URL
-        description: |
-          The GitHub issue or pull request URL where we want to add a new
-          comment.
+  - name: REQUEST_URL
+    description: |
+      The GitHub issue or pull request URL where we want to add a new
+      comment.
 
-      - name: COMMENT
-        description: |
-          The actual comment to add.
+  - name: COMMENT
+    description: |
+      The actual comment to add.
   steps:
     - name: add-comment
       env:
