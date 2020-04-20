@@ -7,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.redhat.manuela.model.Measure;
+import com.redhat.manuela.sensor.GpsSensor;
 import com.redhat.manuela.sensor.TemperatureSensor;
 import com.redhat.manuela.sensor.VibrationSensor;
 
@@ -37,11 +38,17 @@ public class SensorRoute extends RouteBuilder{
     @ConfigProperty(name = "mqtt.vibration.topic")
     String mqtt_vibration_topic;
 
+    @ConfigProperty(name = "mqtt.gps.topic")
+    String mqtt_gps_topic;
+
     @Inject
     TemperatureSensor temperatureSensor;
 
     @Inject
     VibrationSensor vibrationSensor;
+
+    @Inject
+    GpsSensor gpsSensor;
 
     @Override
     public void configure() throws Exception { 
@@ -56,6 +63,12 @@ public class SensorRoute extends RouteBuilder{
             fromF("timer:vibrationSensorHeartbeat?period=%s", vibrationSensor.getFrequency())
                 .process(createVibrationPayload)
                 .toF("paho:%s?brokerUrl=ws://%s:%s",mqtt_vibration_topic,mqtt_host,mqtt_port);
+        }
+
+        if(gpsSensor.isEnabled()) {
+            fromF("timer:gpsSensorHeartbeat?period=%s", gpsSensor.getFrequency())
+                .process(createGpsPayload)
+                .toF("paho:%s?brokerUrl=ws://%s:%s",mqtt_gps_topic,mqtt_host,mqtt_port);
         }
         
     }
@@ -81,6 +94,19 @@ public class SensorRoute extends RouteBuilder{
 		    Measure measure = new Measure(machineId, deviceId, String.valueOf(utc.toInstant().toEpochMilli()));
 		    vibrationSensor.calculateCurrentMeasure(measure);
 		    log.info("Current Vibration Measure " + measure.getPayload());
+            msg.setBody(measure.getCSVData(), String.class);
+            exchange.setMessage(msg);
+        }
+    };
+
+    private final Processor createGpsPayload = new Processor() {
+        @Override
+        public void process(final Exchange exchange) throws Exception {
+            final Message msg = exchange.getIn();
+            ZonedDateTime utc = ZonedDateTime.now(ZoneOffset.UTC);
+		    Measure measure = new Measure(machineId, deviceId, String.valueOf(utc.toInstant().toEpochMilli()));
+		    gpsSensor.calculateCurrentMeasure(measure);
+		    log.info("Current GPS Measure " + measure.getPayload());
             msg.setBody(measure.getCSVData(), String.class);
             exchange.setMessage(msg);
         }
