@@ -1,11 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ArgoCD
 metadata:
-  name: argocd
+  name: argocdinstance
   namespace: argocd
 spec:
   server:
     route: true
+    host: argocd
+    ingress: false
+    insecure: false
+    resources: {}
   dex:
     image: quay.io/ablock/dex
     openShiftOAuth: true
