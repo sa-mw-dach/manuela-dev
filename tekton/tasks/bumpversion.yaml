@@ -27,7 +27,7 @@ spec:
     image: quay.io/manuela/bumpversiontask:latest
     script: |
       #!/usr/bin/env bash
-      cd git-repo/$(inputs.params.PATH_CONTEXT)/
+      cd git-repo/$(params.PATH_CONTEXT)/
       bump2version --commit build VERSION
   - name: push-version-to-git
     image: alpine/git
@@ -46,8 +46,8 @@ spec:
         #!/usr/bin/env sh
         echo "https://$GITHUB_USER:$GITHUB_TOKEN@github.com" > ~/.git-credentials
         git config --global credential.helper store 'store --file ~/.git-credentials'
-        git config --global user.email "$(inputs.params.GIT_EMAIL)"
-        git config --global user.name "$(inputs.params.GIT_USERNAME)"
+        git config --global user.email "$(params.GIT_EMAIL)"
+        git config --global user.name "$(params.GIT_USERNAME)"
         git commit -a -m "Version Bump"
         git push --set-upstream origin master
     workingdir: /workspace/git-repo

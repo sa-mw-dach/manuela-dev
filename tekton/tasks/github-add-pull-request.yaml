@@ -40,5 +40,5 @@ spec:
             key: user      
     script: |
         #!/usr/bin/env sh
-        #echo curl -v -u :$GITHUB_TOKEN https://api.github.com/repos/$(inputs.params.GITHUB_REPO)/pulls -d '{"title":"$(inputs.params.PULL_REQUEST_TITLE)","body":"$(inputs.params.PULL_REQUEST_BODY)","head":"$(inputs.params.GIT_BRANCH_HEAD)","base":"$(inputs.params.GIT_BRANCH_BASE)"}'
-        curl -v -u :$GITHUB_TOKEN https://api.github.com/repos/$(inputs.params.GITHUB_REPO)/pulls -d '{"title":"$(inputs.params.PULL_REQUEST_TITLE)","body":"$(inputs.params.PULL_REQUEST_BODY)","head":"$(inputs.params.GIT_BRANCH_HEAD)","base":"$(inputs.params.GIT_BRANCH_BASE)"}'
+        #echo curl -v -u :$GITHUB_TOKEN https://api.github.com/repos/$(params.GITHUB_REPO)/pulls -d '{"title":"$(params.PULL_REQUEST_TITLE)","body":"$(params.PULL_REQUEST_BODY)","head":"$(params.GIT_BRANCH_HEAD)","base":"$(params.GIT_BRANCH_BASE)"}'
+        curl -v -u :$GITHUB_TOKEN https://api.github.com/repos/$(params.GITHUB_REPO)/pulls -d '{"title":"$(params.PULL_REQUEST_TITLE)","body":"$(params.PULL_REQUEST_BODY)","head":"$(params.GIT_BRANCH_HEAD)","base":"$(params.GIT_BRANCH_BASE)"}'

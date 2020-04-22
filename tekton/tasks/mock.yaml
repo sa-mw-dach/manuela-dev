@@ -13,4 +13,4 @@ spec:
   - image: node  # contains node
     script: |
       #!/usr/bin/env node
-      console.log("$(inputs.params.MESSAGE)")
+      console.log("$(params.MESSAGE)")
