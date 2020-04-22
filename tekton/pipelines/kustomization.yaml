@@ -2,5 +2,6 @@ resources:
 - iot-consumer-pipeline.yaml
 - iot-frontend-pipeline.yaml
 - iot-software-sensor-pipeline.yaml
+- iot-anomaly-detection-pipeline.yaml
 
 
