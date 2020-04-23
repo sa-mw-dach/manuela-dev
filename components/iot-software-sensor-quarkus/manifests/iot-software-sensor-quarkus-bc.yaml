@@ -19,7 +19,7 @@ spec:
   runPolicy: Serial
   source:
     git:
-      ref: camel-quarkus-sensor
+      ref: master
       uri: https://github.com/sa-mw-dach/manuela-dev.git
     type: Git
     contextDir: "components/iot-software-sensor-quarkus"
