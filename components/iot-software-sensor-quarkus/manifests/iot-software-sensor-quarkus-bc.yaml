@@ -12,10 +12,6 @@ spec:
       kind: ImageStreamTag
       name: iot-software-sensor-quarkus:latest
   postCommit: {}
-  resources: 
-    limits:
-      cpu: '4'
-      memory: 4Gi
   runPolicy: Serial
   source:
     git:

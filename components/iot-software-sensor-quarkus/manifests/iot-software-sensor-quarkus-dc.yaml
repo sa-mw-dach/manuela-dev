@@ -2,7 +2,7 @@ apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
   labels:
-    application: iot-software-sensor-quarkus
+    app: iot-software-sensor-quarkus
     app.kubernetes.io/part-of: ManuELA
   name: iot-software-sensor-quarkus
   annotations:
@@ -26,7 +26,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        application: iot-software-sensor-quarkus
+        app: iot-software-sensor-quarkus
         deploymentConfig: iot-software-sensor-quarkus
       name: iot-software-sensor-quarkus
     spec:
