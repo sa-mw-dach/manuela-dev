@@ -9,3 +9,5 @@ repository/
 .classpath
 .project
 .settings
+
+.odo/odo-file-index.json

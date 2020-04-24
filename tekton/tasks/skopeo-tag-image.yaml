@@ -1,24 +1,24 @@
 kind: Task
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 metadata:
   name: skopeo-tag-image
 spec:
-  inputs:
-    resources:
+  resources:
+    inputs:
       - name: source
         type: git
         targetPath: git-repo
       - name: image
         type: image
-    params:
-    - name: PATH_CONTEXT
-      type: string
+  params:
+  - name: PATH_CONTEXT
+    type: string
   steps:
   - name: skopeo-tag
     image: quay.io/redhat-emea-ssa-team/skopeo-ubi:latest
     script: |
       #!/usr/bin/env bash
-      cd git-repo/$(inputs.params.PATH_CONTEXT)/
+      cd git-repo/$(params.PATH_CONTEXT)/
       export SEMVER=$(cat VERSION)
-      echo skopeo copy --authfile=/pushsecret/.dockerconfigjson --src-tls-verify=false --dest-tls-verify=false docker://$(inputs.resources.image.url) docker://$(inputs.resources.image.url):$SEMVER
-      skopeo copy --authfile=/pushsecret/.dockerconfigjson --src-tls-verify=false --dest-tls-verify=false docker://$(inputs.resources.image.url) docker://$(inputs.resources.image.url):$SEMVER
+      echo skopeo copy --authfile=/pushsecret/.dockerconfigjson --src-tls-verify=false --dest-tls-verify=false docker://$(resources.inputs.image.url) docker://$(resources.inputs.image.url):$SEMVER
+      skopeo copy --authfile=/pushsecret/.dockerconfigjson --src-tls-verify=false --dest-tls-verify=false docker://$(resources.inputs.image.url) docker://$(resources.inputs.image.url):$SEMVER

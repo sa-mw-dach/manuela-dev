@@ -1,2 +1,2 @@
-.vscode/launch.json
+.vscode/*
 networkpathoperator/firewallrule/deploy/firewall-inventory-secret.yaml

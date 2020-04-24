@@ -1,24 +1,24 @@
 kind: Task
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 metadata:
   name: bumpversion
 spec:
-  inputs:
-    resources:
-      - name: source
-        type: git
-        targetPath: git-repo
-    params:
-      - name: PATH_CONTEXT
-        type: string
-      - name: GIT_USERNAME
-        description: The username to be used for the git commit.
-        type: string
-        default: "manuela-tekton"
-      - name: GIT_EMAIL
-        description: The email to be used for the git commit.
-        type: string
-        default: "manuela-team@redhat.com"
+  resources:
+    inputs:
+    - name: source
+      type: git
+      targetPath: git-repo
+  params:
+  - name: PATH_CONTEXT
+    type: string
+  - name: GIT_USERNAME
+    description: The username to be used for the git commit.
+    type: string
+    default: "manuela-tekton"
+  - name: GIT_EMAIL
+    description: The email to be used for the git commit.
+    type: string
+    default: "manuela-team@redhat.com"
 #  results:
 #    - name: new-version
 #      description: The current date in unix timestamp format
@@ -27,7 +27,7 @@ spec:
     image: quay.io/manuela/bumpversiontask:latest
     script: |
       #!/usr/bin/env bash
-      cd git-repo/$(inputs.params.PATH_CONTEXT)/
+      cd git-repo/$(params.PATH_CONTEXT)/
       bump2version --commit build VERSION
   - name: push-version-to-git
     image: alpine/git
@@ -46,8 +46,8 @@ spec:
         #!/usr/bin/env sh
         echo "https://$GITHUB_USER:$GITHUB_TOKEN@github.com" > ~/.git-credentials
         git config --global credential.helper store 'store --file ~/.git-credentials'
-        git config --global user.email "$(inputs.params.GIT_EMAIL)"
-        git config --global user.name "$(inputs.params.GIT_USERNAME)"
+        git config --global user.email "$(params.GIT_EMAIL)"
+        git config --global user.name "$(params.GIT_USERNAME)"
         git commit -a -m "Version Bump"
         git push --set-upstream origin master
     workingdir: /workspace/git-repo
