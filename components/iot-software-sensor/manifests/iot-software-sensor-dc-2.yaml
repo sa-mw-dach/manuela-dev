@@ -30,7 +30,7 @@ spec:
       containers:
       - name: iot-software-sensor-2
         image: iot-software-sensor:latest
-        imagePullPolicy: Always
+        #imagePullPolicy: Always
         ports:
           - containerPort: 8778
             name: jolokia

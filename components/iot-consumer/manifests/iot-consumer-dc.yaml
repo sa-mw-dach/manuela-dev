@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - image: iot-consumer:latest
-        imagePullPolicy: Always
+        #imagePullPolicy: Always
         name: iot-consumer
         ports:
         - containerPort: 3000

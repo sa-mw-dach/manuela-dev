@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - image: iot-frontend:latest
-        imagePullPolicy: Always
+        #imagePullPolicy: Always
         name: iot-frontend
         ports:
         - containerPort: 8080
