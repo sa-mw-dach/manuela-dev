@@ -1,6 +1,6 @@
 # MANUela Anomaly ML Model
 - Perpare sensor data for model training
-- Train and validate model(s) - TBD
+- Train and validate model(s) 
 
 ## Prepare data
 
@@ -17,5 +17,5 @@ grep -v "Last ID:\|handleTemperature" messaging.log | grep "handleVibration\|ale
 python3 log-to-timeseries.py
 ```
 
-### Convert data to eposodes 
+### Convert data to eposodes and train a model
 See first part of Data-Analyses.ipynb
