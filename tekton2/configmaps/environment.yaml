@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: environment
+data:
+  GIT_EMAIL: "manuela@redhat.com"
+  GIT_USERNAME: "Manuela Team"
+  GIT_DEV_REPO_URL: https://github.com/sa-mw-dach/manuela-dev.git
+  GIT_OPS_REPO_URL: https://github.com/sa-mw-dach/manuela-gitops.git
+  IOT_CONSUMER_REMOTE_IMAGE: quay.io/manuela/iot-consumer
+  IOT_CONSUMER_YAML_PATH: images.(name==messaging).newTag
+  IOT_CONSUMER_TEST_KUSTOMIZATION_PATH: config/instances/manuela-tst/kustomization.yaml
+  IOT_CONSUMER_PROD_KUSTOMIZATION_PATH: config/templates/manuela-openshift-prod/messaging/kustomization.yaml
+  IOT_CONSUMER_PROD_IMAGESTREAM_PATH: config/templates/manuela-openshift-prod/messaging/messaging-is.yaml

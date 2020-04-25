@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: iot-consumer-
+spec:
+  pipelineRef:
+    name: iot-consumer
+  workspaces:
+  - name: config
+    configMap:
+      name: environment
+  - name: github-secret
+    secret:
+      secretName: github
+  - name: gitrepos
+    # volumeClaimTemplate:
+    #   spec:
+    #     accessModes: 
+    #     - ReadWriteMany
+    #     resources:
+    #       requests:
+    #         storage: 1Gi
+    persistentVolumeClaim:
+      claimName: iot-consumer
