@@ -73,7 +73,7 @@ spec:
     - name: BUILDER_IMAGE
       value: $(params.S2I_BUILDER_IMAGE)
     - name: TAG
-      value: $(tasks.bump-build-version.results.version)
+      value: $(tasks.bump-build-version.results.image-tag)
     - name: OUTPUT_IMAGE
       value: $(params.LOCAL_IMAGE)
 
@@ -90,7 +90,7 @@ spec:
       workspace: github-secret
     params:
     - name: PUSH_FLAGS
-      value: origin $(tasks.bump-build-version.results.version)
+      value: origin $(tasks.bump-build-version.results.git-tag)
 
   - name: git-clone-gitops
     taskRef:
@@ -102,7 +102,7 @@ spec:
       workspace: config
     params:
     - name: url_configmapkey
-      value: GIT_OPS_REPO_URL
+      value: GIT_OPS_REPO_TEST_URL
     - name: revision
       value: master
     - name: subdirectory
@@ -127,7 +127,7 @@ spec:
     - name: ENVIRONMENT
       value: TEST
     - name: TAG
-      value: $(tasks.bump-build-version.results.version)
+      value: $(tasks.bump-build-version.results.image-tag)
     - name: subdirectory
       value: ops
 
@@ -261,5 +261,5 @@ spec:
     - name: TEMPLATE
       value: stage-production-pipelinerun
     - name: PARAMS
-      value: -p TAG=$(tasks.bump-build-version.results.version) -p CONFIGMAP_PREFIX=$(params.CONFIGMAP_PREFIX) -p SOURCE_IMAGE=$(params.LOCAL_IMAGE)
+      value: -p TAG=$(tasks.bump-build-version.results.image-tag) -p CONFIGMAP_PREFIX=$(params.CONFIGMAP_PREFIX) -p SOURCE_IMAGE=$(params.LOCAL_IMAGE) -p COMPONENT_NAME=$(params.COMPONENT_NAME)
   

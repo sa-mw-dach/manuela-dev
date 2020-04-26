@@ -80,6 +80,13 @@ spec:
         exit $EXIT_CODE
       fi
 
+      git branch --set-upstream-to=origin/$(params.revision) master
+      EXIT_CODE="$?"
+      if [ "$EXIT_CODE" != 0 ]
+      then
+        exit $EXIT_CODE
+      fi
+      
       RESULT_SHA="$(git rev-parse HEAD | tr -d '\n')"
       EXIT_CODE="$?"
       if [ "$EXIT_CODE" != 0 ]

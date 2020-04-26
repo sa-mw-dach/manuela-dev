@@ -27,7 +27,7 @@ spec:
       workspace: config
     params:
     - name: url_configmapkey
-      value: GIT_OPS_REPO_URL
+      value: GIT_OPS_REPO_PROD_URL
     - name: revision
       value: master
     - name: subdirectory
@@ -130,7 +130,7 @@ spec:
       workspace: config
     params:
     - name: GITHUB_REPO_CONFIGMAPKEY
-      value: GIT_OPS_REPO_URL
+      value: GIT_OPS_REPO_PROD_URL
     - name: GIT_BRANCH_HEAD
       value: staging-approval
     - name: GIT_BRANCH_BASE

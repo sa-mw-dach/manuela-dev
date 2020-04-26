@@ -18,7 +18,9 @@ spec:
     description: path within subdirectory where the base VERSION of the component resides
     type: string
   results:
-  - name: version
+  - name: image-tag
+    description: the new build version based on the last tags and VERSION file
+  - name: git-tag
     description: the new build version based on the last tags and VERSION file
   steps:
   - name: current-tag
@@ -61,6 +63,8 @@ spec:
       EOF
 
       bump2version build /scratch/VERSION
+
+      sed "s/build-$(params.component_name)-//" /scratch/VERSION >$(results.image-tag.path)
     volumeMounts:
     - mountPath: /scratch
       name: scratch  
@@ -74,7 +78,7 @@ spec:
       if [ "$EXIT_CODE" != 0 ] ; then
         exit $EXIT_CODE
       fi
-      echo -n "$VERSION" > $(results.version.path)
+      echo -n "$VERSION" > $(results.git-tag.path)
     volumeMounts:
     - mountPath: /scratch
       name: scratch  

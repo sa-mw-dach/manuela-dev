@@ -6,6 +6,9 @@ spec:
   workspaces:
   - name: gitrepos
     description: The git repo will be cloned onto the volume backing this workspace
+  results:
+  - name: image
+    description: The image+tag that was created
   params:
   - name: BUILDER_IMAGE
     description: The location of the s2i builder image.
@@ -31,22 +34,64 @@ spec:
   - name: TAG
     default: latest 
     type: string
+# only for java builds
+  - name: MAVEN_ARGS_APPEND
+    default: ""
+    description: Additional Maven arguments
+    type: string
+  - name: MAVEN_CLEAR_REPO
+    default: "false"
+    description: Remove the Maven repository after the artifact is built
+    type: string
+  - name: MAVEN_MIRROR_URL
+    default: ""
+    description: The base URL of a mirror used for retrieving artifacts
+    type: string
   steps:
+  - name: prepare-env
+    image: quay.io/openshift-pipeline/s2i
+    script: |
+      if [[ "$(params.BUILDER_IMAGE)" == *"jdk"* ]]; then 
+        echo "MAVEN_CLEAR_REPO=$(params.MAVEN_CLEAR_REPO)" > env-file
+
+        [[ '$(params.MAVEN_ARGS_APPEND)' != "" ]] &&
+          echo "MAVEN_ARGS_APPEND=$(params.MAVEN_ARGS_APPEND)" >> env-file
+
+        [[ '$(params.MAVEN_MIRROR_URL)' != "" ]] &&
+          echo "MAVEN_MIRROR_URL=$(params.MAVEN_MIRROR_URL)" >> env-file
+
+        echo "Generated Env file"
+        echo "------------------------------"
+        cat env-file
+        echo "------------------------------"
+
+        echo "s2i build --loglevel=$(params.LOGLEVEL) $(params.PATH_CONTEXT) $(params.BUILDER_IMAGE) --image-scripts-url image:///usr/local/s2i --as-dockerfile /gen-source/Dockerfile.gen --environment-file /env-params/env-file" >s2icommand
+      else
+        echo "s2i build --loglevel=$(params.LOGLEVEL) $(params.PATH_CONTEXT) $(params.BUILDER_IMAGE) --as-dockerfile /gen-source/Dockerfile.gen" >s2icommand
+      fi
+    volumeMounts:
+    - mountPath: /env-params
+      name: envparams
+    workingDir: /env-params
   - name: generate
     image: quay.io/openshift-pipeline/s2i
-    command:
-    - s2i
-    - build
-    - --loglevel=$(params.LOGLEVEL)
-    - $(params.PATH_CONTEXT)
-    - $(params.BUILDER_IMAGE)
-    - --as-dockerfile
-    - /gen-source/Dockerfile.gen
+    # command:
+    # - s2i
+    # - build
+    # - --loglevel=$(params.LOGLEVEL)
+    # - $(params.PATH_CONTEXT)
+    # - $(params.BUILDER_IMAGE)
+    # - --as-dockerfile
+    # - /gen-source/Dockerfile.gen
+    script: |
+      source /env-params/s2icommand
     resources: {}
     volumeMounts:
     - mountPath: /gen-source
       name: gen-source
-    workingDir: /workspace/gitrepos/$(params.subdirectory)
+    - mountPath: /env-params
+      name: envparams
+    workingDir: $(workspaces.gitrepos.path)/$(params.subdirectory)
   - name: build
     image: quay.io/buildah/stable:v1.11.0
     script: |
@@ -64,6 +109,7 @@ spec:
     image: quay.io/buildah/stable:v1.11.0
     script: |
       buildah push --tls-verify=$(params.TLSVERIFY) $(params.OUTPUT_IMAGE) docker://$(params.OUTPUT_IMAGE):$(params.TAG)
+      echo -n "$(params.OUTPUT_IMAGE):$(params.TAG)" >$(results.image.path)
     resources: {}
     securityContext:
       privileged: true
@@ -75,3 +121,5 @@ spec:
     name: varlibcontainers
   - emptyDir: {}
     name: gen-source
+  - emptyDir: {}
+    name: envparams

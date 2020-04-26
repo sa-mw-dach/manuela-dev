@@ -1,22 +1,15 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: stage-production-pipelinerun
+  name: seed
 objects:
 - apiVersion: tekton.dev/v1beta1
   kind: PipelineRun
   metadata:
-    generateName: stage-production-${COMPONENT_NAME}-
+    generateName: seed-
   spec:
     pipelineRef:
-      name: stage-production
-    params:
-    - name: TAG
-      value: ${TAG}
-    - name: SOURCE_IMAGE
-      value: ${SOURCE_IMAGE}
-    - name: CONFIGMAP_PREFIX
-      value: ${CONFIGMAP_PREFIX}
+      name: seed
     workspaces:
     - name: config
       configMap:
@@ -39,9 +32,4 @@ objects:
       #       requests:
       #         storage: 1Gi
       persistentVolumeClaim:
-        claimName: stage-production
-parameters:
-- name: TAG
-- name: SOURCE_IMAGE
-- name: CONFIGMAP_PREFIX
-- name: COMPONENT_NAME
+        claimName: iot-consumer

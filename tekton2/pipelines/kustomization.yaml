@@ -5,3 +5,4 @@ resources:
 - build-and-test.yaml
 - test-all.yaml
 - stage-production.yaml
+- seed.yaml
