@@ -17,10 +17,14 @@ class AnomalyDetection(object):
         self.clf = load(open(self.model_file, 'rb'))
 
     def predict(self, X, feature_names):
-        _LOGGER.info("Predict features: " , X)
+        #_LOGGER.info("Predict features: " , X)
+        print(" Predict features: ", X)
+        print(" Features types: ", type(X),  type(X[0][0]))  
+
 
         prediction = self.clf.predict(X)
-        _LOGGER.info("Prediction: " , prediction)
+        #_LOGGER.info("Prediction: " , prediction)
+        print("Prediction: " , prediction)
         
         return prediction
 
@@ -28,6 +32,7 @@ if __name__ == "__main__":
     p = AnomalyDetection()
     
     X = np.asarray([[16.1,  15.40,  15.32,  13.47,  17.70]], dtype=np.float32)
+    print(" Features types: ", type(X),  type(X[0][0])) 
 
     prediction = p.clf.predict(X)
     print(prediction)
