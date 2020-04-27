@@ -1,29 +1,23 @@
 from joblib import dump, load
 import numpy as np
 
-import logging
 import os, sys
 import time
 
-_LOGGER = logging.getLogger()
-_LOGGER.setLevel(logging.INFO)
 
 class AnomalyDetection(object):
     def __init__(self):
-        _LOGGER.info("Initializing...")
+        print("Initializing...")
         self.model_file = os.environ.get('MODEL_FILE', 'model.joblib')
 
-        _LOGGER.info("Load modelfile: %s\n" % (self.model_file))
+        print("Load modelfile: %s" % (self.model_file))
         self.clf = load(open(self.model_file, 'rb'))
 
     def predict(self, X, feature_names):
-        #_LOGGER.info("Predict features: " , X)
         print(" Predict features: ", X)
-        print(" Features types: ", type(X),  type(X[0][0]))  
-
+        # print(" Features types: ", type(X),  type(X[0][0]))  
 
         prediction = self.clf.predict(X)
-        #_LOGGER.info("Prediction: " , prediction)
         print("Prediction: " , prediction)
         
         return prediction

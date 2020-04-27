@@ -8,7 +8,7 @@ bases:
 - iot-consumer/manifests
 - iot-frontend/manifests
 - iot-software-sensor/manifests
-- iot-software-sensor-quarkus/manifests
+# - iot-software-sensor-quarkus/manifests
 
 # Open data hub is optional
 # - iot-anomaly-detection/manifests

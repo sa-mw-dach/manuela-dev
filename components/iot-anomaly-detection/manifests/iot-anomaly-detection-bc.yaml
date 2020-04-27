@@ -18,6 +18,7 @@ spec:
   source:
     git:
       uri: https://github.com/sa-mw-dach/manuela-dev.git
+      ref: "ml-model"
     type: Git
     contextDir: "components/iot-anomaly-detection"
   strategy:
