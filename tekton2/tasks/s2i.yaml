@@ -51,7 +51,7 @@ spec:
   - name: prepare-env
     image: quay.io/openshift-pipeline/s2i
     script: |
-      if [[ "$(params.BUILDER_IMAGE)" == *"jdk"* ]]; then 
+      if [[ "$(params.BUILDER_IMAGE)" == *"jdk"* ]] || [[ "$(params.BUILDER_IMAGE)" == *"java"* ]]; then 
         echo "MAVEN_CLEAR_REPO=$(params.MAVEN_CLEAR_REPO)" > env-file
 
         [[ '$(params.MAVEN_ARGS_APPEND)' != "" ]] &&
