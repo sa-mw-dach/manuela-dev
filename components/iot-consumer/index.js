@@ -25,7 +25,6 @@ const temperature_threshold = process.env.TEMPERATURE_THRESHOLD || 70.0;
 const temperature_alert_enabled = ((process.env.TEMPERATURE_ALERT_ENABLED || "false") === 'true');
 const vibration_alert_enabled = ((process.env.VIBRATION_ALERT_ENABLED || "false") === 'true');
 const vibration_anomaly_enabled = ((process.env.VIBRATION_ANOMALY_ENABLED || "false") === 'true');
-const vibration_anomaly_pump = process.env.VIBRATION_ANOMALY_PUMP || "floor-1-line-1-extruder-1pump-2";
 const anomaly_detection_url = process.env.ANOMALY_DETECTION_URL || 'http://anomaly-detection-anomaly-detection';
 
 // setup application
