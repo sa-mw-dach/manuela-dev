@@ -1,62 +1,11 @@
-# Manuela-dev Pipelines
+# Tekton Pipelines (reworked)
 
-This repository contains a catalog of `Task`s, `Pipeline`s and other Tekton `Resource`s, which are designed to build the ManuELA software components.
+These pipelines are designed to be long, with simple reusable tasks. They do not use PipelineResources due to the unclear nature of their future. Instead, they use tasks, workspaces and persistent volume claims to achieve similar goals: Clone the repositories, build the code, deploy to test, test and then trigger a staging to production. For each component, there is a separate PVC to allow parallel component builds without two pipeline runs stepping on each others toes. In the future (post Tekton-v0.11), the PVCs can be created on the fly instead of having to be static. The git clone tasks clone their repositories into a subdirectory of this PVC, so both the dev and ops repos reside on the same PVC.
 
-## Task Kinds
+The build-and-test pipeline is designed to be generic in nature and to be used on all components. In the previous attempt to provide pipelines, all component pipelines were the same instead of the build step which used a component specific s2i task. This design can be deviated from in the future if need arises to provide a component-specific pipeline. There is a certain amount of logic within the s2i task to distinguish java-based s2i builds from others since the former require some special handling, such as setting up the Maven environment and special parameters to the s2i build process.
 
-There are two kinds of `Task`s:
+All tasks are simple and designed not to have any hardwired dependencies, such as a direct reference to a configmap or secret, or implicit dependencies such as secrets added to the pipeline user. This means that all these dependencies are provided as Tekton workspaces, which are passed from the Tekton Pipeline(Run) to the Task(Run). This enables to reuse the same task across different environments, such as different GitHub users, Quay Repositories, etc. A drawback of this approach is that in the current state of OpenShift Pipelines UI (v0.11), these pipelines can no longer be instantiated via UI, since it doesn't provide a UI to define workspaces. To allow developers to instantiate PipelineRuns, OpenShift Templates are provided which instantiate a component PipelineRun with a name indicating which Component is being built.
 
- 1. `ClusterTask` with a Cluster scope, which can be installed by a cluster
-    operator and made available to users in all namespaces
- 2. `Task` with a Namespace scope, which is designed to be installed and used
-    only within that namespace.
+Tasks are named to indicate whehter they are specific to a certain product, such as OpenShift or GitHub. This should allow to identify which tasks need to be adjusted if this demo is ported to other scnearios. 
 
-`Task`s in this repo are namespace-scoped `Task`s, but can be installed as
-`ClusterTask`s by changing the `kind`.
-
-## Tasks Overview
-
-### `bumpversion`
-Increments the build number of a software component and commits and pushes the new version to the git repo
-### `skopeo-tag-image`
-Uses skopeo to tag an image in an image repository
-### `gitops-imagetag`
-Uses a Git repo as input, patches a yaml file, and pushes the changes.
-### `argocd-task-sync-and-wait`
-Logs in to an ArgoCD server and syncs an application
-### `mock`
-Just printing a string
-### `skopeo-copy`
-Uses skopeo to copy an image from one image repository to another
-### `github-add-comment`
-Used to comment a GitHub issue
-
-## Pipelines Overview
-
-### `iot-consumer-pipeline`
-text...
-### `iot-frontend-pipeline`
-text...
-### `iot-sensor-pipeline`
-text...
-
-## Installation
-
-First, install the `OpenShift Pipelines Operator` onto your cluster:
-
-.....
-
-
-
-
-## Contributing and Support
-
-If you want to contribute to this repository, please see our [contributing](./CONTRIBUTING.md) guidelines.
-
-If you are looking for support, please enter an [issue](https://github.com/sa-mw-dach/manuela-dev/issues/new)
-
-## Status of the Project
-
-This project is still under active development, so you might run into
-[issues](https://github.com/sa-mw-dach/manuela-dev/issues). If you do,
-please don't be shy about letting us know.
+Another design goal was to put all environment-specific configuration into a (single) ConfigMap, to allow easy reconfiguration of the Pipeline for new environments. It contains both global configuration (such as the location of the dev and ops git repositories) as well as component-specific configuration items whose key is prefixed with a component-specific name, such as IOT_CONSUMER_. This way, the whole pipeline can be reused for different components, just by specifying the component prefix.

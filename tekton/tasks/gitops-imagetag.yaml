@@ -3,111 +3,48 @@ kind: Task
 metadata:
   name: gitops-imagetag
 spec:
+  workspaces:
+  - name: gitrepos
+    description: The git repo will be cloned onto the volume backing this workspace
+  - name: config
   params:
-  - name: GIT_USERNAME
-    description: The username to be used for the git commit.
+  - name: CONFIGMAP_PREFIX
     type: string
-    default: "manuela-tekton"
-  - name: GIT_EMAIL
-    description: The email to be used for the git commit.
+  - name: ENVIRONMENT
     type: string
-    default: "manuela-team@redhat.com"
-  - name: GIT_COMMENT
-    description: The comment to be used for the git commit.
+    default: TEST
+    description: TEST or PROD
+  - name: TAG
+    description: the VERSION tag
     type: string
-    default: "Image tag updated by Tekton task gitops-imagetag"
-  - name: GIT_BRANCH
-    description: The branch to create / use
-    type: string
-    default: master
-  - name: VERSION_PATH
-    description: path of the VERSION file in the source-dev repo 
-    type: string
-  - name: KUSTOMIZATION_YAML_PATH
-    description: The path of the kustomize resource to be patched.
-    type: string
-    default: "config/instances/manuela-tst/kustomization.yaml"
-  - name: YAML_PATH
-    description: the yq yaml path of the value to be changed
-    type: string
-    default: images.(name==line-dashboard).newTag
-  - name: IMAGESTREAM_PATH
-    type: string
-    description: config/templates/manuela-openshift-prod/messaging/messaging-is.yaml
-    default: ""
-  - name: REMOTE_IMAGE
-    type: string
-    description: quay.io/manuela/iot-consumer
-    default: ""
   - name: TRUNCATE_IMAGESTREAM_TAGS_AFTER
     type: string
     description: Number of image stream tags to keep
     default: "5"
-  resources:
-    inputs:
-    - name: source-gitops
-      type: git
-    - name: source-semver
-      type: git  
+  - name: subdirectory
+    description: subdirectory inside the "gitrepos" workspace to clone the git repo into
+    type: string
+    default: "ops"
   steps:
-  - name: checkout-branch-and-merge-master
-    image: alpine/git
-    script: |
-        #!/usr/bin/env sh
-        if [ "$(params.GIT_BRANCH)" != "master" ]; then
-          git fetch 2>&1
-          echo 'Creating and checking out branch $(params.GIT_BRANCH)'
-          git checkout -q --track -b $(params.GIT_BRANCH) origin/$(params.GIT_BRANCH) 2>&1 || git checkout -q -b $(params.GIT_BRANCH) 2>&1
-          git branch
-
-          #echo 'merging master into $(params.GIT_BRANCH)'
-          #git merge master 2>&1
-        fi
-    workingdir: /workspace/source-gitops
-  - name: patch-imagetag
+  - name: patch-kustomization
     image: mikefarah/yq:3.2.1
     script: |
-        #!/usr/bin/env sh
-        semver=$(cat /workspace/source-semver/$(params.VERSION_PATH))
-        echo $semver
-        echo 'Patching $(params.KUSTOMIZATION_YAML_PATH)'
-        #echo ''
-        #cat $(params.KUSTOMIZATION_YAML_PATH)
-        echo ''
-        yq w -i $(params.KUSTOMIZATION_YAML_PATH) '$(params.YAML_PATH)' $semver
-        #echo ''
-        #cat $(params.KUSTOMIZATION_YAML_PATH)
-        if [ ! -z "$(params.IMAGESTREAM_PATH)" ]; then
-          echo "Adding $semver to image stream $(params.IMAGESTREAM_PATH)"
-          echo "{\"spec\":{\"tags\":[{\"name\":\"$semver\",\"from\":{\"kind\":\"DockerImage\",\"name\":\"$(params.REMOTE_IMAGE):$semver\"},\"importPolicy\":{},\"referencePolicy\":{\"type\":\"Local\"}}]}}" | yq -P m -i -a $(params.IMAGESTREAM_PATH) -
-          if [ $(yq r $(params.IMAGESTREAM_PATH) --length spec.tags) -gt $(params.TRUNCATE_IMAGESTREAM_TAGS_AFTER) ]; then
-            yq -P d -i $(params.IMAGESTREAM_PATH) 'spec.tags[0]'
-          fi
-        fi
-    workingdir: /workspace/source-gitops
-  - name: git-push
-    image: alpine/git
-    env:
-      - name: GITHUB_TOKEN
-        valueFrom:
-          secretKeyRef:
-            name: github
-            key: token
-      - name: GITHUB_USER
-        valueFrom:
-          secretKeyRef:
-            name: github
-            key: user      
+      KUSTOMIZATION_PATH="$(cat $(workspaces.config.path)/$(params.CONFIGMAP_PREFIX)_$(params.ENVIRONMENT)_KUSTOMIZATION_PATH)"
+      YAML_PATH="$(cat $(workspaces.config.path)/$(params.CONFIGMAP_PREFIX)_YAML_PATH)"
+      yq w -i $KUSTOMIZATION_PATH "$YAML_PATH" $(params.TAG)
+    workingDir: $(workspaces.gitrepos.path)/$(params.subdirectory)
+  - name: patch-imagestream
+    image: mikefarah/yq:3.2.1
     script: |
-        #!/usr/bin/env sh
-        git diff
-        echo "https://$GITHUB_USER:$GITHUB_TOKEN@github.com" > ~/.git-credentials
-        git config --global credential.helper store 'store --file ~/.git-credentials'
-        git config --global user.email "$(params.GIT_EMAIL)"
-        git config --global user.name "$(params.GIT_USERNAME)"
-        echo ''
-        echo 'Adding changes to git index'
-        git add .
-        git commit -m '$(params.GIT_COMMENT)'
-        git push --set-upstream origin $(params.GIT_BRANCH)
-    workingdir: /workspace/source-gitops  
+      IMAGESTREAM_CONFIG_PATH=$(workspaces.config.path)/$(params.CONFIGMAP_PREFIX)_$(params.ENVIRONMENT)_IMAGESTREAM_PATH
+      if [ -f "$IMAGESTREAM_CONFIG_PATH" ]; then
+        IMAGESTREAM_PATH=$(cat $IMAGESTREAM_CONFIG_PATH)
+        REMOTE_IMAGE=$(cat $(workspaces.config.path)/$(params.CONFIGMAP_PREFIX)_REMOTE_IMAGE)
+
+        echo "Adding $(params.TAG) to image stream $IMAGESTREAM_PATH"
+        echo "{\"spec\":{\"tags\":[{\"name\":\"$(params.TAG)\",\"from\":{\"kind\":\"DockerImage\",\"name\":\"$REMOTE_IMAGE:$(params.TAG)\"},\"importPolicy\":{},\"referencePolicy\":{\"type\":\"Local\"}}]}}" | yq -P m -i -a $IMAGESTREAM_PATH -
+        if [ $(yq r $IMAGESTREAM_PATH --length spec.tags) -gt $(params.TRUNCATE_IMAGESTREAM_TAGS_AFTER) ]; then
+          yq -P d -i $IMAGESTREAM_PATH 'spec.tags[0]'
+        fi
+      fi
+    workingDir: $(workspaces.gitrepos.path)/$(params.subdirectory)

@@ -1,9 +1,0 @@
-apiVersion: tekton.dev/v1alpha1
-kind: PipelineResource
-metadata:
-  name: quay-consumer-image
-spec:
-  type: image
-  params:
-    - name: url
-      value: quay.io/manuela/iot-consumer

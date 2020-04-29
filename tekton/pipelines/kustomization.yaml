@@ -1,7 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
 resources:
-- iot-consumer-pipeline.yaml
-- iot-frontend-pipeline.yaml
-- iot-software-sensor-pipeline.yaml
-- iot-anomaly-detection-pipeline.yaml
-
-
+- build-and-test.yaml
+- test-all.yaml
+- stage-production.yaml
+- seed.yaml
