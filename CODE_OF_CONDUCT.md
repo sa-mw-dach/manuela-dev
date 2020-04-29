@@ -2,7 +2,7 @@
 
 The MANUela community is made up of a mixture of professionals and volunteers from all over the world, working on every aspect of the MANUela from coding through to marketing. Diversity is one of our huge strengths, but it can also lead to communication issues and unhappiness. To that end, we have a few ground rules that we ask people to adhere to when they’re using project resources.
 
-We are committed to providing a welcoming and inspiring community for all.
+> We are committed to providing a welcoming and inspiring community for all.
 
 This isn’t an exhaustive list of things that you can’t do. Rather, take it in the spirit in which it’s intended - a guide to make it easier to be excellent to each other.
 
@@ -14,7 +14,9 @@ This isn’t an exhaustive list of things that you can’t do. Rather, take it i
 
 * **Be welcoming:** Our communities welcome and support people of all backgrounds and identities. This includes, but is not limited to members of any race, ethnicity, culture, national origin, color, immigration status, social and economic class, educational level, sex, sexual orientation, gender identity and expression, age, size, family status, political belief, religion, and mental and physical ability.
 
-When we disagree, we try to understand why. Disagreements, both social and technical, happen all the time and MANUela is no exception. It is important that we resolve disagreements and differing views constructively.
+When we disagree, we try to understand why. Disagreements, both social and technical, happen all the time and MANUela is no exception. 
+
+> It is important that we resolve disagreements and differing views constructively.
 
 Remember that we’re different. The strength of MANUela comes from its varied community, people from a wide range of backgrounds. Different people have different perspectives on issues. Being unable to understand why someone holds a viewpoint doesn’t mean that they’re wrong. Don’t forget that it is human to err and blaming each other doesn’t get us anywhere, rather offer to help resolving issues and to help learn from mistakes.
 
