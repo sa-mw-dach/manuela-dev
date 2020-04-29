@@ -131,18 +131,14 @@ async function check_anomaly(id, value) {
         
         if (l.length == episode_length) {
 
-            var edgeAnomalyDict = { "data": { "ndarray": [l] }};
-        
-            // var edgeAnomalyDict = { "data": { "ndarray": [parseFloat(value)] }};
-
-            // log.debug("edgeAnomalyDict: " + JSON.stringify(edgeAnomalyDict)); 
-        
+            var edgeAnomaly = { "data": { "ndarray": [l] }};
+                
             try {
                 console.log('*AD* ID: %s,  Val: %d', id, value );
                 const edgeAnomalyResponse = await request({
                 method: 'POST',
                 uri: anomaly_detection_url + '/api/v0.1/predictions',
-                body: edgeAnomalyDict,
+                body: edgeAnomaly,
                 json: true,
                 timeout: 1000
                 });
@@ -156,11 +152,11 @@ async function check_anomaly(id, value) {
                 result = false;
                 }
             } catch (err) {
-            log.error("check_anomaly failed", err)
+               log.error("check_anomaly failed", err)
             }
 
         } else {
-            console.log('check_anomaly: not enpugh lavues for %s', id );
+            console.log('check_anomaly: not enought values for %s', id );
         }
 
     } else {
