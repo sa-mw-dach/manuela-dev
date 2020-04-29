@@ -1,34 +1,34 @@
-import logging
+from joblib import dump, load
+import numpy as np
+
 import os, sys
-import statistics
 import time
 
-_LOGGER = logging.getLogger()
-_LOGGER.setLevel(logging.INFO)
 
 class AnomalyDetection(object):
     def __init__(self):
-        self.multiplier = int(os.environ.get('MODEL_STDDEV_MULTIPLIER', 3))
-        self.window_size = int(os.environ.get('MODEL_WINDOW_SIZE', 5))
-        self.window = []
-        self.n = []
+        print("Initializing...")
+        self.model_file = os.environ.get('MODEL_FILE', 'model.joblib')
+
+        print("Load modelfile: %s" % (self.model_file))
+        self.clf = load(open(self.model_file, 'rb'))
 
     def predict(self, X, feature_names):
-        x = X[0]
+        print(" Predict features: ", X)
+        # print(" Features types: ", type(X),  type(X[0][0]))  
 
-        if len(self.window) > 1:
-            summ = sum(self.window)
-            n = len(self.window)
-            stddev = statistics.stdev(self.window[:(self.window_size if len(self.window) >= self.window_size else len(self.window)):])
-            mean = summ / n
-            abs_val = abs(x)
-            result = mean + (stddev * self.multiplier) < abs_val
-            _LOGGER.info("\nx: %d\nsum: %d\nn: %d\nstd dev: %d\nmean: %d\nresult: %s\n" % (x, summ, n, stddev, mean, result))
-        else:
-            result = False
+        prediction = self.clf.predict(X)
+        print("Prediction: " , prediction)
+        
+        return prediction
 
-        if  not result:
-            self.window.append(x)
-            self.window = self.window[-self.window_size:len(self.window)]
+if __name__ == "__main__":
+    p = AnomalyDetection()
+    
+    X = np.asarray([[16.1,  15.40,  15.32,  13.47,  17.70]], dtype=np.float32)
+    print(" Features types: ", type(X),  type(X[0][0])) 
 
-        return [1] if result else [0]
+    prediction = p.clf.predict(X)
+    print(prediction)
+
+

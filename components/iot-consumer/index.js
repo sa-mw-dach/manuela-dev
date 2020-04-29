@@ -25,7 +25,6 @@ const temperature_threshold = process.env.TEMPERATURE_THRESHOLD || 70.0;
 const temperature_alert_enabled = ((process.env.TEMPERATURE_ALERT_ENABLED || "false") === 'true');
 const vibration_alert_enabled = ((process.env.VIBRATION_ALERT_ENABLED || "false") === 'true');
 const vibration_anomaly_enabled = ((process.env.VIBRATION_ANOMALY_ENABLED || "false") === 'true');
-const vibration_anomaly_pump = process.env.VIBRATION_ANOMALY_PUMP || "floor-1-line-1-extruder-1pump-2";
 const anomaly_detection_url = process.env.ANOMALY_DETECTION_URL || 'http://anomaly-detection-anomaly-detection';
 
 // setup application
@@ -97,43 +96,71 @@ function handleLight(message) {
 }
 
 
+
 // Anomaly Detection
+
+const episode_length = 5
+var last_value_array_map = {};
+
+function get_list_last_values(id, value) {
+  var array = [];
+
+  if ( last_value_array_map[id] !== undefined) {
+    array = last_value_array_map[id]
+  }
+  array.unshift(value); 
+
+  if (array.length > episode_length) {
+    array.pop()
+  }
+  last_value_array_map[id] = array;
+  return array;
+}
+
+
+
 var last_value_map = {}; 
 async function check_anomaly(id, value) {
     var result = false
 
-    if (vibration_anomaly_enabled && id == vibration_anomaly_pump ) {
+    if (vibration_anomaly_enabled) {
         // Call anomaly detection web service for specified pump
         console.log('Anomaly detection for: %s, Val: %d', id, value );
-        var edgeAnomalyDict = { "data": { "ndarray": [parseFloat(value)] }};
 
-        // log.debug("edgeAnomalyDict: " + JSON.stringify(edgeAnomalyDict)); 
-    
-        try {
-            console.log('*ED* ID: %s,  Val: %d', id, value );
-            const edgeAnomalyResponse = await request({
-              method: 'POST',
-              uri: anomaly_detection_url + '/api/v0.1/predictions',
-              body: edgeAnomalyDict,
-              json: true,
-              timeout: 1000
-            });
-    
-            // log.debug("Edge Anomaly Repsonse: " + JSON.stringify(edgeAnomalyResponse)); //DELETE
-            // log.debug("Edge Anomaly Repsonse.data: " + JSON.stringify(edgeAnomalyResponse.data)); //DELETE
-    
-            if ( parseInt(edgeAnomalyResponse["data"]["ndarray"][0]) == 1 ){
-              result = true;
-            } else {
-              result = false;
+        l = get_list_last_values(id, value)
+        
+        if (l.length == episode_length) {
+
+            var edgeAnomaly = { "data": { "ndarray": [l] }};
+                
+            try {
+                console.log('*AD* ID: %s,  Val: %d', id, value );
+                const edgeAnomalyResponse = await request({
+                method: 'POST',
+                uri: anomaly_detection_url + '/api/v0.1/predictions',
+                body: edgeAnomaly,
+                json: true,
+                timeout: 1000
+                });
+        
+                // log.debug("Edge Anomaly Repsonse: " + JSON.stringify(edgeAnomalyResponse)); //DELETE
+                // log.debug("Edge Anomaly Repsonse.data: " + JSON.stringify(edgeAnomalyResponse.data)); //DELETE
+        
+                if ( parseInt(edgeAnomalyResponse["data"]["ndarray"][0]) == 1 ){
+                result = true;
+                } else {
+                result = false;
+                }
+            } catch (err) {
+               log.error("check_anomaly failed", err)
             }
-        } catch (err) {
-          log.error("check_anomaly failed", err)
+
+        } else {
+            console.log('check_anomaly: not enought values for %s', id );
         }
 
     } else {
         // Basic internal anomaly check (Mock)
-        // All metric
 
         if ( isNaN(last_value_map[id])) {
         result = false

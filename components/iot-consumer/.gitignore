@@ -4,4 +4,6 @@ tmp/
 #System Files
 .DS_Store
 Thumbs.db
-.odo/odo-file-index.json
+
+
+.odo
