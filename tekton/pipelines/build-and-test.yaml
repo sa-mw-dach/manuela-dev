@@ -55,7 +55,7 @@ spec:
     - name: component_name
       value: $(params.COMPONENT_NAME)
     - name: version_file_path
-      value: $(params.PATH_CONTEXT)/TESTVERSION
+      value: $(params.PATH_CONTEXT)/VERSION
 
   - name: s2i-build
     taskRef:

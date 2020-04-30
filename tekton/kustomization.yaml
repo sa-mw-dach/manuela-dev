@@ -1,16 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: manuela-ci
-
 bases:
-- ../namespaces_and_operator_subscriptions/openshift-pipelines
-- ../namespaces_and_operator_subscriptions/manuela-ci
-- pipeline-resources
-- pipelines
+- persistent-volume-claims
+- configmaps
 #- secrets
 - tasks
-- configmaps
-
-resources:
-- pipeline-service-account.yaml
+- pipelines
+- templates
