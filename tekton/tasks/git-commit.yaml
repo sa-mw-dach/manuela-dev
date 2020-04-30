@@ -36,7 +36,8 @@ spec:
         exit $EXIT_CODE
       fi
 
-      git commit -m "$(params.MESSAGE)"
+      #only commit if there is something which has changed
+      git diff --staged --quiet || git commit -m "$(params.MESSAGE)"
 
       EXIT_CODE="$?"
       if [ "$EXIT_CODE" != 0 ]
