@@ -5,6 +5,7 @@ resources:
 - build-iot-consumer.yaml
 - build-iot-frontend.yaml
 - build-iot-software-sensor.yaml
+- build-iot-software-sensor-quarkus.yaml
 - build-iot-anomaly-detection.yaml
 - stage-production-pipelinerun.yaml
 - seed.yaml
