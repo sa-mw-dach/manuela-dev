@@ -51,12 +51,14 @@ In addition, there is a [stage-production-pipelinerun](templates/stage-productio
 
 ## Versioning and Tagging
 
-These pipelines use git tags in the dev repository to maintain the state which build number is current per component. The task [bumpversion](tasks/bumpversion.yaml) retrieves the component version from its VERSION file in the dev repo. It then searches for the highest tag matching "build-<COMPONENTNAME>-<VERSION>-*". In case it doesn't find one, it assumes "build-<COMPONENTNAME>-<VERSION>-0". The task then increases the build number (after the last dash) and tags the repo accordingly to form a tag in the form "build-<COMPONENTNAME>-<VERSION>-<BUILD>". These tags can be pushed to origin in a later task.
+These pipelines use git tags in the dev repository to maintain the state which build number is current per component. The task [bumpversion](tasks/bumpversion.yaml) retrieves the component version from its VERSION file in the dev repo. It then searches for the highest tag matching "build-COMPONENTNAME-VERSION-*". In case it doesn't find one, it assumes "build-COMPONENTNAME-VERSION-0". The task then increases the build number (after the last dash) and tags the repo accordingly to form a tag in the form "build-COMPONENTNAME-VERSION-BUILD". These tags can be pushed to origin in a later task.
 
-OCI Images are tagged with "<VERSION>-<BUILD>" since the component name is already reflected in the image name.
+OCI Images are tagged with "VERSION-BUILD" since the component name is already reflected in the image name.
 
 ## Open issues
 
 * A failure in the [test-all](pipelines/test-all.yaml) pipeline does not cause the [build-and-test](pipelines/build-and-test.yaml) pipeline to fail.
   
 * A rerun of a pipeline run is launched with a generic name, i.e. without the component name.
+
+* The VERSION of a component should only be increased, never decreased. Otherwise the clenaup task will remove the wrong tags, since it tries to keep the "highest" version tags.
