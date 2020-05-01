@@ -23,6 +23,9 @@ objects:
     - name: quay-secret
       secret:
         secretName: quay-build-secret
+    - name: build-artifacts
+      persistentVolumeClaim:
+        claimName: build-artifacts
     - name: gitrepos
       # volumeClaimTemplate:
       #   spec:

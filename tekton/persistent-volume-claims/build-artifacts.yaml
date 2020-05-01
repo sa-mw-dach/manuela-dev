@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: maven-repo
+  name: build-artifacts
 spec:
   resources:
     requests:

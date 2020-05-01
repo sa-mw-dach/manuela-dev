@@ -19,7 +19,10 @@ objects:
         secretName: github
     - name: argocd-env-secret
       secret:
-        secretName: argocd-env
+        secretName: argocd-
+    - name: build-artifacts
+      persistentVolumeClaim:
+        claimName: build-artifacts
     - name: gitrepos
       # volumeClaimTemplate:
       #   spec:

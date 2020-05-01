@@ -7,4 +7,4 @@ resources:
 - iot-software-sensor.yaml
 - iot-anomaly-detection.yaml
 - stage-production.yaml
-- maven-repo.yaml
+- build-artifacts.yaml
