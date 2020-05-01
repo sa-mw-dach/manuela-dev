@@ -1,0 +1,9 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: manuela-firewalloperator-catalog
+spec:
+  sourceType: grpc
+  image: quay.io/manuela/firewallruleoperator-index:latest
+  displayName: Manuela Firewall Rule Operator Catalog
+  publisher: Manuela Team
