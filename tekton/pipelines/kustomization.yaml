@@ -6,3 +6,4 @@ resources:
 - test-all.yaml
 - stage-production.yaml
 - seed.yaml
+- build-images.yaml

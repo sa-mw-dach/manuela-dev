@@ -9,3 +9,5 @@ resources:
 - build-iot-anomaly-detection.yaml
 - stage-production-pipelinerun.yaml
 - seed.yaml
+- build-image-httpd-ionic.yaml
+- build-image-bumpversion.yaml

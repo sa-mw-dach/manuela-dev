@@ -28,3 +28,5 @@ data:
   IOT_ANOMALY_TEST_KUSTOMIZATION_PATH: config/instances/manuela-tst/kustomization.yaml
   IOT_ANOMALY_PROD_KUSTOMIZATION_PATH: config/templates/manuela-openshift-prod/anomaly-detection/kustomization.yaml
   IOT_ANOMALY_PROD_IMAGESTREAM_PATH: config/templates/manuela-openshift-prod/anomaly-detection/anomaly-detection-is.yaml
+  BUMPVERSION_REMOTE_IMAGE: quay.io/manuela/bumpversion
+  HTTPD_IONIC_REMOTE_IMAGE: quay.io/manuela/httpd-ionic
