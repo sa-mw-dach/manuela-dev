@@ -41,3 +41,5 @@ objects:
       value: iot-frontend
     - name: CONFIGMAP_PREFIX
       value: IOT_FRONTEND
+    - name: CHAINED_BUILD_DOCKERFILE
+      value: "FROM centos/httpd-24-centos7\nCOPY --from=0 /opt/app-root/output /var/www/html/"
