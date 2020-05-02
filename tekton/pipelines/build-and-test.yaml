@@ -25,6 +25,9 @@ spec:
   - name: CONFIGMAP_PREFIX
     type: string
     default: IOT_CONSUMER
+  - name: CHAINED_BUILD_DOCKERFILE 
+    type: string 
+    default: ""
   tasks:
   - name: git-clone-dev
     taskRef:
@@ -79,6 +82,8 @@ spec:
       value: $(tasks.bump-build-version.results.image-tag)
     - name: OUTPUT_IMAGE
       value: $(params.LOCAL_IMAGE)
+    - name: CHAINED_BUILD_DOCKERFILE
+      value: $(params.CHAINED_BUILD_DOCKERFILE)
 
   - name: push-dev-tag
     taskRef:

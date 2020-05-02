@@ -49,6 +49,10 @@ spec:
     default: ""
     description: The base URL of a mirror used for retrieving artifacts
     type: string
+  - name: CHAINED_BUILD_DOCKERFILE
+    default: "" 
+    description: If a chained build is to be executed, the second part of the DOCKERFILE
+    type: string
   steps:
   - name: prepare-env
     image: quay.io/openshift-pipeline/s2i
@@ -92,10 +96,10 @@ spec:
     # - --as-dockerfile
     # - /gen-source/Dockerfile.gen
     script: |
-      if [ -f /env-params/s2icommand ]; then
-        source /env-params/s2icommand
-      else 
-        s2i build --loglevel=$(params.LOGLEVEL) $(params.PATH_CONTEXT) $(params.BUILDER_IMAGE) --as-dockerfile /gen-source/Dockerfile.gen
+      source /env-params/s2icommand
+
+      if [[ -n "$(params.CHAINED_BUILD_DOCKERFILE)" ]]; then
+        echo "$(params.CHAINED_BUILD_DOCKERFILE)" >>/gen-source/Dockerfile.gen
       fi
     resources: {}
     volumeMounts:
