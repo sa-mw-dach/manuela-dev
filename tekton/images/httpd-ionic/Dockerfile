@@ -3,7 +3,7 @@ FROM registry.access.redhat.com/ubi8-minimal
 RUN microdnf install -y httpd && \
     microdnf -y clean all && \
     sed -i 's/Listen 80/Listen 8080/' /etc/httpd/conf/httpd.conf 
-    
+
 COPY rewrite.conf /etc/httpd/conf.d/
 
 ENV HTTPD_CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/httpd/ \
@@ -21,7 +21,7 @@ EXPOSE 8080
 
 USER 1001
 
-CMD ["/usr/bin/run-httpd"]
+#CMD ["/usr/bin/run-httpd"]
 
-#STOPSIGNAL SIGWINCH
-#ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+STOPSIGNAL SIGWINCH
+ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]
