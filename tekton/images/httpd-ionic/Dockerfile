@@ -1,6 +1,8 @@
 FROM registry.access.redhat.com/ubi8-minimal
 
-RUN yum -y module enable httpd:2.4 && \
+RUN microdnf install -y yum && \
+    microdnf -y clean all && \
+    yum -y module enable httpd:2.4 && \
     yum install -y --setopt=tsflags=nodocs httpd && \
     rpm -V $INSTALL_PKGS && \
     yum -y clean all --enablerepo='*' && \ 
