@@ -2,7 +2,8 @@ FROM registry.access.redhat.com/ubi8-minimal
 
 RUN microdnf install -y httpd && \
     microdnf -y clean all && \
-    sed -i 's/Listen 80/Listen 8080/' /etc/httpd/conf/httpd.conf 
+    sed -i 's/Listen 80/Listen 8080/' /etc/httpd/conf/httpd.conf && \
+    chmod -c -R a+rwX  /etc/httpd/conf /run/httpd /var/log/httpd 
 
 COPY rewrite.conf /etc/httpd/conf.d/
 
