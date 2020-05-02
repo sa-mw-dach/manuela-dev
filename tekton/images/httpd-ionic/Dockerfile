@@ -1,11 +1,7 @@
 FROM registry.access.redhat.com/ubi8-minimal
 
-RUN microdnf install -y yum && \
+RUN microdnf install -y httpd && \
     microdnf -y clean all && \
-    yum -y module enable httpd:2.4 && \
-    yum install -y --setopt=tsflags=nodocs httpd && \
-    rpm -V httpd && \
-    yum -y clean all --enablerepo='*' && \ 
     sed -i 's/Listen 80/Listen 8080/' /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf && \
     chgrp -R 0 /var/log/httpd24 /opt/rh/httpd24/root/var/run/httpd && \
     chmod -R g=u /var/log/httpd24 /opt/rh/httpd24/root/var/run/httpd
