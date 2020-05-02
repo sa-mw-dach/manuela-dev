@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi8-minimal
 
 RUN microdnf install -y httpd && \
     microdnf -y clean all && \
-    sed -i 's/Listen 80/Listen 8080/' /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf && \
+    sed -i 's/Listen 80/Listen 8080/' /etc/httpd/conf/httpd.conf && \
     chgrp -R 0 /var/log/httpd24 /opt/rh/httpd24/root/var/run/httpd && \
     chmod -R g=u /var/log/httpd24 /opt/rh/httpd24/root/var/run/httpd
 
