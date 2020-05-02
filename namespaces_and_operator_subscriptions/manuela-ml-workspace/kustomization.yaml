@@ -10,5 +10,7 @@ resources:
 - manuela-ml-workspace-namespace.yaml
 - manuela-ml-workspace-operatorgroup.yaml
 - odh-operator-subscription.yaml
-- seldon-deployment-crd.yaml
+# Seldon CRD should exist on OCP3 and OCP4
+# Uncomment if you install in your own OCP (e.g. CRC)
+# - seldon-deployment-crd.yaml
 - odh-instance.yaml
