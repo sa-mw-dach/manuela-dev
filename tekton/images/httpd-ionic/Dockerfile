@@ -22,7 +22,6 @@ EXPOSE 8080
 
 USER 1001
 
-#CMD ["/usr/bin/run-httpd"]
-
 STOPSIGNAL SIGWINCH
-ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+#ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
