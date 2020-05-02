@@ -28,6 +28,6 @@ spec:
     script: |
       echo "https://$(cat $(workspaces.github-secret.path)/$(params.GITHUB_USERNAME_CONFIGMAPKEY)):$(cat $(workspaces.github-secret.path)/$(params.GITHUB_TOKEN_CONFIGMAPKEY))@github.com" > ~/.git-credentials
       git config --global credential.helper store 'store --file ~/.git-credentials'
-      git pull --ff-only --no-edit
+      git branch -r | grep -q origin/$(git rev-parse --abbrev-ref HEAD) && git pull --ff-only --no-edit
       git push $(params.PUSH_FLAGS)
     workingDir: $(workspaces.gitrepos.path)/$(params.subdirectory)
