@@ -1,10 +1,10 @@
 FROM golang as builder
 
-RUN go get github.com/robustperception/pushprox/proxy && \
+RUN go get -v github.com/robustperception/pushprox/proxy && \
     cd ${GOPATH-$HOME/go}/src/github.com/robustperception/pushprox/proxy && \
     go build 
 
-RUN go get github.com/robustperception/pushprox/client && \
+RUN go get -v github.com/robustperception/pushprox/client && \
     cd ${GOPATH-$HOME/go}/src/github.com/robustperception/pushprox/client && \
     go build 
 
