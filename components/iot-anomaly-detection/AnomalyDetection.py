@@ -9,6 +9,7 @@ class AnomalyDetection(object):
     def __init__(self):
         print("Initializing...")
         self.model_file = os.environ.get('MODEL_FILE', 'model.joblib')
+        time.sleep(600)
 
         print("Load modelfile: %s" % (self.model_file))
         self.clf = load(open(self.model_file, 'rb'))
