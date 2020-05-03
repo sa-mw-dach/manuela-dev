@@ -9,18 +9,17 @@ class AnomalyDetection(object):
     def __init__(self):
         print("Initializing...")
         self.model_file = os.environ.get('MODEL_FILE', 'model.joblib')
-        ## time.sleep(600)
-
+       
         print("Load modelfile: %s" % (self.model_file))
 
         try:
             self.clf = load(open(self.model_file, 'rb'))
-            print("Model file loaded: %s", self.model_file)
+            print("Model file loaded: %s"% (self.model_file))
         except FileNotFoundError:
             print("File does not exist in:", os. getcwd())
             sys.exit() 
         except:
-            print("Other error")
+            print("Coul dnot load model file! ", self.model_file, os. getcwd() )
             sys.exit() 
 
     def predict(self, X, feature_names):
