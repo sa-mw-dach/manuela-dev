@@ -8,7 +8,7 @@ import time
 class AnomalyDetection(object):
     def __init__(self):
         print("Initializing...")
-        self.model_file = os.environ.get('MODEL_FILE', 'model.joblibx')
+        self.model_file = os.environ.get('MODEL_FILE', 'model.joblib')
         ## time.sleep(600)
 
         print("Load modelfile: %s" % (self.model_file))
