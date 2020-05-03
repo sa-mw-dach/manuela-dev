@@ -72,7 +72,7 @@ spec:
           memory: 512Mi
           cpu: 500m
   seldon:
-    odh_deploy: true
+    odh_deploy: false
   kafka:
     odh_deploy: false
     kafka_cluster_name: odh-message-bus
