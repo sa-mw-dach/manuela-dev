@@ -6,6 +6,8 @@ spec:
   workspaces:
   - name: gitrepos
     description: The git repo will be cloned onto the volume backing this workspace
+  - name: build-artifacts
+    description: The maven repo for java builds
   results:
   - name: image
     description: The image+tag that was created
@@ -64,14 +66,20 @@ spec:
         [[ '$(params.MAVEN_MIRROR_URL)' != "" ]] &&
           echo "MAVEN_MIRROR_URL=$(params.MAVEN_MIRROR_URL)" >> env-file
 
+        #create build artifacts cache directory
+        if [[ ! -d $(workspaces.build-artifacts.path)/m2 ]]; then 
+           mkdir $(workspaces.build-artifacts.path)/m2
+           chmod a+rwx $(workspaces.build-artifacts.path)/m2
+        fi
+        echo "MAVEN_LOCAL_REPO=/ba/m2" >> env-file
+
         echo "Generated Env file"
         echo "------------------------------"
         cat env-file
         echo "------------------------------"
 
         echo "s2i build --loglevel=$(params.LOGLEVEL) $(params.PATH_CONTEXT) $(params.BUILDER_IMAGE) --image-scripts-url image:///usr/local/s2i --as-dockerfile /gen-source/Dockerfile.gen --environment-file /env-params/env-file" >s2icommand
-      else
-        echo "s2i build --loglevel=$(params.LOGLEVEL) $(params.PATH_CONTEXT) $(params.BUILDER_IMAGE) --as-dockerfile /gen-source/Dockerfile.gen" >s2icommand
+        echo "buildah bud --tls-verify=$(params.TLSVERIFY) --layers -f /gen-source/Dockerfile.gen -t $(params.OUTPUT_IMAGE) -v $(workspaces.build-artifacts.path)/m2:/ba/m2 ." >buildahcommand
       fi
     volumeMounts:
     - mountPath: /env-params
@@ -103,7 +111,11 @@ spec:
   - name: build
     image: quay.io/buildah/stable:v1.11.0
     script: |
-      buildah bud --tls-verify=$(params.TLSVERIFY) --layers -f /gen-source/Dockerfile.gen -t $(params.OUTPUT_IMAGE) .
+      if [ -f /env-params/buildahcommand ]; then
+        source /env-params/buildahcommand
+      else 
+        buildah bud --tls-verify=$(params.TLSVERIFY) --layers -f /gen-source/Dockerfile.gen -t $(params.OUTPUT_IMAGE) .
+      fi
     resources: {}
     securityContext:
       privileged: true
@@ -111,7 +123,9 @@ spec:
     - mountPath: /var/lib/containers
       name: varlibcontainers
     - mountPath: /gen-source
-      name: gen-source
+      name: gen-source    
+    - mountPath: /env-params
+      name: envparams
     workingDir: /gen-source
   - name: push
     image: quay.io/buildah/stable:v1.11.0

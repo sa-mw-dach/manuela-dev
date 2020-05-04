@@ -8,6 +8,7 @@ spec:
   - name: config
   - name: github-secret
   - name: argocd-env-secret
+  - name: build-artifacts
   params:
   - name: S2I_BUILDER_IMAGE
     type: string
@@ -68,6 +69,8 @@ spec:
     workspaces:
     - name: gitrepos
       workspace: gitrepos
+    - name: build-artifacts
+      workspace: build-artifacts
     params:
     - name: TLSVERIFY
       value: "false"
