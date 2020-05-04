@@ -34,10 +34,10 @@ spec:
     spark:
       image: 'quay.io/opendatahub/spark-cluster-image:spark22python36'
       worker:
-        instances: 1
+        instances: 2
         resources:
           limits:
-            memory: 1Gi
+            memory: 4Gi
             cpu: 3
           requests:
             memory: 1Gi
