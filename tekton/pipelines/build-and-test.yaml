@@ -27,6 +27,9 @@ spec:
   - name: CHAINED_BUILD_DOCKERFILE 
     type: string 
     default: ""
+  - name: DEV_REVISION 
+    type: string 
+    default: master
   tasks:
   - name: git-clone-dev
     taskRef:
@@ -40,7 +43,7 @@ spec:
     - name: url_configmapkey
       value: GIT_DEV_REPO_URL
     - name: revision
-      value: master
+      value: $(params.DEV_REVISION)
     - name: subdirectory
       value: dev
     - name: deleteExisting

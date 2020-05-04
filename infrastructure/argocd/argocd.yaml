@@ -17,4 +17,7 @@ spec:
   helpChatText: "MANUela Chat"
   rbac:
     defaultPolicy: role:admin
+  prometheus:
+    enabled: true
+    ingress: true
 #see: https://argocd-operator.readthedocs.io/en/latest/reference/argocd/

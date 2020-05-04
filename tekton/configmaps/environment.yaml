@@ -30,3 +30,4 @@ data:
   IOT_ANOMALY_PROD_IMAGESTREAM_PATH: config/templates/manuela-openshift-prod/anomaly-detection/anomaly-detection-is.yaml
   BUMPVERSION_REMOTE_IMAGE: quay.io/manuela/bumpversion
   HTTPD_IONIC_REMOTE_IMAGE: quay.io/manuela/httpd-ionic
+  PUSHPROX_REMOTE_IMAGE: quay.io/manuela/pushprox
