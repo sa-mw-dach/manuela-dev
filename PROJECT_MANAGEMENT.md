@@ -134,6 +134,7 @@ Labels:
 - Comment
 - Review
 - Blocker
+- Waiting (on MANUEla external event / input / dependency)
 
 #### Task Review
 When creating a task, please think about if this will need a review upon completion. 
