@@ -130,6 +130,9 @@ The MANUela Sprint Board (basically a Kanban board) has the following columns:
 * **Done**: Tasks completed. Not reviewed during the Sprint Review, and the acceptance criteria is not evaluated.
 * **Done and Closed**: Tasks completed and reviewed/discussed with the team. The acceptance criteria were met.
 
+
+
+
 #### Sprint Board - Workflow
 
 1. A team member picks a Task he or she wants to implement from the "To Do" column by assigning him or herself and moving the Task to "In Progress". 
@@ -140,6 +143,9 @@ The MANUela Sprint Board (basically a Kanban board) has the following columns:
    1. Optional: The team member wants the Task to be reviewed. The details of what and how to review is documented in the comments of the task (GitHub Issue). After a successful review, by commenting the Task by the reviewer, -> 4. 
    2. Optional: Request for comments
 4. The team member moves the Task to "Done" but does not close it.
+
+5. When a ticket is closed, please document Why. e.g. when performing a review "add a LGTM -> Close", or "Sprint Review Meeting: consens story is complete and done -> close".
+
 
 
 * According to the Kanban value WIP (Work in Progress), there should be only one Task per user at a time "In Progress". Limitting the WIP is important.
