@@ -6,15 +6,17 @@ Scrum is a process framework that has been used to manage work on complex produc
 
 Please refer to the official [Scrum Guide](https://www.scrumguides.org/scrum-guide.html) to get more information about Scrum.
 
-## MANUela - NEXT
+## MANUela - NEXT Meeting
 
-A meeting to discuss new User Stories / Use Cases and the next steps of MANUela. It is also used to improve and refine the Product backlog.
+A meeting to discuss new User Stories / Use Cases and the next steps of MANUela. It is also used to *improve* and *refine* (groom) the Product backlog.
 
 Product Backlog refinement is the act of adding detail, estimates, and order to items in the Product Backlog. This is an ongoing process in which the Product Owner and the Development Team collaborate on the details of Product Backlog items. During Product Backlog refinement, items are reviewed and revised.
 
 * On a monthly base
 * Duration of 2-4 hours
-* Should be conducted before a Sprint planning meeting.
+* Should be conducted *before* a Sprint planning meeting
+* Priority by discussion
+* Outcome are user Stories in the Product Backlog
 
 ## MANUela - Scrum Adaption
 
@@ -33,7 +35,7 @@ Scrum prescribes four formal events for inspection and adaptation, as described 
 * The Sprint duration is not negotiable.
 * We always define a Sprint Goal.
 * We select a team member for the role as Product Owner every Sprint.
-* The Product Owner is accountable in termsof the Sprint Goal, the prioritization of tasks and User Stories
+* The Product Owner is accountable in terms of the Sprint Goal, the prioritization of tasks and User Stories
 
 During the Sprint:
 
