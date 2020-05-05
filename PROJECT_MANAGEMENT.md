@@ -73,10 +73,11 @@ The Sprint Review includes the following elements:
 
 * The Product Owner explains what Product Backlog items have been "Done" and what has not been "Done";
 * The Team members demonstrate their work they have "Done" and answer questions about the Increment;
-* Backlog items (Github Issues) which are "Done" are getting closed.
-* Backlog items not "Done" move back to the Product Backlog and will be discussed.
+* User stories (Github Issues) which are "Done" are getting closed.
+* User stories not "Done" move back to the Product Backlog and will be discussed.
 * The Product Owner discusses the Product Backlog as it stands. He or she projects likely target and delivery dates based on progress to date (if needed);
 * The entire group collaborates on what to do next, so that the Sprint Review provides valuable input to subsequent Sprint Planning;
+
 
 ### MANUela - Sprint Retrospective
 
@@ -124,28 +125,28 @@ The MANUela Sprint Board (basically a Kanban board) has the following columns:
 * **Sprint Backlog**: Contains the User Stories to implement during the Sprint. Prioritized by the order from top to bottom. Every User Story has an assigned owner.
 * **To Do**: Tasks to implement / complete during the Sprint. Tasks are the unit of work. Tasks are normally not assigned to a team member at this stage.
 * **In Progress**: Tasks a team member is assigned and currently working on.
-* **HelpWanted**: Tasks that can not be continued for any reason. Help is needed. Labels indicate which type of help is needed (see below).
+* **Help Wanted**: Tasks that can not be continued for any reason. Help is needed. Labels indicate which type of help is needed (see below).
 * **Done**: 
 Task OPEN completed: Not reviewed during the Sprint Review, and the acceptance criteria is not evaluated.
 Task CLOSED: Tasks completed and reviewed/discussed with the team. The acceptance criteria were met.
 
 Labels: 
-- HelpWanted: Comment
-- HelpWanted: Review
-- HelpWanted
+- Comment
+- Review
+- Blocker
 
-#### Review of Tasks
+#### Task Review
+When creating a task, please think about if this will need a review upon completion. 
+If so, please attach the Label "Review"
+
 When you completed the work, please decide if this is minor trivial change, then close the ticket into done.
 If the work is a bit more complex, bigger change, we try to follow the four eyes principle to have minimum quality assurance.
-
-#### Review of Sprint
-Check of user stories, if they are completed (matched against success criteries)
-Tasks are 
-
-
+If the ticket was flagged as "Review" upon creation, it is mandatory get a review.
 
 
 #### Sprint Board - Workflow
+
+TODO: Ortwin to align this section
 
 1. A team member picks a Task he or she wants to implement from the "To Do" column by assigning him or herself and moving the Task to "In Progress". 
 2. The team member is working on the Task.
