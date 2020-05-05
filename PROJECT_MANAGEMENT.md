@@ -124,11 +124,23 @@ The MANUela Sprint Board (basically a Kanban board) has the following columns:
 * **Sprint Backlog**: Contains the User Stories to implement during the Sprint. Prioritized by the order from top to bottom. Every User Story has an assigned owner.
 * **To Do**: Tasks to implement / complete during the Sprint. Tasks are the unit of work. Tasks are normally not assigned to a team member at this stage.
 * **In Progress**: Tasks a team member is assigned and currently working on.
-* **Blocked**: Tasks that can not be continued for any reason. Help is needed immediately.
-* **Please Review**: Tasks completed that need a review.
-* **Please Comment**: ??
-* **Done**: Tasks completed. Not reviewed during the Sprint Review, and the acceptance criteria is not evaluated.
-* **Done and Closed**: Tasks completed and reviewed/discussed with the team. The acceptance criteria were met.
+* **HelpWanted**: Tasks that can not be continued for any reason. Help is needed. Labels indicate which type of help is needed (see below).
+* **Done**: 
+Task OPEN completed: Not reviewed during the Sprint Review, and the acceptance criteria is not evaluated.
+Task CLOSED: Tasks completed and reviewed/discussed with the team. The acceptance criteria were met.
+
+Labels: 
+- HelpWanted: Comment
+- HelpWanted: Review
+- HelpWanted
+
+#### Review of Tasks
+When you completed the work, please decide if this is minor trivial change, then close the ticket into done.
+If the work is a bit more complex, bigger change, we try to follow the four eyes principle to have minimum quality assurance.
+
+#### Review of Sprint
+Check of user stories, if they are completed (matched against success criteries)
+Tasks are 
 
 
 
