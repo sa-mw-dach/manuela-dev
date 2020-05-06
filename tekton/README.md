@@ -4,6 +4,7 @@
 - [Pipelines](#Pipelines)
 - [How to start a pipeline](#How-to-start-a-pipeline)
 - [Versioning and Tagging](#Versioning-and-Tagging)
+- [Storing build artifacts across builds](#Storing-build-artifacts-across-builds)
 - [Open issues](#Open-issues)
   
 ## Design Considerations
@@ -54,6 +55,10 @@ In addition, there is a [stage-production-pipelinerun](templates/stage-productio
 These pipelines use git tags in the dev repository to maintain the state which build number is current per component. The task [bumpversion](tasks/bumpversion.yaml) retrieves the component version from its VERSION file in the dev repo. It then searches for the highest tag matching "build-COMPONENTNAME-VERSION-*". In case it doesn't find one, it assumes "build-COMPONENTNAME-VERSION-0". The task then increases the build number (after the last dash) and tags the repo accordingly to form a tag in the form "build-COMPONENTNAME-VERSION-BUILD". These tags can be pushed to origin in a later task.
 
 OCI Images are tagged with "VERSION-BUILD" since the component name is already reflected in the image name.
+
+## Storing build artifacts across builds
+
+The pipelines use the PVC ```build-artifacts``` to store build artifacts (such as maven cache) across pipeline runs and component builds. If you want to clear this cache, delete and recreate the PVC.
 
 ## Open issues
 

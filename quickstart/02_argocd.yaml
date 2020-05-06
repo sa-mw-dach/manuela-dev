@@ -48,6 +48,11 @@ spec:
   helpChatURL: https://chat.google.com/room/AAAAonnPp64
   rbac:
     defaultPolicy: role:admin
+  server:
+    ingress: false
+    insecure: false
+    resources: {}
+    route: true
 ---
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
@@ -72,4 +77,4 @@ spec:
   name: argocd-operator
   source: community-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: argocd-operator.v0.0.5
+  startingCSV: argocd-operator.v0.0.8

@@ -8,6 +8,7 @@ spec:
   - name: config
   - name: github-secret
   - name: argocd-env-secret
+  - name: build-artifacts
   params:
   - name: S2I_BUILDER_IMAGE
     type: string
@@ -27,6 +28,9 @@ spec:
   - name: CHAINED_BUILD_DOCKERFILE 
     type: string 
     default: ""
+  - name: DEV_REVISION 
+    type: string 
+    default: master
   tasks:
   - name: git-clone-dev
     taskRef:
@@ -40,7 +44,7 @@ spec:
     - name: url_configmapkey
       value: GIT_DEV_REPO_URL
     - name: revision
-      value: master
+      value: $(params.DEV_REVISION)
     - name: subdirectory
       value: dev
     - name: deleteExisting
@@ -68,6 +72,8 @@ spec:
     workspaces:
     - name: gitrepos
       workspace: gitrepos
+    - name: build-artifacts
+      workspace: build-artifacts
     params:
     - name: TLSVERIFY
       value: "false"
