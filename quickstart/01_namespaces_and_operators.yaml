@@ -104,7 +104,7 @@ spec:
   name: argocd-operator
   source: community-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: argocd-operator.v0.0.5
+  startingCSV: argocd-operator.v0.0.8
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
@@ -118,16 +118,3 @@ spec:
   source: redhat-operators
   sourceNamespace: openshift-marketplace
   startingCSV: amq-broker-operator.v0.9.1
----
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: opendatahub-operator
-  namespace: iotdemo
-spec:
-  channel: alpha
-  installPlanApproval: Automatic
-  name: opendatahub-operator
-  source: community-operators
-  sourceNamespace: openshift-marketplace
-  startingCSV: opendatahub-operator.v0.5.1
