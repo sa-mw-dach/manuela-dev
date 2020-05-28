@@ -96,8 +96,11 @@ spec:
     # - --as-dockerfile
     # - /gen-source/Dockerfile.gen
     script: |
-      source /env-params/s2icommand
-
+      if [ -f /env-params/s2icommand ]; then
+        source /env-params/s2icommand
+      else
+        s2i build --loglevel=$(params.LOGLEVEL) $(params.PATH_CONTEXT) $(params.BUILDER_IMAGE) --as-dockerfile /gen-source/Dockerfile.gen
+      fi 
       if [[ -n "$(params.CHAINED_BUILD_DOCKERFILE)" ]]; then
         echo "$(params.CHAINED_BUILD_DOCKERFILE)" >>/gen-source/Dockerfile.gen
       fi
