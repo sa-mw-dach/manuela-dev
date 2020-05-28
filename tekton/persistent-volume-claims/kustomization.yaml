@@ -8,5 +8,4 @@ resources:
 - iot-anomaly-detection.yaml
 - stage-production.yaml
 - build-artifacts.yaml
-- maven-repo.yaml
 - build-images.yaml
