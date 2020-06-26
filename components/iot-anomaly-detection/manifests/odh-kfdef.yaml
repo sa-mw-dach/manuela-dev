@@ -4,7 +4,6 @@ metadata:
   annotations:
     kfctl.kubeflow.io/force-delete: 'false'
   name: opendatahub
-  namespace: wr-odh
 spec:
   applications:
 # common config map - should probably always be present
