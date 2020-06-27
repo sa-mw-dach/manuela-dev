@@ -37,9 +37,13 @@ delete-deployment:
 	oc delete -f manifests/iot-anomaly-detection-route.yaml
 	oc delete -f manifests/iot-anomaly-detection-seldon.yaml
 
+
 ## Test Prediction
 ROUTE := $(shell oc get route anomaly-detection -o jsonpath='{.spec.host}')
 .PHONY: test-prediction 
 test-prediction:
 	@echo ROUTE IS $(ROUTE)
 	curl -k -X POST -H 'Content-Type: application/json' -d '{"data": { "ndarray": [[16.1,  15.40,  15.32,  13.47,  17.70]]}}' http://$(ROUTE)/api/v1.0/predictions
+
+.PHONY: clean
+clean: delete-deployment delete-container delete-seldon-operator
