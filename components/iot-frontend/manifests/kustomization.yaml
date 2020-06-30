@@ -8,4 +8,8 @@ resources:
 - iot-frontend-is.yaml
 - iot-frontend-route.yaml
 - iot-frontend-svc.yaml
-- iot-frontend-configmap.yaml
+
+configMapGenerator:
+- name: iot-frontend-cfg
+  files:
+  - config.json=iot-frontend-configmap-config.json
