@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: environment
 data:
-  GIT_EMAIL: "manuela@redhat.com"
+  GIT_EMAIL: "manuela-list@redhat.com"
   GIT_USERNAME: "Manuela Team"
   GIT_DEV_REPO_URL: https://github.com/sa-mw-dach/manuela-dev.git
   GIT_OPS_REPO_TEST_URL: https://github.com/sa-mw-dach/manuela-gitops.git
