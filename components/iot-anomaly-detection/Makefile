@@ -1,15 +1,15 @@
 
-
 .PHONY: install-seldon-operator
 ## Install the Seldon operator
 install-seldon-operator:
+	oc new-project test-anomaly-detection
 	oc apply -f manifests/test-anomaly-detection-operatorgroup.yaml
 	oc apply -f manifests/seldon-subscription-v1.2.0.yaml
 
 .PHONY: delete-seldon-operator
 ## Delete the Seldon operator
 delete-seldon-operator:
-	oc delete ClusterServiceVersion seldon-operator.v1.2.0
+	oc delete csv $(oc get csv | grep seldon-operator | awk '{print $1}')
 	oc delete -f manifests/seldon-subscription-v1.2.0.yaml
 	oc delete -f manifests/test-anomaly-detection-operatorgroup.yaml
 
