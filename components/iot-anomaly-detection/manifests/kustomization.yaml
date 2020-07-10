@@ -1,8 +1,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+#
+# This Kustomization is kind of bumpy, because the seldon operator must run before the SeldonDeployment
+# the SeldonDeployment can be created
+#
+
 resources:
-- odh-instance.yaml
+- test-anomaly-detection-operatorgroup.yaml
+- seldon-subscription-v1.2.0.yaml
 - iot-anomaly-detection-bc.yaml  
 - iot-anomaly-detection-route.yaml   
 - iot-anomaly-detection-is.yaml  
