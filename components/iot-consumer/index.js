@@ -137,7 +137,7 @@ async function check_anomaly(id, value) {
                 console.log('*AD* ID: %s,  Val: %d', id, value );
                 const edgeAnomalyResponse = await request({
                 method: 'POST',
-                uri: anomaly_detection_url + '/api/v1/predictions',
+                uri: anomaly_detection_url + '/api/v1.0/predictions',
                 body: edgeAnomaly,
                 json: true,
                 timeout: 1000
