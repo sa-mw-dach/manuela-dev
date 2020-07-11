@@ -3,7 +3,7 @@ kind: Subscription
 metadata:
   generation: 1
   name: seldon-operator
-  namespace: test-anomaly-detection
+  namespace: iotdemo
 spec:
   channel: alpha
   installPlanApproval: Automatic

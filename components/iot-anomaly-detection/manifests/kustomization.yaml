@@ -7,7 +7,7 @@ kind: Kustomization
 #
 
 resources:
-- test-anomaly-detection-operatorgroup.yaml
+# - test-anomaly-detection-operatorgroup.yaml
 - seldon-subscription-v1.2.0.yaml
 - iot-anomaly-detection-bc.yaml  
 - iot-anomaly-detection-route.yaml   
