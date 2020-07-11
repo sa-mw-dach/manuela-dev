@@ -14,8 +14,8 @@ data:
   TOPIC_VIBRATION: iot-sensor/sw/vibration
   TOPIC_LIGHT: iot-sensor/sw/light
   TEMPERATURE_ALERT_ENABLED: 'false'
-  VIBRATION_ALERT_ENABLED: 'false'
-  VIBRATION_ANOMALY_ENABLED: 'false'
-  ANOMALY_DETECTION_URL: 'http://anomaly-detection-anomaly-detection:8000'
+  VIBRATION_ALERT_ENABLED: 'true'
+  VIBRATION_ANOMALY_ENABLED: 'true'
+  ANOMALY_DETECTION_URL: 'http://anomaly-detection-predictor:8000'
 
 
