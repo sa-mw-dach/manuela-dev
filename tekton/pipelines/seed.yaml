@@ -10,22 +10,7 @@ spec:
   - name: argocd-env-secret
   - name: quay-secret
   - name: build-artifacts
-  params:
-  - name: S2I_BUILDER_IMAGE
-    type: string
-    default: registry.access.redhat.com/rhscl/nodejs-10-rhel7
-  - name: LOCAL_IMAGE
-    type: string
-    default: image-registry.openshift-image-registry.svc:5000/manuela-tst-all/messaging
-  - name: PATH_CONTEXT
-    type: string
-    default: components/iot-consumer
-  - name: COMPONENT_NAME
-    type: string
-    default: iot-consumer
-  - name: CONFIGMAP_PREFIX
-    type: string
-    default: IOT_CONSUMER
+
   tasks:
   - name: git-clone-dev
     taskRef:
@@ -76,7 +61,7 @@ spec:
     - name: component_name
       value: iot-frontend
     - name: version_file_path
-      value: $(params.PATH_CONTEXT)/VERSION
+      value: components/iot-frontend/VERSION
 
   - name: bump-build-version-iot-consumer
     taskRef:
@@ -91,7 +76,7 @@ spec:
     - name: component_name
       value: iot-consumer
     - name: version_file_path
-      value: $(params.PATH_CONTEXT)/VERSION
+      value: components/iot-consumer/VERSION
 
   - name: bump-build-version-iot-anomaly
     taskRef:
@@ -106,7 +91,7 @@ spec:
     - name: component_name
       value: iot-anomaly
     - name: version_file_path
-      value: $(params.PATH_CONTEXT)/VERSION
+      value: components/iot-anomaly-detection/VERSION
 
   - name: bump-build-version-iot-software-sensor
     taskRef:
@@ -121,7 +106,7 @@ spec:
     - name: component_name
       value: iot-swsensor
     - name: version_file_path
-      value: $(params.PATH_CONTEXT)/VERSION
+      value: components/iot-software-sensor/VERSION
 
   - name: s2i-build-iot-frontend
     taskRef:
