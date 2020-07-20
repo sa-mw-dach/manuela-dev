@@ -36,11 +36,13 @@ class AnomalyDetection(object):
         print(" Predict features: ", X)
         # print(" Features types: ", type(X),  type(X[0,0]))  
     
-        self.V0=X[0,0]
-        self.V1=X[0,1]
-        self.V2=X[0,2]
-        self.V3=X[0,3]
-        self.V4=X[0,4]
+        self.V0=float(X[0,0])
+        self.V1=float(X[0,1])
+        self.V2=float(X[0,2])
+        self.V3=float(X[0,3])
+        self.V4=float(X[0,4])
+
+       
 
         prediction = self.clf.predict(X)
         self.Prediction=prediction
