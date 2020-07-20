@@ -45,7 +45,7 @@ class AnomalyDetection(object):
        
 
         prediction = self.clf.predict(X)
-        self.Prediction=prediction
+        self.Prediction=float(prediction)
         print("Prediction: " , prediction)
         
         return prediction
