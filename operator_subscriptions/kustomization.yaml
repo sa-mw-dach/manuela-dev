@@ -3,5 +3,7 @@ kind: Kustomization
 
 bases:
 - amq
+#- amq-streams
+#- camel-k
 - opendatahub
 - openshift-pipelines
