@@ -4,7 +4,7 @@ metadata:
   name: seldon-operator
 spec:
   channel: alpha
-  installPlanApproval: Manual
+  installPlanApproval: Automatic
   name: seldon-operator
   source: community-operators
   sourceNamespace: openshift-marketplace

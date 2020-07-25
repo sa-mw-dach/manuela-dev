@@ -4,7 +4,7 @@ metadata:
   name: amq-streams
 spec:
   channel: stable
-  installPlanApproval: Manual
+  installPlanApproval: Automatic
   name: amq-streams
   source: redhat-operators
   sourceNamespace: openshift-marketplace

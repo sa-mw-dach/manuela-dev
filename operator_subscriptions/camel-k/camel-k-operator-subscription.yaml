@@ -4,7 +4,7 @@ metadata:
   name: red-hat-camel-k
 spec:
   channel: techpreview
-  installPlanApproval: Manual
+  installPlanApproval: Automatic
   name: red-hat-camel-k
   source: redhat-operators
   sourceNamespace: openshift-marketplace
