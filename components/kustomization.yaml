@@ -6,6 +6,7 @@ bases:
 - iot-frontend/manifests
 - iot-software-sensor/manifests
 # - iot-software-sensor-quarkus/manifests
+- iot-mqtt2kafka-integration/manifests
 
 # Open data hub is optional
 - iot-anomaly-detection/manifests

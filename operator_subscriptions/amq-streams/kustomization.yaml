@@ -3,7 +3,3 @@ kind: Kustomization
 
 resources:
 - amq-streams-operator-subscription.yaml
-- kafka-cr.yaml
-- kafka-temperature-topic.yaml
-- kafka-vibration-topic.yaml
-

@@ -3,5 +3,3 @@ kind: Kustomization
 
 resources:
 - camel-k-operator-subscription.yaml
-- camel-k-integration-platform.yaml
-
