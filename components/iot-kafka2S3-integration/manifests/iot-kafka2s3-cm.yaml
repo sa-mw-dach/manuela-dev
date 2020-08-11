@@ -9,8 +9,6 @@ data:
     kafka.broker.topic.temperature=iot-sensor-sw-temperature
     kafka.broker.topic.vibration=iot-sensor-sw-vibration
 
-    s3.accessKey=replacme
-    s3.secretKey=replaceme
     s3.region=eu-central-1
     s3.bucket.name=manuela
     s3.message.aggregation.count=10
