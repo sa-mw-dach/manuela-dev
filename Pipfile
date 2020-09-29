@@ -4,12 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-tensorflow = "==2.2.0"
+tensorflow = "==2.3.0"
 pandas = "*"
 matplotlib = "*"
 numpy = "*"
 scikit-learn = "*"
 seaborn = "*"
+jupyter = "*"
 
 [dev-packages]
 
