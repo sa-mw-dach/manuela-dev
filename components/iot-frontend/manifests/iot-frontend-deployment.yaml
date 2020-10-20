@@ -1,5 +1,5 @@
-apiVersion: apps.openshift.io/v1
-kind: DeploymentConfig
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   labels:
     app: iot-frontend
@@ -9,18 +9,8 @@ spec:
   replicas: 1
   revisionHistoryLimit: 10
   selector:
-    app: iot-frontend
-    deploymentconfig: iot-frontend
-  strategy:
-    activeDeadlineSeconds: 21600
-    resources: {}
-    rollingParams:
-      intervalSeconds: 1
-      maxSurge: 25%
-      maxUnavailable: 25%
-      timeoutSeconds: 600
-      updatePeriodSeconds: 1
-    type: Rolling
+    matchLabels:
+      deploymentconfig: iot-frontend
   template:
     metadata:
       labels:
@@ -67,18 +57,7 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-        - configMap:
-            defaultMode: 438
-            name: iot-frontend-cfg
-          name: iot-frontend-cfg-vol
-  test: false
-  triggers:
-  - type: ConfigChange
-  - imageChangeParams:
-      automatic: true
-      containerNames:
-      - iot-frontend
-      from:
-        kind: ImageStreamTag
-        name: iot-frontend:latest
-    type: ImageChange
+      - name: iot-frontend-cfg-vol
+        configMap:
+          defaultMode: 438
+          name: iot-frontend-cfg
