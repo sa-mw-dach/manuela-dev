@@ -10,12 +10,10 @@ class AnomalyDetection(object):
         print("Initializing...")
 
         # Variables needed for metric collection
-        self.V0=0
-        self.V1=0
-        self.V2=0
-        self.V3=0
-        self.V4=0
-        self.Prediction=0
+        self.actual=0
+        self.prediction=0
+        self.device_metric="na"
+
 
         self.model_file = os.environ.get('MODEL_FILE', 'model.joblib')
        
@@ -32,32 +30,30 @@ class AnomalyDetection(object):
             print(e)
             sys.exit() 
 
-    def predict(self, X, feature_names):
+
+  
+        
+    def predict(self, X, feature_names=None, meta=None):
         print(" Predict features: ", X)
         # print(" Features types: ", type(X),  type(X[0,0]))  
-    
-        self.V0=float(X[0,0])
-        self.V1=float(X[0,1])
-        self.V2=float(X[0,2])
-        self.V3=float(X[0,3])
-        self.V4=float(X[0,4])
 
-       
+
+        if meta:
+            # print(" device_metric: ", meta.get('device_metric'))
+            self.device_metric = meta.get('device_metric')
+    
+        self.actual=float(X[0,0])
 
         prediction = self.clf.predict(X)
-        self.Prediction=float(prediction)
+        self.prediction=float(prediction)
         print("Prediction: " , prediction)
         
         return prediction
 
     def metrics(self):
         return [
-            {"type":"GAUGE","key":"V0","value":self.V0},
-            {"type":"GAUGE","key":"V1","value":self.V1},
-            {"type":"GAUGE","key":"V2","value":self.V2},
-            {"type":"GAUGE","key":"V3","value":self.V3},
-            {"type":"GAUGE","key":"V4","value":self.V4},
-            {"type":"GAUGE","key":"Prediction","value":self.Prediction}
+            {"type":"GAUGE","key":"iot_anomaly_actual","value":self.actual, "tags": {"device_metric":self.device_metric}},
+            {"type":"GAUGE","key":"iot_anomaly_prediction","value":self.prediction, "tags": {"device_metric":self.device_metric}}
             ]
 
 
@@ -69,8 +65,10 @@ if __name__ == "__main__":
     print(" Features types: ", type(X),  type(X[0][0])) 
 
     ## prediction = p.clf.predict(X)
+    
+    meta_dict = {'device_metric': 'test1'}
 
-    prediction = p.predict(X,"")
+    prediction = p.predict(X,feature_names=None,meta=meta_dict)
     print(prediction)
     print(p.metrics())
 
