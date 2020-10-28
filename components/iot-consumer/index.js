@@ -131,7 +131,7 @@ async function check_anomaly(id, value) {
         
         if (l.length == episode_length) {
 
-            var edgeAnomaly = { "data": { "ndarray": [l] }};
+            var edgeAnomaly = { "data": { "ndarray": [l] },"meta":{"device_metric":id}};
                 
             try {
                 console.log('*AD* ID: %s,  Val: %d', id, value );
