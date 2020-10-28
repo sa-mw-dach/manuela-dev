@@ -11,3 +11,4 @@ resources:
 - iot-anomaly-detection-route.yaml   
 - iot-anomaly-detection-is.yaml  
 - iot-anomaly-detection-seldon.yaml
+- iot-anomaly-detection-metrics-svc.yaml

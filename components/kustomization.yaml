@@ -10,4 +10,5 @@ bases:
 # Open data hub is optional
 - iot-anomaly-detection/manifests
 
-
+# Monitoring is optional (really?)
+- iot-monitoring/manifests
