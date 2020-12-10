@@ -1,2 +1,2 @@
-seldon-core
-scikit-learn
+seldon-core==1.4.0
+scikit-learn==0.23.2
