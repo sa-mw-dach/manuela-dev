@@ -20,7 +20,7 @@
     "log4js": "^4.5.1",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.5.0"
   },
   "keywords": [
     "mqtt"
