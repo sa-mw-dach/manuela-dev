@@ -19,6 +19,7 @@
     "mqtt": "^4.3.7",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
+    "requests": "^0.3.0",
     "socket.io": "^2.5.0"
   },
   "keywords": [
