@@ -11,6 +11,7 @@
     "url": "git+https://github.com/ortwinschneider/iot-consumer.git"
   },
   "dependencies": {
+    "bluebird": "^3.7.2",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
