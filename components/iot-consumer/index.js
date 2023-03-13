@@ -26,6 +26,7 @@ const temperature_alert_enabled = ((process.env.TEMPERATURE_ALERT_ENABLED || "fa
 const vibration_alert_enabled = ((process.env.VIBRATION_ALERT_ENABLED || "false") === 'true');
 const vibration_anomaly_enabled = ((process.env.VIBRATION_ANOMALY_ENABLED || "false") === 'true');
 const anomaly_detection_url = process.env.ANOMALY_DETECTION_URL || 'http://anomaly-detection-anomaly-detection';
+const anomaly_detection_rhods = ((process.env.ANOMALY_DETECTION_RHODS || "false") === 'true');
 
 // setup application
 var mqtt = require('mqtt')
@@ -122,6 +123,8 @@ function get_list_last_values(id, value) {
 var last_value_map = {}; 
 async function check_anomaly(id, value) {
     var result = false
+    var edgeAnomaly = {}
+    var anomaly_uri = anomaly_detection_url
 
     if (vibration_anomaly_enabled) {
         // Call anomaly detection web service for specified pump
@@ -131,26 +134,53 @@ async function check_anomaly(id, value) {
         
         if (l.length == episode_length) {
 
-            var edgeAnomaly = { "data": { "ndarray": [l] },"meta":{"device_metric":id}};
+            if(!anomaly_detection_rhods) {
+                edgeAnomaly = { "data": { "ndarray": [l] },"meta":{"device_metric":id}};
+                anomaly_uri = anomaly_detection_url + '/api/v1.0/predictions'
+
+
+            } else {
+                edgeAnomaly = {
+                    "inputs": [
+                        { "name": "predict", 
+                          "shape": [1, 5], 
+                          "datatype": "FP32", 
+                          "data": [l]
+                        }
+                    ]
+                }
+            }
+
                 
             try {
-                console.log('*AD* ID: %s,  Val: %d', id, value );
+                // console.log('*AD* ID: %s,  Val: %d', id, value );
+                // console.log('edgeAnomaly: %s', JSON.stringify(edgeAnomaly));
                 const edgeAnomalyResponse = await request({
                 method: 'POST',
-                uri: anomaly_detection_url + '/api/v1.0/predictions',
+                uri: anomaly_uri,
                 body: edgeAnomaly,
                 json: true,
-                timeout: 1000
+                timeout: 2000
                 });
         
                 // log.debug("Edge Anomaly Repsonse: " + JSON.stringify(edgeAnomalyResponse)); //DELETE
                 // log.debug("Edge Anomaly Repsonse.data: " + JSON.stringify(edgeAnomalyResponse.data)); //DELETE
+                // log.debug("Edge Anomaly Repsonse.outputs: " + JSON.stringify(edgeAnomalyResponse.outputs)); //DELETE
         
-                if ( parseInt(edgeAnomalyResponse["data"]["ndarray"][0]) == 1 ){
-                result = true;
+                if(!anomaly_detection_rhods) {
+                    if ( parseInt(edgeAnomalyResponse["data"]["ndarray"][0]) == 1 ){
+                    result = true;
+                    } else {
+                    result = false;
+                    }
                 } else {
-                result = false;
+                    if ( parseInt(edgeAnomalyResponse["outputs"][0]["data"][0]) == 1 ){
+                        result = true;
+                        } else {
+                        result = false;
+                        }                    
                 }
+
             } catch (err) {
                log.error("check_anomaly failed", err)
             }
@@ -220,7 +250,7 @@ async function handleVibration(message) {
         var value = parseFloat(elements[2])
 
         var ano = await check_anomaly(id,value)
-        // console.log('Ano: %s', ano);
+        console.log('Ano: %s', ano);
 
         if(ano) {
             console.log('vibration alert!!!');
