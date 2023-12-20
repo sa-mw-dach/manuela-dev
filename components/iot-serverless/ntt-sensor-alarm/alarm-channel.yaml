@@ -1,0 +1,14 @@
+apiVersion: messaging.knative.dev/v1
+kind: Channel
+metadata:
+  name: alarm-channel
+  labels:
+    app: channel
+    app.kubernetes.io/component: channel
+    app.kubernetes.io/instance: channel
+    app.kubernetes.io/name: channel
+    app.kubernetes.io/part-of: device-registry-app
+spec:
+  channelTemplate:
+    apiVersion: messaging.knative.dev/v1
+    kind: InMemoryChannel

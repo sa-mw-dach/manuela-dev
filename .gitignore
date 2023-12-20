@@ -1,0 +1,5 @@
+.vscode/*
+networkpathoperator/firewallrule/deploy/firewall-inventory-secret.yaml
+.DS_Store
+
+.idea

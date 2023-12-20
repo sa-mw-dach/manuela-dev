@@ -1,0 +1,14 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: iot-frontend
+  name: ntt-iot-frontend
+spec:
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: Service
+    name: ntt-iot-frontend
+    weight: 100
+  wildcardPolicy: None

@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    seldon-app: anomaly-detection-predictor
+  name: manuela-anomaly-detection
+spec:
+  endpoints:
+  - interval: 30s
+    path: /prometheus
+    port: metrics
+  selector:
+    matchLabels:
+      seldon-app: anomaly-detection-predictor

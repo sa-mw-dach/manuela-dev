@@ -1,0 +1,19 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: iot-frontend
+  name: centos7-s2i-web-app
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+  - annotations:
+      openshift.io/imported-from: nodeshift/centos7-s2i-web-app
+    from:
+      kind: DockerImage
+      name: nodeshift/centos7-s2i-web-app
+    importPolicy: {}
+    name: latest
+    referencePolicy:
+      type: Source

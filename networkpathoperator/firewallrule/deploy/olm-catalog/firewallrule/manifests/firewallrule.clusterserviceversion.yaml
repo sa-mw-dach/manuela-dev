@@ -1,0 +1,195 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "manuela.redhat.com/v1alpha1",
+          "kind": "FirewallRule",
+          "metadata": {
+            "name": "example-firewallrule"
+          },
+          "spec": {
+            "action": "pass",
+            "after": "top",
+            "destination": "any",
+            "destination_port": "53",
+            "interface": "lan",
+            "ipprotocol": "inet",
+            "protocol": "udp",
+            "source": "any"
+          }
+        }
+      ]
+    capabilities: Basic Install
+  name: firewallrule.v0.0.1
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - kind: FirewallRule
+      name: firewallrules.manuela.redhat.com
+      version: v1alpha1
+  displayName: Firewallrule
+  icon:
+  - base64data: "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"
+    mediatype: "image/png"
+  install:
+    spec:
+      deployments:
+      - name: firewallrule
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: firewallrule
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: firewallrule
+            spec:
+              containers:
+              - command:
+                - /usr/local/bin/ao-logs
+                - /tmp/ansible-operator/runner
+                - stdout
+                image: quay.io/manuela/firewallruleoperator:v0.0.1
+                imagePullPolicy: Always
+                name: ansible
+                resources: {}
+                volumeMounts:
+                - mountPath: /tmp/ansible-operator/runner
+                  name: runner
+                  readOnly: true
+              - env:
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['olm.targetNamespaces']
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: OPERATOR_NAME
+                  value: firewallrule
+                - name: ANSIBLE_GATHERING
+                  value: explicit
+                image: quay.io/manuela/firewallruleoperator:v0.0.1
+                imagePullPolicy: Always
+                name: operator
+                resources: {}
+                volumeMounts:
+                - mountPath: /tmp/ansible-operator/runner
+                  name: runner
+                - mountPath: /tmp/inventory
+                  name: inventory
+                  readOnly: true
+              serviceAccountName: firewallrule
+              volumes:
+              - emptyDir: {}
+                name: runner
+              - name: inventory
+                secret:
+                  defaultMode: 256
+                  secretName: firewall-inventory
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - apps
+          resourceNames:
+          - firewallrule
+          resources:
+          - deployments/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+        - apiGroups:
+          - apps
+          resources:
+          - replicasets
+          - deployments
+          verbs:
+          - get
+        - apiGroups:
+          - manuela.redhat.com
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        serviceAccountName: firewallrule
+    strategy: deployment
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: false
+    type: AllNamespaces
+  keywords:
+  - "pfsense"
+  - "firewall"
+  - "manuela"
+  maintainers:
+  - {}
+  maturity: alpha
+  provider:     
+    name: Manuela Team
+    url: https://github.com/sa-mw-dach/manuela
+  version: 0.0.1

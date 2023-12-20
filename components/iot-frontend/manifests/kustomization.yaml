@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+- name: iot-frontend-cfg
+  files:
+  - config.json=iot-frontend-configmap-config.json
+
+resources:
+- nodeshift-is.yaml
+- iot-frontend-bc.yaml
+- iot-frontend-deployment.yaml
+- iot-frontend-is.yaml
+- iot-frontend-route.yaml
+- iot-frontend-svc.yaml
+
+images:
+- name: iot-frontend
+  newName: image-registry.openshift-image-registry.svc:5000/iotdemo/iot-frontend
+  newTag: latest

@@ -1,0 +1,16 @@
+MANUela - NTT MSAP Gateway integration
+
+Required operators:
+- AMQ Broker
+- Camel-K
+
+Components:
+- AMQ MQTT Broker
+- Device Registry
+- MongoDB
+- IoT Consumer
+- IoT Dashboard
+- MQTT Source Kamelet
+- Knative Channel
+- Kamelet Binding
+- Alarm handler service

@@ -1,0 +1,38 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: device-registry-config
+data:
+  mp.openapi.extensions.smallrye.info.contact.email: 'ortwin@redhat.com'
+  mp.openapi.extensions.smallrye.info.contact.name: 'Ortwin Schneider'
+  mp.openapi.extensions.smallrye.info.description: 'Subset of MSAP IoT Gateway API implementation'
+  mp.openapi.extensions.smallrye.info.license.name: 'Apache 2.0'
+  mp.openapi.extensions.smallrye.info.license.url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+  mp.openapi.extensions.smallrye.info.title: 'Device Registry API'
+  mp.openapi.extensions.smallrye.info.version: '0.1.0'
+
+  quarkus.mongodb.connection-string: 'mongodb://mongo:27017'
+  quarkus.mongodb.database: 'ntt'
+
+  mp.messaging.connector.smallrye-mqtt.auto-clean-session: 'true'
+  mp.messaging.connector.smallrye-mqtt.host: 'amq-mqtt-mqtt-0-svc'
+  mp.messaging.connector.smallrye-mqtt.port: '1883'
+
+  mp.messaging.incoming.device-value.type: 'smallrye-mqtt'
+  mp.messaging.incoming.device-value.topic: 'MSAPValue'
+  mp.messaging.incoming.device-value.client-id: 'dr-device-value'
+
+  mp.messaging.incoming.gateway-announce.type: 'smallrye-mqtt'
+  mp.messaging.incoming.gateway-announce.topic: 'MSAPAnnounce'
+  mp.messaging.incoming.gateway-announce.client-id: 'dr-gw-announce'
+
+  mp.messaging.incoming.gateway-report.type: 'smallrye-mqtt'
+  mp.messaging.incoming.gateway-report.topic: 'MSAPPublic'
+  mp.messaging.incoming.gateway-report.client-id: 'dr-gw-report'
+
+  mqtt.paho.broker.uri: 'tcp://amq-mqtt-mqtt-0-svc:1883'
+  mqtt.paho.client-id: 'dr-quarkus-paho'
+  mqtt.paho.topic.add-gateway: 'MSAPGatewayPublic'
+  mqtt.paho.topic.announce-gateway: 'MSAPAnnounce'
+  mqtt.paho.topic.report-gateway: 'MSAPPublic'
+  mqtt.paho.topic.device-value: 'MSAPValue'

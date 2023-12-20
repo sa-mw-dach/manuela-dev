@@ -1,0 +1,51 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app.kubernetes.io/part-of: {{ .Values.appGrouping }}
+    app: {{ .Values.appLabel }}
+  name: iot-consumer
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    app: iot-consumer
+    deploymentconfig: iot-consumer
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: iot-consumer
+        deploymentconfig: iot-consumer
+    spec:
+      containers:
+      - image: {{ .Values.consumer.image }}
+        #imagePullPolicy: Always
+        name: iot-consumer
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        resources: {}
+        envFrom:
+        - configMapRef:
+            name: iot-consumer-cfg
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        imagePullPolicy: {{ .Values.consumer.imagePullPolicy }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - type: ConfigChange

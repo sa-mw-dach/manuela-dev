@@ -1,0 +1,403 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: gatewaysim-config
+  labels:
+    app: {{ .Values.appLabel }}
+data:
+  macchina.properties: >
+    #
+
+    # OSP Configuration
+
+    #
+
+    osp.codeCache          = ${application.dir}codeCache
+
+    osp.bundleRepository   =
+    ${application.configDir}../platform/OSP/bundles;${application.configDir}../devices/bundles;${application.configDir}../services/bundles;${application.configDir}../protocols/bundles;${application.configDir}../webui/bundles;${application.configDir}../samples/bundles;${application.configDir}../apps/bundles
+
+    osp.data               = ${application.configDir}data
+
+    osp.web.cacheResources = true
+
+    osp.web.sessionManager.cookiePersistence = transient
+
+
+    # Note: unofficial list of V8 options can be found here:
+
+    # https://github.com/thlorenz/v8-flags/blob/master/flags-0.11.md
+
+    osp.js.v8.flags = --harmony;--use-strict
+
+
+    msap.path = ${application.configDir}../../
+
+
+    nttdata.database.path =
+    ${application.configDir}../apps/CloudCommunicationInterface/tests/nao.db
+
+
+    #
+
+    # Settings
+
+    #
+
+    macchina.settings.path = ${application.configDir}settings.properties
+
+
+
+    #
+
+    # Authentication
+
+    #
+
+    # Note: Password for user "admin" is "admin".
+
+    auth.simple.admin.passwordHash = 69eccc7dad8a8484b299e8e6b9c8bc44
+
+    auth.simple.user.name = user
+
+    auth.simple.user.passwordHash = 2f8d16944e8eac88ff8e4af1b67f1780
+
+    auth.simple.salt = salty
+
+
+
+    #
+
+    # LEDs Configuration
+
+    #
+
+    linux.leds.enable = false
+
+
+
+
+    #
+
+    # NTT Data devices
+
+    #
+
+    nttdata.multilevelSensor.alertType1.id = 12
+
+    nttdata.multilevelSensor.alertType1.physicalQuantity = degree Celsius
+
+    nttdata.multilevelSensor.alertType1.initialValue = 0
+
+    nttdata.multilevelSensor.alertType1.symbolicName = Temperature sensor
+
+    nttdata.multilevelSensor.alertType1.description = Indoor temperature of the
+    industrial facility
+
+    nttdata.multilevelSensor.alertType1.range.min = 0
+
+    nttdata.multilevelSensor.alertType1.range.max = 50
+
+    nttdata.multilevelSensor.alertType1.range.abs_min = -20
+
+    nttdata.multilevelSensor.alertType1.range.abs_max = 80
+
+    nttdata.multilevelSensor.alertType1.range.step = 0.2
+
+
+    nttdata.multilevelSensor.driverDistraction1.id = 123
+
+    nttdata.multilevelSensor.driverDistraction1.physicalQuantity = range
+
+    nttdata.multilevelSensor.driverDistraction1.initialValue = 0
+
+    nttdata.multilevelSensor.driverDistraction1.symbolicName = Vibration sensor
+
+    nttdata.multilevelSensor.driverDistraction1.description = Machine vibration
+    level detected on the front cover of the industrial motor
+
+    nttdata.multilevelSensor.driverDistraction1.range.min = 0
+
+    nttdata.multilevelSensor.driverDistraction1.range.max = 100
+
+    nttdata.multilevelSensor.driverDistraction1.range.abs_min = 0
+
+    nttdata.multilevelSensor.driverDistraction1.range.abs_max = 3
+
+    nttdata.multilevelSensor.driverDistraction1.range.step = 1
+
+
+    #nttdata.multilevelSensor.distractionType1.id = 133
+
+    #nttdata.multilevelSensor.distractionType1.physicalQuantity = predefined
+    value
+
+    #nttdata.multilevelSensor.distractionType1.initialValue = 0
+
+    #nttdata.multilevelSensor.distractionType1.symbolicName = Distraction type
+
+    #nttdata.multilevelSensor.distractionType1.description = Bitmapped to
+    following values head turned, gaze distraction, yawning, eyes closed,
+    drowsy
+
+    #nttdata.multilevelSensor.distractionType1.range.min = 0
+
+    #nttdata.multilevelSensor.distractionType1.range.max = 4
+
+    #nttdata.multilevelSensor.distractionType1.range.abs_min = 0
+
+    #nttdata.multilevelSensor.distractionType1.range.abs_max = 4
+
+    #nttdata.multilevelSensor.distractionType1.range.step = 1
+
+
+    #nttdata.multilevelSensor.driverReaction1.id = 134
+
+    #nttdata.multilevelSensor.driverReaction1.physicalQuantity = predefined
+    value
+
+    #nttdata.multilevelSensor.driverReaction1.initialValue = 0
+
+    #nttdata.multilevelSensor.driverReaction1.symbolicName = Driver reaction
+
+    #nttdata.multilevelSensor.driverReaction1.description = value should be
+    mapped to neutral, startled, afraid.
+
+    #nttdata.multilevelSensor.driverReaction1.range.min = 0
+
+    #nttdata.multilevelSensor.driverReaction1.range.max = 2
+
+    #nttdata.multilevelSensor.driverReaction1.range.abs_min = 0
+
+    #nttdata.multilevelSensor.driverReaction1.range.abs_max = 2
+
+    #nttdata.multilevelSensor.driverReaction1.range.step = 1
+
+
+    #nttdata.multilevelSensor.collisionrisk1.id = 135
+
+    #nttdata.multilevelSensor.collisionrisk1.physicalQuantity = range
+
+    #nttdata.multilevelSensor.collisionrisk1.initialValue = 0
+
+    #nttdata.multilevelSensor.collisionrisk1.symbolicName = Collision risk
+
+    #nttdata.multilevelSensor.collisionrisk1.description = Bitmapped to
+    following values head turned, gaze distraction, yawning, eyes closed,
+    drowsy
+
+    #nttdata.multilevelSensor.collisionrisk1.range.min = 0
+
+    #nttdata.multilevelSensor.collisionrisk1.range.max = 15
+
+    #nttdata.multilevelSensor.collisionrisk1.range.abs_min = 0
+
+    #nttdata.multilevelSensor.collisionrisk1.range.abs_max = 15
+
+    #nttdata.multilevelSensor.collisionrisk1.range.step = 1
+
+
+
+    nttdata.avlprotocol.avldevice1.id = 136
+
+    nttdata.avlprotocol.avldevice1.port = 22091
+
+    nttdata.avlprotocol.avldevice1.symbolicName = "AVL TCP"
+
+
+    #
+
+    # MQTT
+
+    #
+
+    # Create a MQTT client that connects to the MQTT test server
+
+
+    # MQTT localhost test server
+
+    mqtt.clients.mosquitto.serverURI = localhost
+
+    mqtt.clients.mosquitto.clientId = ${system.nodeId}
+
+
+    ## MQTT RedHat secure server
+
+    mqtt.clients.redhat.serverURI =
+    amq-mqtt-mqtt-0-svc
+
+    #mqtt.clients.redhat.serverURI =
+    ssl://ex-aao-all-0-svc-rte-amq-tls.apps.ocp4.rhlab.de:443
+
+    mqtt.clients.redhat.clientId = ${system.nodeId}
+
+    mqtt.clients.redhat.username = mqtt
+
+    mqtt.clients.redhat.password = mqtt
+
+    #mqtt.clients.redhat.ssl.trustStore = ${application.configDir}ntt-broker.pem
+
+    #mqtt.clients.redhat.ssl.trustStore = ${application.configDir}redhat.pem
+
+    #mqtt.clients.redhat.ssl.version = tls1.2
+
+    #mqtt.clients.redhat.ssl.privateKeyPassword = msap
+
+    #mqtt.clients.redhat.ssl.enabledCipherSuites = TLSv1
+
+
+
+    #
+
+    # Cloud Communication Interface
+
+    #
+
+    #nttdataapps.cloudCommunication.com1.id = mosquitto
+
+    nttdataapps.cloudCommunication.com1.id = redhat
+
+    nttdataapps.cloudCommunication.com1.announceTopic = MSAPAnnounce
+
+    nttdataapps.cloudCommunication.com1.addGwTopic = MSAPGatewayPublic
+
+    nttdataapps.cloudCommunication.com1.cloudTopic = MSAPPublic
+
+    nttdataapps.cloudCommunication.com1.keepAliveTopic = MSAPPublic
+
+    nttdataapps.cloudCommunication.com1.errorTopic = MSAPError
+
+    nttdataapps.cloudCommunication.com1.valueTopic = MSAPValue
+
+    nttdataapps.cloudCommunication.com1.logTopic = MSAPLog
+
+    nttdataapps.cloudCommunication.com1.announceIntervalMs = 3000
+
+    nttdataapps.cloudCommunication.com1.logIntervalMs = 10000000
+
+    nttdataapps.cloudCommunication.com1.logFile =
+    ${application.configDir}../server/bin/Linux/x86_64/macchina.log
+
+
+    #
+
+    # Gateway information
+
+    #
+
+    nttdata.version.firmware = 1.1125
+
+    nttdata.gateway.name = Manuela Edge Gateway
+
+    nttdata.gateway.description = Industrial demo gateway with Vibration sensor
+
+    nttdata.gateway.location = Novi Sad, Serbia
+
+
+    #
+
+    # WebTunnel
+
+    #
+
+    webtunnel.enable = false
+
+    webtunnel.reflectorURI = https://reflector.my-devices.net
+
+    webtunnel.deviceName = ${system.nodeName}
+
+    webtunnel.domain = 3100ef24-e395-4726-9951-84a6cb7a1c11
+
+    webtunnel.deviceId = 3100ef24-e395-4726-9951-${system.nodeId}
+
+    webtunnel.username = ${webtunnel.deviceId}@${webtunnel.domain}
+
+    webtunnel.password =
+
+
+
+    #
+
+    # Logging Configuration
+
+    #
+
+    # See <http://pocoproject.org/slides/110-Logging.pdf> and
+
+    # <http://pocoproject.org/slides/185-LoggingConfiguration.pdf>
+
+    # for more information.
+
+    #
+
+    logging.loggers.root.channel = splitter
+
+    logging.loggers.root.level = information
+
+
+    logging.loggers.remoting.name = RemotingNG
+
+    logging.loggers.remoting.level = notice
+
+
+    logging.channels.file.class = FileChannel
+
+    logging.channels.file.pattern = %Y-%m-%d %H:%M:%S.%i [%p] %s<%I>: %t
+
+    logging.channels.file.path = ${application.dir}${application.baseName}.log
+
+    logging.channels.file.rotation = daily
+
+    logging.channels.file.archive = number
+
+    logging.channels.file.purgeCount = 10
+
+
+    logging.channels.console.class = ColorConsoleChannel
+
+    logging.channels.console.pattern = %Y-%m-%d %H:%M:%S.%i [%p] %s<%I>: %t
+
+
+    logging.channels.webconsole.class = EventChannel
+
+
+    logging.channels.splitter.class = SplitterChannel
+
+    logging.channels.splitter.channels = console, webconsole, file
+
+
+
+    #
+
+    # NetSSL (OpenSSL) Configuration
+
+    #
+
+    openSSL.server.certificateFile = ${application.configDir}macchina.pem
+
+    openSSL.server.privateKeyFile = ${application.configDir}macchina.pem
+
+    openSSL.server.verificationMode = none
+
+    openSSL.server.verificationDepth = 9
+
+    openSSL.server.loadDefaultCAFile = true
+
+    openSSL.server.caConfig = ${application.configDir}rootcert.pem
+
+    openSSL.server.cipherList =
+    ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA:!DSS
+
+    openSSL.server.disableProtocols = sslv2,sslv3
+
+    openSSL.server.invalidCertificateHandler.name = AcceptCertificateHandler
+
+    openSSL.client.verificationMode = none
+
+    openSSL.client.verificationDepth = 9
+
+    openSSL.client.loadDefaultCAFile = false
+
+    openSSL.client.caConfig = ${application.configDir}rootcert.pem
+
+    openSSL.client.invalidCertificateHandler.name = RejectCertificateHandler

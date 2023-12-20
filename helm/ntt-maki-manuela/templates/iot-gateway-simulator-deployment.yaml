@@ -1,0 +1,50 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ntt-gateway-simulator
+  labels:
+    app.kubernetes.io/part-of: {{ .Values.appGrouping }}
+    app: {{ .Values.appLabel }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ntt-gateway-simulator
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ntt-gateway-simulator
+        deploymentconfig: ntt-gateway-simulator
+    spec:
+      volumes:
+        - name: gw-config
+          configMap:
+            name: gatewaysim-config
+            defaultMode: 420
+      containers:
+        - name: ntt-gateway-simulator
+          image: {{ .Values.gwSim.image }}
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - name: gw-config
+              mountPath: /opt/app-root/src/msapcore/server/macchina.properties
+              subPath: macchina.properties
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: {{ .Values.gwSim.imagePullPolicy }}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

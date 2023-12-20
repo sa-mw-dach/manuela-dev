@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: anomaly-detection-metrics
+  namespace: iotdemo
+  labels:
+    seldon-app: anomaly-detection-predictor
+spec:
+  selector:
+    seldon-app: anomaly-detection-predictor
+  ports:
+    - name: metrics
+      protocol: TCP
+      port: 6000
+      targetPort: 6000

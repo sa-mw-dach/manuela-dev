@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- iot-software-sensor-quarkus-builder-is.yaml
+- iot-software-sensor-quarkus-is.yaml
+- iot-software-sensor-quarkus-cm.yaml
+- iot-software-sensor-quarkus-bc.yaml
+- iot-software-sensor-quarkus-dc.yaml

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: iot-frontend
+  name: ntt-iot-frontend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      deploymentconfig: iot-frontend
+  template:
+    metadata:
+      labels:
+        app: iot-frontend
+        deploymentconfig: iot-frontend
+    spec:
+      containers:
+      - image: quay.io/oschneid/ntt-iot-dashboard:1.0
+        #imagePullPolicy: Always
+        name: ntt-iot-frontend
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+            - mountPath: /opt/app-root/src/conf/config.json
+              name: iot-frontend-cfg-vol
+              subPath: config.json
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: iot-frontend-cfg-vol
+        configMap:
+          defaultMode: 438
+          name: ntt-iot-frontend-cfg

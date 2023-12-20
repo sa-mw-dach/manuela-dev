@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- amq-broker.yaml
+- iot-consumer-bc.yaml
+- iot-consumer-dc.yaml
+- iot-consumer-is.yaml
+- iot-consumer-route.yaml
+- iot-consumer-svc.yaml
+- iot-consumer-configmap.yaml

@@ -1,0 +1,37 @@
+# General props
+appGrouping: MANUela-NTT
+appLabel: manuela-ntt
+ocpAppDomain: apps.ocp4.rhlab.de
+
+# AMQ MQTT Broker
+amqBroker:
+  user: admin
+  password: admin
+  tlsEnable: false
+  tlsSecretName: amq-tls-secret
+
+# MongoDB
+mongo:
+  image: 'mongo:latest'
+  imagePullPolicy: IfNotPresent
+
+# Device Registry
+dr:
+  image: 'quay.io/oschneid/ntt-device-registry:1.0'
+  imagePullPolicy: Always
+
+# iot-consumer
+consumer:
+  image: 'quay.io/oschneid/ntt-iot-consumer:1.0'
+  imagePullPolicy: Always
+
+# iot-frontend
+frontend:
+  image: 'quay.io/oschneid/ntt-iot-dashboard:1.0'
+  imagePullPolicy: Always
+
+# Gateway Simulator
+gwSim:
+  install: true
+  image: 'quay.io/oschneid/ntt-gateway-simulator:ntt-maki'
+  imagePullPolicy: Always

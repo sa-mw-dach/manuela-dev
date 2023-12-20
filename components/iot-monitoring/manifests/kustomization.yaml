@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources: 
+
+# Base configuration
+- prometheus-instance.yaml
+- prometheus-route.yaml
+- grafana-instance.yaml
+- grafana-prometheus-datasource.yaml
+
+# Scrape data
+- anomaly-detection-servicemonitor.yaml
+- manuela-seldon-servicemonitor.yaml
+
+# Dashboards
+- prediction-analytics-aio-dashboard.yaml
+- sensor-custom-seldon-metrics-dashboards.yaml
+- prediction-analytics-seldon-core-1.2.2.yaml

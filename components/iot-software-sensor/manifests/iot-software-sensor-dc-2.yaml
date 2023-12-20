@@ -1,0 +1,84 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    application: iot-software-sensor-2
+    template: openjdk18-web-basic-s2i
+    app.kubernetes.io/part-of: ManuELA
+  name: iot-software-sensor-2
+  annotations:
+    app.openshift.io/connects-to: broker-amq-mqtt-ss
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    deploymentConfig: iot-software-sensor-2
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        application: iot-software-sensor-2
+        deploymentConfig: iot-software-sensor-2
+      name: iot-software-sensor-2
+    spec:
+      containers:
+      - name: iot-software-sensor-2
+        image: iot-software-sensor:latest
+        #imagePullPolicy: Always
+        ports:
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8443
+            name: https
+            protocol: TCP
+        envFrom:
+          - configMapRef: 
+              name: iot-software-sensor-2-config
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        livenessProbe: 
+          httpGet:   
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 15  
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 75
+  test: false
+  triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - iot-software-sensor-2
+        from:
+          kind: ImageStreamTag
+          name: 'iot-software-sensor:latest'
+      type: ImageChange
+    - type: ConfigChange

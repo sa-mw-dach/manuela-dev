@@ -1,0 +1,21 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ntt-device-registry
+  labels:
+    app.kubernetes.io/part-of: {{ .Values.appGrouping }}
+    app: {{ .Values.appLabel }}
+  annotations:
+    app.openshift.io/connects-to: >-
+      [{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"mongo"}]
+spec:
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: ntt-device-registry
+    deploymentconfig: ntt-device-registry
+  type: ClusterIP
+

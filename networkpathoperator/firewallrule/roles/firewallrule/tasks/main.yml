@@ -1,0 +1,49 @@
+---
+# tasks file for firewallrule
+
+- name: "Add/Remove firewall rule"
+  pfsensible.core.rule:
+    name: 'Operator generated {{ meta.namespace }}/{{ meta.name}}'
+    action: "{{ action }}"
+    interface: "{{ interface }}"
+    ipprotocol: "{{ ipprotocol }}"
+    protocol: "{{ protocol }}"
+    source: "{{ source }}"
+    source_port: "{{ source_port|default(None, true) }}"
+    destination: "{{ destination }}"
+    destination_port: "{{ destination_port|default(None, true) }}"
+    after: "{{ after }}"
+    state: "{{ state|default('present',true) }}"
+
+
+# - name: open ports
+#   when: state|default('present',true) == 'present'
+#   block:
+#   - debug: 
+#       var: hostvars['ocp3bastion.stormshift.coe.muc.redhat.com']
+#   - debug:
+#       msg: "open port name: {{ meta.name }} namespace: {{ meta.namespace }}"
+#   - file:
+#       path: /tmp/{{ meta.namespace}}.{{ meta.name }}
+#       state: touch
+# #   - name: update status
+# #     delegate_to: localhost
+# #     operator_sdk.util.k8s_status:
+# #       api_version: manuela.redhat.com/v1alpha1
+# #       kind: FirewallRule
+# #       name: "{{ meta.name }}"
+# #       namespace: "{{ meta.namespace }}"
+# #       status:
+# #         foo: bar
+
+
+
+# - name: close ports
+#   when: state|default('present',true) == 'absent'
+#   block:
+#   - debug:
+#       msg: "close port name: {{ meta.name }} namespace: {{ meta.namespace }}"
+#   - file:
+#       path: /tmp/{{ meta.namespace}}.{{ meta.name }}
+#       state: absent
+

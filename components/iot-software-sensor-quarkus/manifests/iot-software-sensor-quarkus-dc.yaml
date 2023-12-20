@@ -1,0 +1,82 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: iot-software-sensor-quarkus
+    app.kubernetes.io/part-of: ManuELA
+  name: iot-software-sensor-quarkus
+  annotations:
+    app.openshift.io/connects-to: broker-amq-mqtt-ss
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    deploymentConfig: iot-software-sensor-quarkus
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: iot-software-sensor-quarkus
+        deploymentConfig: iot-software-sensor-quarkus
+      name: iot-software-sensor-quarkus
+    spec:
+      containers:
+      - name: iot-software-sensor-quarkus
+        image: iot-software-sensor-quarkus:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+        envFrom:
+          - configMapRef: 
+              name: iot-software-sensor-quarkus-config
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        livenessProbe: 
+          httpGet:   
+            path: /health/live
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 15  
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - iot-software-sensor-quarkus
+        from:
+          kind: ImageStreamTag
+          name: 'iot-software-sensor-quarkus:latest'
+      type: ImageChange
+    - type: ConfigChange

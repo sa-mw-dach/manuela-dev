@@ -1,0 +1,19 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: ntt-device-registry
+  labels:
+    app: ntt-device-registry
+    app.kubernetes.io/part-of: device-registry-app
+  annotations:
+    app.openshift.io/connects-to: >-
+      [{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"mongo"}]
+spec:
+  to:
+    kind: Service
+    name: ntt-device-registry
+    weight: 100
+  port:
+    targetPort: 8080-tcp
+  wildcardPolicy: None
+

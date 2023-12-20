@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ntt-iot-frontend-cfg
+  labels:
+    app: {{ .Values.appLabel }}
+data:
+  config.json: |-
+    {
+      "websocketHost": "http://iot-consumer-{{ .Release.Namespace }}.{{ .Values.ocpAppDomain }}",
+      "websocketPath": "/api/service-web/socket",
+      "SERVER_TIMEOUT": 20000,
+      "CHART_REFRESH_INTERVAL": 2000,
+      "CHART_BUFFER_ENTRIES": 500
+    }

@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: iot-anomaly-detection
+  annotations:
+    description: >
+      Source-to-Image (S2I) builder image for serving an anomaly detection model
+  labels:
+    component: serving
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: iot-anomaly-detection:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      uri: https://github.com/sa-mw-dach/manuela-dev.git
+    type: Git
+    contextDir: "components/iot-anomaly-detection"
+  strategy:
+    sourceStrategy:
+      from:
+        kind: DockerImage
+        name: registry.access.redhat.com/ubi7/python-36
+    type: Source
+  triggers:
+    - type: ConfigChange
+

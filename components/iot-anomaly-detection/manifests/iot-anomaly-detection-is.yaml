@@ -1,0 +1,9 @@
+kind: ImageStream
+apiVersion: v1
+metadata:
+  name: iot-anomaly-detection
+  labels:
+    component: serving
+spec:
+  lookupPolicy:
+    local: true

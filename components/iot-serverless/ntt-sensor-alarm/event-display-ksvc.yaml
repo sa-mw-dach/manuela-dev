@@ -1,0 +1,23 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: event-display
+  labels:
+    app.kubernetes.io/part-of: device-registry-app
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/window: "10s"
+        client.knative.dev/user-image: gcr.io/knative-releases/knative.dev/eventing/cmd/event_display
+    spec:
+      containerConcurrency: 0
+      containers:
+        - image: gcr.io/knative-releases/knative.dev/eventing/cmd/event_display
+          name: user-container
+          resources: {}
+      enableServiceLinks: false
+      timeoutSeconds: 300
+  traffic:
+    - latestRevision: true
+      percent: 100
