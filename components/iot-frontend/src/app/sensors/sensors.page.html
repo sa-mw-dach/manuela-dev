@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>Realtime Data</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light">
+  <ion-grid>
+    <ion-row>
+      <!--
+      <ion-col size="6">
+        <img src="assets/pump.jpg" />
+      </ion-col>
+      -->
+      <ion-col *ngFor="let machineId of displayCharts" size="6">
+        <div id="{{machineId}}" style="width:100%; height:400px;"></div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</ion-content>

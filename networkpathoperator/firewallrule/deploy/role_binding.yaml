@@ -1,0 +1,11 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: firewallrule
+subjects:
+- kind: ServiceAccount
+  name: firewallrule
+roleRef:
+  kind: Role
+  name: firewallrule
+  apiGroup: rbac.authorization.k8s.io

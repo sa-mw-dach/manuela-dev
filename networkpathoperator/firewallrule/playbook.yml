@@ -1,0 +1,17 @@
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: update inventory from secret
+    add_host:
+      groups: firewall
+      hostname: "{{lookup('file', '/tmp/inventory/hostname') }}"
+      ansible_user: "{{lookup('file', '/tmp/inventory/ansible_user') }}"
+      ansible_ssh_common_args: -o userknownhostsfile=/dev/null -o StrictHostKeyChecking=no
+      ansible_ssh_extra_args: -o userknownhostsfile=/dev/null -o StrictHostKeyChecking=no
+      ansible_ssh_private_key_file: /tmp/inventory/privatekey
+
+- hosts: firewall
+  gather_facts: no
+  tasks:
+  - import_role:
+      name: "firewallrule"

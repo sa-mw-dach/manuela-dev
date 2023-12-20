@@ -1,0 +1,9 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: iot-software-sensor-quarkus
+  name: iot-software-sensor-quarkus
+spec:
+  lookupPolicy:
+    local: false

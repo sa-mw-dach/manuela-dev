@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: iot-kafka2seldon-config
+data:
+  application.properties: |    
+    kafka.broker.uri=manuela-kafka-cluster-kafka-bootstrap:9092
+    kafka.broker.topic.temperature=iot-sensor-sw-temperature
+    kafka.broker.topic.vibration=iot-sensor-sw-vibration
+    kafka.broker.topic.anomaly=iot-sensor-sw-anomaly
+    anomaly.seldon.endpoint=http://anomaly-detection-predictor-anomaly-detection:9000/api/v1.0/predictions
+    

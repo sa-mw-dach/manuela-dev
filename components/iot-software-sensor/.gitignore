@@ -1,0 +1,13 @@
+target/
+*.m4v
+.DS_Store
+RemoteSystemsTempFiles/
+.index/
+*.zip
+repository/
+*.tar
+.classpath
+.project
+.settings
+
+.odo/odo-file-index.json

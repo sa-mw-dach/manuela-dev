@@ -1,0 +1,94 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com.
+
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://vagrantcloud.com/search.
+  config.vm.box = "fedora/30-cloud-base"
+  config.vm.box_version = "30.20190425.0"
+
+  # Disable automatic box update checking. If you disable this, then
+  # boxes will only be checked for updates when the user runs
+  # `vagrant box outdated`. This is not recommended.
+  # config.vm.box_check_update = false
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # NOTE: This will enable public access to the opened port
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine and only allow access
+  # via 127.0.0.1 to disable public access
+  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network "private_network", ip: "192.168.33.10"
+
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  # config.vm.network "public_network"
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "../data", "/vagrant_data"
+
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
+  #
+  config.vm.provider "virtualbox" do |vb|
+  #   # Display the VirtualBox GUI when booting the machine
+  #   vb.gui = true
+  #
+  #   # Customize the amount of memory on the VM:
+    vb.memory = "1024"
+    config.vm.synced_folder ".", "/vagrant", type: "rsync"
+  end
+  #
+  # View the documentation for the provider you are using for more
+  # information on available options.
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+  config.vm.provision "shell", inline: <<-SHELL
+    OPERATORSDK_RELEASE_VERSION=v0.17.0
+    OPERATOR_REGISTRY_VERSION=v1.11.1
+    OC_RELEASE_VERSION=4.3
+    sudo dnf clean all
+    sudo dnf -y install docker
+    sudo systemctl start docker
+    curl -OJLs https://github.com/operator-framework/operator-sdk/releases/download/${OPERATORSDK_RELEASE_VERSION}/operator-sdk-${OPERATORSDK_RELEASE_VERSION}-x86_64-linux-gnu
+    sudo chmod +x operator-sdk-${OPERATORSDK_RELEASE_VERSION}-x86_64-linux-gnu
+    sudo mv operator-sdk-${OPERATORSDK_RELEASE_VERSION}-x86_64-linux-gnu /usr/local/bin/operator-sdk
+    curl -OJLs https://mirror.openshift.com/pub/openshift-v4/clients/oc/${OC_RELEASE_VERSION}/linux/oc.tar.gz
+    tar xzvf oc.tar.gz
+    sudo mv oc /usr/local/bin/oc
+    sudo ln -s /usr/local/bin/oc /usr/local/bin/kubectl
+    curl -OJLs https://github.com/operator-framework/operator-registry/releases/download/${OPERATOR_REGISTRY_VERSION}/linux-amd64-opm
+    sudo mv linux-amd64-opm /usr/local/bin/opm
+    sudo chmod +x /usr/local/bin/opm
+    sudo dnf -y install ansible
+    sudo dnf -y install python3-ansible-runner
+    sudo dnf -y install python3-kubernetes
+    sudo dnf -y install python3-openshift
+    sudo ln -s /vagrant/firewallrule /opt/ansible
+
+    ansible-galaxy collection install operator_sdk.util
+    ansible-galaxy collection install pfsensible.core
+  SHELL
+end

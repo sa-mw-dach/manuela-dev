@@ -1,0 +1,113 @@
+apiVersion: camel.apache.org/v1
+kind: Integration
+metadata:
+  name: iot-kafka2seldon-integration
+spec:
+  configuration:
+  - type: configmap
+    value: iot-kafka2seldon-config
+  dependencies:
+  - camel:jackson
+  - mvn:org.json:json:20200518
+  - camel:http
+  profile: OpenShift
+  sources:
+  - content: "package com.redhat.manuela.routes;\n\nimport java.util.ArrayList;\nimport
+      java.util.HashMap;\nimport java.util.Map;\n\nimport com.fasterxml.jackson.annotation.JsonIgnoreProperties;\n\nimport
+      org.apache.camel.model.OnCompletionDefinition;\nimport org.apache.camel.AggregationStrategy;\nimport
+      org.apache.camel.Exchange;\nimport org.apache.camel.Message;\nimport org.apache.camel.Processor;\nimport
+      org.apache.camel.PropertyInject;\nimport org.apache.camel.builder.RouteBuilder;\nimport
+      org.apache.camel.component.http.HttpMethods;\n\nimport org.json.JSONObject;\nimport
+      org.json.JSONArray;\nimport org.json.JSONException;\n\n\nimport org.slf4j.Logger;\nimport
+      org.slf4j.LoggerFactory;\n\n\npublic class Kafka2SeldonRoute extends RouteBuilder
+      {\n\n    @PropertyInject(value = \"anomaly.seldon.endpoint\", defaultValue =
+      \"http://anomaly-detection-predictor-anomaly-detection:9000/api/v1.0/predictions\")\n\n
+      \   private String anomalyEndpoint;\n  \n    private static final Logger LOGGER
+      = LoggerFactory.getLogger(Kafka2SeldonRoute.class);\n    \n    // Keep the last
+      5 values of all sensor\n    private static int episode_length = 5; // Amount
+      of last values\n\n    // HashMap to keep last 5 values for every metric\n    private
+      static  final Map<String, ArrayList<Float>> last_value_array_map = new HashMap<String,
+      ArrayList<Float>>();\n    \n    //\n    // Get the last 5 values for a metric.
+      \n    // Add the current metric.\n    // Retrun an empty ArrayList if less than
+      5 values are kept.\n    //\n    public static ArrayList<Float> get_list_last_values(final
+      String id, final Float value) {\n\n        ArrayList<Float> array = new ArrayList<Float>();\n\n
+      \       // Get list for a id if list exists \n        if ( last_value_array_map.containsKey(id)
+      ) \n        {\n            array = last_value_array_map.get(id);\n        }
+      \n\n        // Add current value to the array\n        array.add(0, value);\n\n
+      \       if (array.size() > episode_length) {\n            array.remove(array.size()
+      - 1);\n        }\n\n        LOGGER.info(\"**** Array :\" + array);\n\n        //
+      Put valies into map\n        last_value_array_map.put(id, array);\n\n        //
+      Lets return an empty array if episode not complete\n        if (array.size()
+      < episode_length) {\n            return new ArrayList<Float>();\n        }\n
+      \       \n        return array;\n    }\n\n    //\n    // Helper class to parse
+      and set the Body in messages\n    //\n    @JsonIgnoreProperties(ignoreUnknown
+      = true)\n    public static class BodyData {\n        private String orig;\n
+      \       private String values;\n        private Integer anomaly;\n\n        public
+      String getOrig() {\n          return orig;\n        }\n        public void setOrig(String
+      orig) {\n          this.orig = orig;\n        }\n        public String getValues()
+      {\n          return values;\n        }\n        public void setValues(String
+      values) {\n          this.values = values;\n        }\n        public Integer
+      getAnomaly() {\n          return anomaly;\n        }\n        public void setAnomaly(Integer
+      anomaly) {\n          this.anomaly = anomaly;\n        }\n        \n        @Override\n
+      \       public String toString() {\n          return String.format(\"BodyData
+      [orig=%s, values=%s, anomaly=%d]\", orig, values, anomaly);\n        }\n    }\n\n
+      \   private void readVibrationFromKafka() {\n        from(\"kafka:{{kafka.broker.topic.vibration}}?brokers={{kafka.broker.uri}}\")\n
+      \         .log(\"Reading message from Kafka: ${body}\")\n          //.log(\"
+      \   on the topic ${headers[kafka.TOPIC]}\")\n          .to(\"direct:prepbody\");\n
+      \     }\n\n    // Prepare Body data for Seldon WS call \n    // Seldon Anomaly
+      detection required the last 5 values\n    // Call Seldon only if there are enough
+      values collected\n    public void prepBody() {\n        from(\"direct:prepbody\")\n
+      \       .process(new Processor() {\n            public void process(Exchange
+      exchange) {\n                    ArrayList<Float> last_values;\n\n                    Message
+      in = exchange.getIn();\n                    String body = in.getBody(String.class);\n
+      \                   String[] tokens = body.split(\",\");\n                    String
+      location = tokens[0];\n                    String device = tokens[1];\n                    Float
+      value = Float.parseFloat(tokens[2]);\n\n                    last_values = get_list_last_values(location+\"-\"+device,
+      value);\n                    \n                    BodyData data = new BodyData();\n\n
+      \                   data.setOrig(body);\n                    data.setValues(last_values.toString());\n
+      \                   exchange.getIn().setBody(data);\n            }\n        })\n
+      \       .log(\"** prepbody: ${body}\")\n        .choice()\n            .when().simple(\"${body.values}
+      == '[]' \")\n                .log(\"** Not enough values yet to call Seldon
+      WS\")\n            .otherwise()\n                //.log(\"** To-do: Call Seldon
+      WS\");\n                .to(\"direct:callSeldon\");\n                \n    }\n\n
+      \   //\n    // Check the Selson reposone and set the anomaly attribute in the
+      message\n    //\n\n    class AddResponseAggregationStrategy implements org.apache.camel.AggregationStrategy
+      {\n\n        public Exchange aggregate(Exchange oldExchange, Exchange newExchange)
+      {\n\n            Message in = newExchange.getIn();\n            String response
+      = in.getBody(String.class);\n            Integer result = 0;\n\n            LOGGER.info(\"****
+      newExchange :\" + response);\n           \n            // Expected result\n
+      \           // {\"data\":{\"names\":[],\"ndarray\":[1]},\"meta\":{}}\n\n            try
+      {\n\n                final JSONObject obj = new JSONObject(response);\n                final
+      JSONObject data = obj.getJSONObject(\"data\");\n                final JSONArray
+      ndarray = data.getJSONArray(\"ndarray\");\n\n                if (ndarray.length()
+      < 1)\n                {\n                    LOGGER.error(\"**** Missing ndarray\");\n
+      \               } else {\n                    result = ndarray.getInt(0);\n
+      \               }\n\n\n            } catch (JSONException e) {\n                LOGGER.error(\"****
+      Unexpected JSON exception:\", e);\n            }\n\n            BodyData bodyData
+      = oldExchange.getIn().getBody(BodyData.class);\n\n            bodyData.setAnomaly(result);\n\n
+      \           oldExchange.getIn().setBody(bodyData);\n            return oldExchange;\n
+      \       }\n    }\n\n\n\n    //\n    // Enrich the message with the Seldon Respone.\n
+      \   // Send any anomaly to Kafka\n    //\n    public void callSeldon() {\n        AggregationStrategy
+      addResponse = new AddResponseAggregationStrategy();\n        from(\"direct:callSeldon\")\n
+      \           .enrich(\"direct:seldonws\", addResponse) \n        .choice()\n
+      \           .when().simple(\"${body.anomaly} == 1 \")\n                .to(\"direct:storeAlertInKafka\")\n
+      \           .otherwise()\n                .log(\"*** No anomaly found\");\n
+      \           \n    }\n\n    //\n    // Call Seldon Web Service with an HTTP POST\n
+      \   //\n    public void callSeldonWS() {\n\n        from(\"direct:seldonws\")\n
+      \           .log(\"** callSeldonWS: ${body}\")\n            .setHeader(Exchange.HTTP_METHOD).constant(HttpMethods.POST)\n
+      \           .setHeader(Exchange.CONTENT_TYPE).constant(\"application/json\")\n
+      \           .setBody(simple(\"{\\\"data\\\": { \\\"ndarray\\\": [${body.values}]}}\"))\n
+      \           .to(anomalyEndpoint);\n    }\n\n\n\n    private void storeAlertInKafka()
+      {\n        from(\"direct:storeAlertInKafka\")\n            .setBody().simple(\"${body.orig}\")\n
+      \           .to(\"kafka:{{kafka.broker.topic.anomaly}}?brokers={{kafka.broker.uri}}\")\n
+      \           .log(\"Alert sent message: ${body}\");\n    }\n\n    private void
+      storeAlertInKafkaMock() {\n        from(\"direct:storeAlertInKafka\")\n            .setBody().simple(\"${body.orig}\")\n
+      \           .log(\"*** Sent Alert: ${body}\");\n    }\n\n    private void readAlertsFromKafka()
+      {\n        from(\"kafka:{{kafka.broker.topic.anomaly}}?brokers={{kafka.broker.uri}}\")\n
+      \         .log(\"*** Reading message from Kafka: ${body}\")\n          .log(\"
+      \   on the topic ${headers[kafka.TOPIC]}\");\n      }\n    \n\n    @Override\n
+      \   public void configure() throws Exception {\n        readVibrationFromKafka();\n
+      \       prepBody();\n        callSeldon();\n        callSeldonWS();\n        storeAlertInKafka();\n
+      \       // readAlertsFromKafka();\n    }\n\n    @Override\n    public OnCompletionDefinition
+      onCompletion() {\n      return super.onCompletion();\n    }\n}\n"
+    name: Kafka2SeldonRoute.java

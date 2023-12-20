@@ -1,0 +1,9 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: iot-frontend
+  name: iot-frontend
+spec:
+  lookupPolicy:
+    local: false

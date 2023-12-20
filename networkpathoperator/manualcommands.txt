@@ -1,0 +1,22 @@
+== OSX ==
+operator-sdk new firewallrule --type ansible --kind FirewallRule --api-version manuela.redhat.com/v1alpha1 --generate-playbook
+ansible-galaxy collection install pfsensible.core -p firewallrule/collections/ansible_collections
+chmod -R a+r firewallrule/collections
+sed -i "" 's|{{ REPLACE_IMAGE }}|quay.io/manuela/firewallruleoperator:v0.0.1|g' deploy/operator.yaml
+sed -i "" 's/{{ pull_policy.* }}/Always/g' deploy/operator.yaml
+
+=== VAGRANT ===
+oc login ....
+docker login ...
+cd firewallrule
+sudo operator-sdk build quay.io/manuela/firewallruleoperator:v0.0.1
+sudo docker push quay.io/manuela/firewallruleoperator:v0.0.1
+oc apply -f deploy/firewall-inventory-secret.yaml
+oc apply -k deploy
+
+
+=== FIREWALL ===
+[2.4.4-RELEASE][root@pfSense.localdomain]/root: mkdir .ssh
+[2.4.4-RELEASE][root@pfSense.localdomain]/root: cat >>.ssh/authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCju36wN6dmwqKkhGZz0I9MbtV/aNZvDHGIst4ag93gMQgD5bCpAwuhdEDsQAfZkTtFv7aFXYNHavmoC4agfpOKlvSuhS8gkIU+3kjHUoqdoXzMszdEJ9VFTK6tdEzbjDzkT8AEQWgSjH3d1dPp5fQXpMChcVayH8KAnEGv4x/8+GsiLKb/hmvonUSBW8IvGYZpDbRP5Tr0ng/dVRCj8uE4/juOPs4Ga+wP2wAY6iOZu4p4a7w3kIp7mK7t/V38DSoBuyuxEDmnTBUWGtazBWgqC9bd8qnpk7GDDGD/pKcB946ane1FS61yGkGJ2bOBKiNv94lhuH/xiczbntixf8Xb wrichter@Wolframs-MacBook-Pro
+[2.4.4-RELEASE][root@pfSense.localdomain]/root: chmod 600 .ssh/authorized_keys

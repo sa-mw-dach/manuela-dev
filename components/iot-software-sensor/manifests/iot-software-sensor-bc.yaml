@@ -1,0 +1,38 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: iot-software-sensor
+    template: openjdk18-web-basic-s2i
+  name: iot-software-sensor
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: {}
+  output:
+    to:
+      kind: ImageStreamTag
+      name: iot-software-sensor:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      ref: master
+      uri: https://github.com/sa-mw-dach/manuela-dev.git
+    type: Git
+    contextDir: "components/iot-software-sensor"
+  strategy:
+    sourceStrategy:
+      forcePull: true
+      from:
+        kind: ImageStreamTag
+        name: 'java:8'
+        namespace: openshift
+    type: Source
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - type: ConfigChange
+  - imageChange:
+    type: ImageChange
+status: 
+  lastVersion: 0
